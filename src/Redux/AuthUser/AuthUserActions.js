@@ -2,6 +2,8 @@ import {
   FETCH_USER_SUCCESS,
   FETCH_USER_ERROR,
   FETCH_USER_REQUEST,
+  USER_LOGIN,
+  USER_LOGOUT,
 } from "./AuthUserActionTypes";
 import api from "../../util/api";
 
@@ -25,6 +27,18 @@ export const fetch_auth_user_data_request = () => {
   };
 };
 
+export const user_login = () => {
+  return {
+    type: USER_LOGIN,
+  };
+};
+
+export const user_logout = () => {
+  return {
+    type: USER_LOGOUT,
+  };
+};
+
 //side effects
 export const fetch_user_data = () => {
   return (dispatch) => {
@@ -39,6 +53,7 @@ export const fetch_user_data = () => {
         dispatch(fetch_auth_user_data_success(payload));
       })
       .catch((error) => {
+        dispatch(fetch_auth_user_data_error(error));
         if (error.response) {
           // The request was made and the server responded with a status code
           // that falls out of the range of 2xx
@@ -61,7 +76,7 @@ export const fetch_user_data = () => {
           // Something happened in setting up the request that triggered an Error
           console.log("Error", error.message);
         }
-        // console.log(error.config);
+        console.log(error.config);
       });
   };
 };

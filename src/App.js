@@ -1,7 +1,7 @@
 import react from "react";
 import Fruits from "./components/Fruits";
 import Login from "./Pages/Login/Login";
-import { Route, Routes, Navigate } from "react-router-dom";
+import { Route, Routes, Navigate, useNavigate } from "react-router-dom";
 import Dashboard from "./Pages/Panel/Dashboard";
 import { isLoggedIn } from "./util/auth";
 import api from "./util/api";
@@ -13,13 +13,17 @@ import Error404 from "./Pages/Errors/Error404";
 import ErrorModelsContainer from "./components/Models/ErrorModelsContainer";
 
 function App(props) {
+  const navigate = useNavigate();
+
   react.useEffect(() => {
     api(true).get("/sanctum/csrf-cookie");
   }, []);
 
   react.useEffect(() => {
     props.fetch_user_data();
-  }, []);
+    if (props.login) navigate("/");
+    if (props.logout) navigate("/login");
+  }, [props.login, props.logout]);
 
   return props.loading ? (
     <h1> loading</h1>
@@ -51,7 +55,7 @@ const AllRoutes = () => {
       </AuthRoute>
       <Route path="/403" element={<Error403 />} />
       <Route path="/404" element={<Error404 />} />
-      <Route path="/*" element={<Navigate to="/404" />} />
+      <Route path="/*" element={<Navigate replace={true} to="/404" />} />
     </Routes>
   );
 };
@@ -59,6 +63,8 @@ const AllRoutes = () => {
 const mapStateToProps = (state) => {
   return {
     loading: state.currentUser.loading,
+    login: state.currentUser.login,
+    logout: state.currentUser.logout,
   };
 };
 

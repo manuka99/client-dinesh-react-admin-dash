@@ -13,7 +13,7 @@ function AuthRoute({ path, hasAnyRoles, ...rest }) {
   return !userAuth ? (
     <Navigate to="/login" />
   ) : !userRoleValidated ? (
-    <Navigate to="/403" />
+    <Navigate to="/403" replace={true} />
   ) : (
     <Route {...rest} />
   );

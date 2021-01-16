@@ -93,7 +93,7 @@ export default function Login() {
   const submitForm = (event) => {
     console.log(userLogin);
     event.preventDefault();
-    api(true)
+    api()
       .post("/login", userLogin)
       .then((res) => {
         console.log(res);

@@ -1,4 +1,5 @@
 import React from "react";
+import { LogOut } from "../../util/auth";
 import {
   clsx,
   AppBar,
@@ -8,11 +9,9 @@ import {
   MenuIcon,
   MailIcon,
   MainDashStyles,
-  InputBase,
   Badge,
   MenuItem,
   Menu,
-  SearchIcon,
   AccountCircle,
   NotificationsIcon,
   MoreIcon,
@@ -57,6 +56,7 @@ export default function TopNavBar({ open, handleDrawerOpen }) {
     >
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={LogOut}>Log out</MenuItem>
     </Menu>
   );
 
@@ -108,6 +108,7 @@ export default function TopNavBar({ open, handleDrawerOpen }) {
         className={clsx(classes.appBar, {
           [classes.appBarShift]: open,
         })}
+        style={{ background: "#2E3B55" }}
       >
         <Toolbar>
           <IconButton

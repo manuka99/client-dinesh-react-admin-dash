@@ -31,6 +31,7 @@ function SideNavBar({ open, handleDrawerClose }) {
         paper: clsx({
           [classes.drawerOpen]: open,
           [classes.drawerClose]: !open,
+          [classes.paper]:true,
         }),
       }}
     >

@@ -2,16 +2,16 @@ import react from "react";
 import Cookies from "js-cookie";
 import cookie from "cookie";
 import store from "../Redux/store";
-import { useNavigate } from "react-router-dom";
+import { user_login, user_logout } from "../Redux";
 import api from "./api";
 
 export function LogIn() {
-  window.location = "/panel";
+  store.dispatch(user_login());
 }
 
 export function LogOut() {
-  api(true).post("/logout");
-  window.location = "/login";
+  api().post("/logout");
+  store.dispatch(user_logout());
 }
 
 export function isLoggedIn(roles = null) {
