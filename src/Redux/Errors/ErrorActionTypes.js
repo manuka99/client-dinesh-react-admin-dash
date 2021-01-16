@@ -1,0 +1,3 @@
+export const SET_ERROR_DATA = "SET_ERROR_DATA";
+export const SHOW_ERROR_DATA = "SHOW_ERROR_DATA";
+export const DISMIS_ERROR_DATA = "DISMIS_ERROR_DATA";
