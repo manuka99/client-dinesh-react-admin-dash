@@ -1,17 +1,18 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import {
   CssBaseline,
   Typography,
   MainDashStyles,
 } from "../../assets/StyleImports";
-import SideNavBar from "../../components/common/SideNavBar";
+import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
+import SideNavBar from "../../components/common/SideNavigation/SideNavBar";
 import TopNavBar from "../../components/common/TopNavBar";
 import Fruits from "../../components/Fruits";
 import Login from "../../components/Login";
 import withAuth from "../../components/withAuth";
 
-function Dashboard() {
+function PanelContainer() {
   const classes = MainDashStyles();
 
   const [open, setOpen] = React.useState(false);
@@ -24,6 +25,10 @@ function Dashboard() {
     setOpen(false);
   };
 
+  useEffect(() => {
+    document.title = "Administration Dashboard";
+  }, []);
+
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -34,6 +39,9 @@ function Dashboard() {
 
       <main className={classes.content}>
         <div className={classes.toolbar} />
+
+        <Breadcrumb />
+
         <Typography paragraph>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua. Rhoncus
@@ -56,4 +64,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default PanelContainer;

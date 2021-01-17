@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Typography,
@@ -35,16 +35,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export function Error404() {
-  const navigate = useNavigate();
+const Error500 = () => {
   const classes = useStyles();
   const theme = useTheme();
   const mobileDevice = useMediaQuery(theme.breakpoints.down("sm"));
 
+  React.useEffect(() => {
+    document.title = "Error 500";
+  }, []);
+
   return (
     <Box mt={15}>
-      <Typography align="center" variant={mobileDevice ? "h6" : "h4"}>
-        404: The page you are looking for isn’t here
+      <Typography align="center" variant={mobileDevice ? "h5" : "h4"}>
+        500: Ooops, something went terribly wrong!
       </Typography>
       <Typography align="center" variant="subtitle2">
         You either tried some shady route or you came here by mistake. Whichever
@@ -54,20 +57,16 @@ export function Error404() {
         <img
           alt="Under development"
           className={classes.image}
-          src="/images/undraw_page_not_found_su7k.svg"
+          src="/images/undraw_server_down_s4lk.svg"
         />
       </div>
       <div className={classes.buttonContainer}>
-        <Button
-          color="primary"
-          onClick={() => navigate("/", { state: {}, replace: true })}
-          variant="outlined"
-        >
+        <Button color="primary" component={NavLink} to="/" variant="outlined">
           Back to home
         </Button>
       </div>
     </Box>
   );
-}
+};
 
-export default Error404;
+export default Error500;

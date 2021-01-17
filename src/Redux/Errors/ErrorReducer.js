@@ -5,7 +5,7 @@ import {
 } from "./ErrorActionTypes";
 
 const initialState = {
-  message: "",
+  message: {},
   show: false,
 };
 

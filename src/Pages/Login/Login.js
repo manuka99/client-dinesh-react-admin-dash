@@ -115,7 +115,7 @@ export default function Login() {
   };
 
   return userAuth ? (
-    <Navigate to="/panel" />
+    <Navigate to="/" />
   ) : (
     <Grid container component="main" className={classes.root}>
       <CssBaseline />

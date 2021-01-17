@@ -137,6 +137,9 @@ const MainDashStyles = makeStyles((theme: Theme) =>
         display: "none",
       },
     },
+    nested: {
+      paddingLeft: theme.spacing(4),
+    },
   })
 );
 
