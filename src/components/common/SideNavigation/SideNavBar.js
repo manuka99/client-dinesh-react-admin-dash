@@ -50,4 +50,4 @@ function SideNavBar({ open, handleDrawerClose }) {
   );
 }
 
-export default SideNavBar;
+export default React.memo(SideNavBar);

@@ -1,7 +1,4 @@
 import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
-import { MainDashStyles } from "../../../assets/StyleImports";
-import Collapse from "@material-ui/core/Collapse";
 import SideNavItem from "./SideNavItem";
 
 export function SideNavItems({ navItems }) {
@@ -14,14 +11,14 @@ export function SideNavItems({ navItems }) {
 
   return (
     <React.Fragment>
-      {navItems.map((navItem, index) => {
+      {navItems.map((navItem) => {
         return (
           <React.Fragment>
             <SideNavItem
               navItem={navItem}
-              index={index}
               ids={ids}
               handleNestedChildren={handleNestedChildren}
+              spacing={3}
             />
           </React.Fragment>
         );
@@ -30,4 +27,4 @@ export function SideNavItems({ navItems }) {
   );
 }
 
-export default SideNavItems;
+export default React.memo(SideNavItems);
