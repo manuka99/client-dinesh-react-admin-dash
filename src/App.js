@@ -3,16 +3,26 @@ import { useNavigate } from "react-router-dom";
 import api from "./util/api";
 import { connect } from "react-redux";
 import { fetch_user_data } from "./Redux";
-
 import ErrorModelsContainer from "./components/Modals/ErrorModelsContainer";
-import theme from "./theme";
 import { ThemeProvider } from "@material-ui/styles";
 import { AllRoutes } from "./Routes";
 import Loading from "./Pages/Loading/Loading";
 import { createMuiTheme } from "@material-ui/core";
 
-const darkTheme = createMuiTheme({
+const lightTheme = createMuiTheme({
+  overrides: {
+    MuiAppBar: {
+      colorDefault: {
+        backgroundColor: "red",
+        color: "white",
+      },
+    },
+  },
+  palette: { type: "light" },
+});
 
+const darkTheme = createMuiTheme({
+  palette: { type: "dark" },
 });
 
 function App(props) {
@@ -29,7 +39,7 @@ function App(props) {
   }, [props.login, props.logout]);
 
   return (
-    <ThemeProvider theme={darkTheme}>
+    <ThemeProvider theme={lightTheme}>
       {props.loading ? (
         <Loading />
       ) : (

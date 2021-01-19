@@ -37,10 +37,6 @@ const MainDashStyles = makeStyles((theme: Theme) =>
       flexShrink: 0,
       whiteSpace: "nowrap",
     },
-    paper: {
-      background: "white",
-      color: "#2E3B55",
-    },
     drawerOpen: {
       width: drawerWidth,
       transition: theme.transitions.create("width", {

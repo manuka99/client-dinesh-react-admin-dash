@@ -25,6 +25,7 @@ function SideNavItem({ navItem, ids, handleNestedChildren, spacing }) {
   return (
     <React.Fragment>
       <ListItem
+        button
         key={navItem.id}
         component={NavLink}
         to={navItem.to}

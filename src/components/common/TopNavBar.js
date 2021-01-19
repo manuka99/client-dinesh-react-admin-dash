@@ -104,11 +104,11 @@ export default function TopNavBar({ open, handleDrawerOpen }) {
   return (
     <React.Fragment>
       <AppBar
+        color="default"
         position="fixed"
         className={clsx(classes.appBar, {
           [classes.appBarShift]: open,
         })}
-        style={{ background: "#2E3B55" }}
       >
         <Toolbar>
           <IconButton
