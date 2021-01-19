@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import SideNavItem from "./SideNavItem";
 
-export function SideNavItems({ navItems }) {
+export function SideNavItems({ navItems, handleDrawerOpen }) {
   const [ids, setIds] = useState({});
 
   const handleNestedChildren = (id, event) => {
     event.preventDefault();
     setIds({ ...ids, [id]: !ids[id] });
+    !ids[id] && handleDrawerOpen();
   };
 
   return (

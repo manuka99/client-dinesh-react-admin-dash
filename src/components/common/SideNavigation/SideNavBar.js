@@ -14,7 +14,7 @@ import SideNavItems from "./SideNavItems";
 import { NavItems1 } from "./NavItems";
 import Paper from "@material-ui/core/Paper";
 
-function SideNavBar({ open, handleDrawerClose }) {
+function SideNavBar({ open, handleDrawerOpen, handleDrawerClose }) {
   const classes = MainDashStyles();
   const theme = useTheme();
 
@@ -45,7 +45,7 @@ function SideNavBar({ open, handleDrawerClose }) {
         </div>
         <Divider />
         <List>
-          <SideNavItems navItems={NavItems1()} />
+          <SideNavItems navItems={NavItems1()} handleDrawerOpen={handleDrawerOpen}/>
         </List>
         <Divider />
       </Drawer>

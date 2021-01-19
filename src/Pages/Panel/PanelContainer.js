@@ -35,7 +35,11 @@ function PanelContainer() {
 
       <TopNavBar open={open} handleDrawerOpen={handleDrawerOpen} />
 
-      <SideNavBar open={open} handleDrawerClose={handleDrawerClose} />
+      <SideNavBar
+        open={open}
+        handleDrawerOpen={handleDrawerOpen}
+        handleDrawerClose={handleDrawerClose}
+      />
 
       <main className={classes.content}>
         <div className={classes.toolbar} />

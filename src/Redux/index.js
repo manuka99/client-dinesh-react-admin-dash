@@ -5,7 +5,8 @@ export {
   fetch_auth_user_data_request,
   fetch_user_data,
   user_login,
-  user_logout
+  user_logout,
+  set_app_theme,
 } from "./AuthUser/AuthUserActions";
 
 export {

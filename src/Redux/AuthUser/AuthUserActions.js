@@ -4,6 +4,7 @@ import {
   FETCH_USER_REQUEST,
   USER_LOGIN,
   USER_LOGOUT,
+  SET_APP_THEME,
 } from "./AuthUserActionTypes";
 import api from "../../util/api";
 
@@ -36,6 +37,13 @@ export const user_login = () => {
 export const user_logout = () => {
   return {
     type: USER_LOGOUT,
+  };
+};
+
+export const set_app_theme = (theme) => {
+  return {
+    type: SET_APP_THEME,
+    payload: theme,
   };
 };
 

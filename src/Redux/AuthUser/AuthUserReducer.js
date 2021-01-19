@@ -4,14 +4,16 @@ import {
   FETCH_USER_REQUEST,
   USER_LOGIN,
   USER_LOGOUT,
+  SET_APP_THEME,
 } from "./AuthUserActionTypes";
 
 const initialState = {
   login: false,
-  logout:false,
+  logout: false,
   error: "",
   user_data: "",
   loading: true,
+  theme: null,
 };
 
 export const AuthUserReducer = (state = initialState, action) => {
@@ -20,13 +22,13 @@ export const AuthUserReducer = (state = initialState, action) => {
       return {
         ...state,
         user_data: action.payload,
-        error:'',
+        error: "",
         loading: false,
       };
     case FETCH_USER_ERROR:
       return {
         ...state,
-        user_data:'',
+        user_data: "",
         error: action.payload,
         loading: false,
       };
@@ -46,6 +48,11 @@ export const AuthUserReducer = (state = initialState, action) => {
         ...state,
         login: false,
         logout: true,
+      };
+    case SET_APP_THEME:
+      return {
+        ...state,
+        theme: action.payload,
       };
     default:
       return state;

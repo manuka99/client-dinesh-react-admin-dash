@@ -16,6 +16,7 @@ import {
   NotificationsIcon,
   MoreIcon,
 } from "../../assets/StyleImports";
+import ThemeSwitch from "../../components/ThemeSwitch";
 
 export default function TopNavBar({ open, handleDrawerOpen }) {
   const classes = MainDashStyles();
@@ -125,7 +126,6 @@ export default function TopNavBar({ open, handleDrawerOpen }) {
           <Typography className={classes.title} variant="h6" noWrap>
             Material-UI
           </Typography>
-
           {/* <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />
@@ -139,7 +139,7 @@ export default function TopNavBar({ open, handleDrawerOpen }) {
               inputProps={{ "aria-label": "search" }}
             />
           </div> */}
-
+          <ThemeSwitch />
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
             <IconButton aria-label="show 4 new mails" color="inherit">
