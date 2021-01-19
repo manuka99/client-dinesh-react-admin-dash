@@ -5,8 +5,8 @@ import {
   makeStyles,
 } from "@material-ui/core/styles";
 
-const drawerWidth = 260;
-const MainDashStyles = makeStyles((theme: Theme) =>
+const drawerWidth = 240;
+const MainDashStyles = makeStyles((theme) =>
   createStyles({
     root: {
       display: "flex",
@@ -50,9 +50,11 @@ const MainDashStyles = makeStyles((theme: Theme) =>
         duration: theme.transitions.duration.leavingScreen,
       }),
       overflowX: "hidden",
-      width: theme.spacing(7) + 1,
-      [theme.breakpoints.up("sm")]: {
-        width: theme.spacing(9) + 1,
+      [theme.breakpoints.down("md")]: {
+        width: 0,
+      },
+      [theme.breakpoints.up("md")]: {
+        width: theme.spacing(8),
       },
     },
     toolbar: {
@@ -125,6 +127,7 @@ const MainDashStyles = makeStyles((theme: Theme) =>
       display: "none",
       [theme.breakpoints.up("md")]: {
         display: "flex",
+        columnGap: theme.spacing(3),
       },
     },
     sectionMobile: {

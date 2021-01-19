@@ -15,6 +15,8 @@ import {
   AccountCircle,
   NotificationsIcon,
   MoreIcon,
+  SearchIcon,
+  InputBase,
 } from "../../assets/StyleImports";
 import ThemeSwitch from "../../components/ThemeSwitch";
 
@@ -99,6 +101,9 @@ export default function TopNavBar({ open, handleDrawerOpen }) {
         </IconButton>
         <p>Profile</p>
       </MenuItem>
+      <MenuItem>
+        <ThemeSwitch />
+      </MenuItem>
     </Menu>
   );
 
@@ -126,7 +131,7 @@ export default function TopNavBar({ open, handleDrawerOpen }) {
           <Typography className={classes.title} variant="h6" noWrap>
             Material-UI
           </Typography>
-          {/* <div className={classes.search}>
+          <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />
             </div>
@@ -138,10 +143,10 @@ export default function TopNavBar({ open, handleDrawerOpen }) {
               }}
               inputProps={{ "aria-label": "search" }}
             />
-          </div> */}
-          <ThemeSwitch />
+          </div>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
+            <ThemeSwitch />
             <IconButton aria-label="show 4 new mails" color="inherit">
               <Badge badgeContent={4} color="secondary">
                 <MailIcon />

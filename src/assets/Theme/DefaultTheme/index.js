@@ -8,7 +8,7 @@ import overrides from "./overrides";
 // });
 
 const DefaultTheme = {
-  palette,
+  // palette,
   overrides,
 };
 

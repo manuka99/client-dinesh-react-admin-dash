@@ -24,13 +24,13 @@ const IOSSwitch = withStyles((theme) =>
         transform: "translateX(16px)",
         color: theme.palette.common.white,
         "& + $track": {
-          backgroundColor: "#52d869",
+          backgroundColor: "#074FFF",
           opacity: 1,
           border: "none",
         },
       },
       "&$focusVisible $thumb": {
-        color: "#52d869",
+        color: "blue",
         border: "6px solid #fff",
       },
     },
@@ -41,7 +41,7 @@ const IOSSwitch = withStyles((theme) =>
     track: {
       borderRadius: 26 / 2,
       border: `1px solid ${theme.palette.grey[400]}`,
-      backgroundColor: theme.palette.grey[50],
+      backgroundColor: "#808080",
       opacity: 1,
       transition: theme.transitions.create(["background-color", "border"]),
     },
@@ -80,7 +80,7 @@ function ThemeSwitch({ theme, set_app_theme }) {
             name="checked"
           />
         }
-        label="Dark mode"
+        label={<Typography variant="noWrap">Dark mode</Typography>}
       />
     </FormGroup>
   );

@@ -9,10 +9,12 @@ import {
 import Collapse from "@material-ui/core/Collapse";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
-import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
+import { createStyles, makeStyles } from "@material-ui/core/styles";
 
-function SideNavItem({ navItem, ids, handleNestedChildren, spacing }) {
-  const styles = makeStyles((theme: Theme) =>
+function SideNavItem({ navItem, ids, handleNestedChildren, spacing, ...rest }) {
+  console.log("nav item rendered");
+
+  const styles = makeStyles((theme) =>
     createStyles({
       nested: {
         paddingLeft: theme.spacing(spacing),
@@ -31,11 +33,12 @@ function SideNavItem({ navItem, ids, handleNestedChildren, spacing }) {
         to={navItem.to}
         className={classes.nested}
         activeClassName={!ids[navItem.id] && "Mui-selected"}
-        {...(navItem.hasChildren
-          ? {
-              onClick: (e) => handleNestedChildren(navItem.id, e),
-            }
-          : {})}
+        // {...(navItem.hasChildren
+        //   ? {
+        //       onClick: (e) => handleNestedChildren(navItem.id, e),
+        //     }
+        //   : {})}
+        onClick={(e) => handleNestedChildren(navItem.id, e, navItem.hasChildren)}
       >
         <ListItemIcon>{navItem.iconFront}</ListItemIcon>
         <ListItemText primary={navItem.name} />

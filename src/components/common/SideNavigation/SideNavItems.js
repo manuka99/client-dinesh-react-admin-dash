@@ -4,9 +4,11 @@ import SideNavItem from "./SideNavItem";
 export function SideNavItems({ navItems, handleDrawerOpen }) {
   const [ids, setIds] = useState({});
 
-  const handleNestedChildren = (id, event) => {
-    event.preventDefault();
-    setIds({ ...ids, [id]: !ids[id] });
+  const handleNestedChildren = (id, event = null, hasChildren = false) => {
+    if (hasChildren) {
+      event.preventDefault();
+      setIds({ ...ids, [id]: !ids[id] });
+    }
     !ids[id] && handleDrawerOpen();
   };
 
@@ -19,7 +21,7 @@ export function SideNavItems({ navItems, handleDrawerOpen }) {
               navItem={navItem}
               ids={ids}
               handleNestedChildren={handleNestedChildren}
-              spacing={3}
+              spacing={2.5}
             />
           </React.Fragment>
         );

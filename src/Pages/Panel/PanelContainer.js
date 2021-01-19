@@ -8,14 +8,11 @@ import {
 import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
 import SideNavBar from "../../components/common/SideNavigation/SideNavBar";
 import TopNavBar from "../../components/common/TopNavBar";
-import Fruits from "../../components/Fruits";
-import Login from "../../components/Login";
-import withAuth from "../../components/withAuth";
 
 function PanelContainer() {
   const classes = MainDashStyles();
 
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
 
   const handleDrawerOpen = () => {
     setOpen(true);
