@@ -1,4 +1,5 @@
 import { InboxIcon } from "../../../assets/StyleImports";
+import AccountBoxIcon from "@material-ui/icons/AccountBox";
 
 export const NavItems1 = () => {
   return [
@@ -64,9 +65,9 @@ export const NavItems1 = () => {
     },
     {
       id: 8,
-      name: "Support",
-      to: "/app/support",
-      iconFront: <InboxIcon />,
+      name: "Profile",
+      to: "/app/profile",
+      iconFront: <AccountBoxIcon />,
       hasChildren: false,
       isChild: false,
     },

@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import { fetch_user_data } from "./Redux";
 import ErrorModelsContainer from "./components/Modals/ErrorModelsContainer";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
-import { AllRoutes } from "./Routes";
+import { AllRoutes } from "./Routes/Routes";
 import Loading from "./Pages/Loading/Loading";
 import { get_app_theme, set_app_theme } from "./util/themeService";
 import DefaultTheme from "./assets/Theme/DefaultTheme";

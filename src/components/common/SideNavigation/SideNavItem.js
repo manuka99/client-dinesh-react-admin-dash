@@ -28,7 +28,7 @@ function SideNavItem({ navItem, ids, handleNestedChildren, spacing, ...rest }) {
         fontSize: "15px",
       },
       icon_color: {
-        color: theme.palette.primary.light,
+        color: theme.palette.neutral.main,
       },
     })
   );

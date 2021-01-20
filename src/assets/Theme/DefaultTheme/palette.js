@@ -1,14 +1,19 @@
-import { colors } from '@material-ui/core';
-
 export default {
   primary: {
-    main: "#007f63",
+    main: "#006bfa",
+    light: "#2f6cad",
   },
   secondary: {
     main: "#f50057",
   },
   neutral: {
-    main: "#2979ff",
+    main: "#007f63",
     dark: "#007168",
+    straight: "white",
+    reverse: "black",
+  },
+  background: {
+    default: "#dce8e7",
+    paper: "#ffffff",
   },
 };

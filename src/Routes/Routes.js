@@ -1,14 +1,18 @@
-import Fruits from "./components/Fruits";
-import Login from "./Pages/Login/Login";
+import Fruits from "../components/Fruits";
+import Login from "../Pages/Login/Login";
 import { Route, Routes, Navigate } from "react-router-dom";
-import PanelContainer from "./Pages/Panel/PanelContainer";
-import Dashboard from "./Pages/App/Reports/Dashboard";
-import AuthRoute from "./components/protectedRoutes/AuthRoute";
-import GuestRoute from "./components/protectedRoutes/GuestRoute";
-import Error403 from "./Pages/Errors/Error403";
-import Error404 from "./Pages/Errors/Error404";
-import Error406 from "./Pages/Errors/Error406";
-import Error500 from "./Pages/Errors/Error500";
+import PanelContainer from "../Pages/Panel/PanelContainer";
+import Dashboard from "../Pages/App/Reports/Dashboard";
+import AuthRoute from "../components/protectedRoutes/AuthRoute";
+import GuestRoute from "../components/protectedRoutes/GuestRoute";
+import Error403 from "../Pages/Errors/Error403";
+import Error404 from "../Pages/Errors/Error404";
+import Error406 from "../Pages/Errors/Error406";
+import Error500 from "../Pages/Errors/Error500";
+import Profile from "../Pages/App/Profile/Profile";
+import Account from "../Pages/App/Profile/Account";
+import Security from "../Pages/App/Profile/Security";
+import TwoStepVerification from "../Pages/App/Profile/TwoStepVerification";
 
 export const AllRoutes = () => {
   return (
@@ -28,6 +32,11 @@ export const AllRoutes = () => {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/statistics" element={<Dashboard />} />
         </Route>
+        <AuthRoute path="/profile" element={<Profile />}>
+          <AuthRoute path="/" element={<Account />} />
+          <AuthRoute path="/security" element={<Security />} />
+          <AuthRoute path="/two-step-verification" element={<TwoStepVerification />} />
+        </AuthRoute>
         <AuthRoute hasAnyRoles={["Editor"]} path="/fruits" element={<Fruits />}>
           <AuthRoute path="/fruit" element={<Fruits />} />
           <AuthRoute path="/login" element={<Login />} />
