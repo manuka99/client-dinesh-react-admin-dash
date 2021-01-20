@@ -5,6 +5,7 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
+  Typography,
 } from "../../../assets/StyleImports";
 import Collapse from "@material-ui/core/Collapse";
 import ExpandLess from "@material-ui/icons/ExpandLess";
@@ -18,6 +19,16 @@ function SideNavItem({ navItem, ids, handleNestedChildren, spacing, ...rest }) {
     createStyles({
       nested: {
         paddingLeft: theme.spacing(spacing),
+      },
+      typo_bold: {
+        fontWeight: "bold",
+        fontSize: "15px",
+      },
+      typo_normal: {
+        fontSize: "15px",
+      },
+      icon_color: {
+        color: theme.palette.primary.light,
       },
     })
   );
@@ -38,10 +49,24 @@ function SideNavItem({ navItem, ids, handleNestedChildren, spacing, ...rest }) {
         //       onClick: (e) => handleNestedChildren(navItem.id, e),
         //     }
         //   : {})}
-        onClick={(e) => handleNestedChildren(navItem.id, e, navItem.hasChildren)}
+        onClick={(e) =>
+          handleNestedChildren(navItem.id, e, navItem.hasChildren)
+        }
       >
-        <ListItemIcon>{navItem.iconFront}</ListItemIcon>
-        <ListItemText primary={navItem.name} />
+        <ListItemIcon className={classes.icon_color}>
+          {navItem.iconFront}
+        </ListItemIcon>
+        <ListItemText
+          primary={
+            <Typography
+              className={
+                !navItem.isChild ? classes.typo_bold : classes.typo_normal
+              }
+            >
+              {navItem.name}
+            </Typography>
+          }
+        />
         {navItem.hasChildren &&
           (ids[navItem.id] ? <ExpandLess /> : <ExpandMore />)}
       </ListItem>

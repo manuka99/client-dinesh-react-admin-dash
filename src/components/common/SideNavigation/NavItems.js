@@ -8,6 +8,7 @@ export const NavItems1 = () => {
       to: "/app/reports",
       iconFront: <InboxIcon />,
       hasChildren: true,
+      isChild: false,
       children: [
         {
           id: 2,
@@ -15,6 +16,7 @@ export const NavItems1 = () => {
           to: "/app/reports/dashboard",
           iconFront: <InboxIcon />,
           hasChildren: false,
+          isChild: true,
         },
         {
           id: 3,
@@ -22,6 +24,7 @@ export const NavItems1 = () => {
           to: "/app/reports/statistics",
           iconFront: <InboxIcon />,
           hasChildren: false,
+          isChild: true,
         },
         {
           id: 4,
@@ -29,6 +32,7 @@ export const NavItems1 = () => {
           to: "/app/reports/statistics-data",
           iconFront: <InboxIcon />,
           hasChildren: false,
+          isChild: true,
         },
       ],
     },
@@ -38,6 +42,7 @@ export const NavItems1 = () => {
       to: "/app/fruits",
       iconFront: <InboxIcon />,
       hasChildren: true,
+      isChild: false,
       children: [
         {
           id: 6,
@@ -45,6 +50,7 @@ export const NavItems1 = () => {
           to: "/app/fruits/fruit",
           iconFront: <InboxIcon />,
           hasChildren: false,
+          isChild: true,
         },
         {
           id: 7,
@@ -52,6 +58,7 @@ export const NavItems1 = () => {
           to: "/app/users/member",
           iconFront: <InboxIcon />,
           hasChildren: false,
+          isChild: true,
         },
       ],
     },
@@ -61,6 +68,7 @@ export const NavItems1 = () => {
       to: "/app/support",
       iconFront: <InboxIcon />,
       hasChildren: false,
+      isChild: false,
     },
     {
       id: 9,
@@ -68,6 +76,7 @@ export const NavItems1 = () => {
       to: "/app/fruits",
       iconFront: <InboxIcon />,
       hasChildren: false,
+      isChild: false,
     },
     {
       id: 10,
@@ -75,6 +84,7 @@ export const NavItems1 = () => {
       to: "/app/quiz",
       iconFront: <InboxIcon />,
       hasChildren: false,
+      isChild: false,
     },
   ];
 };

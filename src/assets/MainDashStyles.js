@@ -12,11 +12,16 @@ const MainDashStyles = makeStyles((theme) =>
       display: "flex",
     },
     appBar: {
+      backgroundColor: theme.palette.neutral.dark,
+      color: "white",
       zIndex: theme.zIndex.drawer + 1,
       transition: theme.transitions.create(["width", "margin"], {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen,
       }),
+      height: "68px",
+      display: "flex",
+      justifyContent: "center",
     },
     appBarShift: {
       marginLeft: drawerWidth,
@@ -66,6 +71,7 @@ const MainDashStyles = makeStyles((theme) =>
       ...theme.mixins.toolbar,
     },
     content: {
+      marginTop: "10px",
       flexGrow: 1,
       padding: theme.spacing(3),
     },
@@ -92,12 +98,12 @@ const MainDashStyles = makeStyles((theme) =>
       "&:hover": {
         backgroundColor: fade(theme.palette.common.white, 0.25),
       },
-
-      marginRight: theme.spacing(2),
       marginLeft: 0,
+      marginRight: 0,
       width: "100%",
       [theme.breakpoints.up("sm")]: {
-        marginLeft: theme.spacing(3),
+        marginLeft: theme.spacing(2),
+        marginRight: theme.spacing(2),
         width: "auto",
       },
     },
@@ -119,8 +125,11 @@ const MainDashStyles = makeStyles((theme) =>
       paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
       transition: theme.transitions.create("width"),
       width: "100%",
-      [theme.breakpoints.up("md")]: {
-        width: "20ch",
+      [theme.breakpoints.up("sm")]: {
+        width: "12ch",
+        "&:focus": {
+          width: "20ch",
+        },
       },
     },
     sectionDesktop: {
@@ -135,6 +144,9 @@ const MainDashStyles = makeStyles((theme) =>
       [theme.breakpoints.up("md")]: {
         display: "none",
       },
+    },
+    disabled: {
+      color: theme.palette.text.disabled,
     },
   })
 );

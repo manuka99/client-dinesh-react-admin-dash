@@ -1,15 +1,9 @@
-import { createMuiTheme } from "@material-ui/core/styles";
 import palette from "./palette";
-import overrides from "./overrides";
-
-// const DarkTheme = createMuiTheme({
-//   palette,
-//   overrides,
-// });
+import typography from "./typography";
 
 const DarkTheme = {
   palette,
-  overrides,
+  typography,
 };
 
 export default DarkTheme;

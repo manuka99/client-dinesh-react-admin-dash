@@ -9,10 +9,15 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
   MainDashStyles,
+  Typography,
 } from "../../../assets/StyleImports";
 import SideNavItems from "./SideNavItems";
 import { NavItems1 } from "./NavItems";
 import Paper from "@material-ui/core/Paper";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import DashboardIcon from "@material-ui/icons/Dashboard";
 
 function SideNavBar({ open, handleDrawerOpen, handleDrawerClose }) {
   const classes = MainDashStyles();
@@ -44,10 +49,41 @@ function SideNavBar({ open, handleDrawerOpen, handleDrawerClose }) {
           </IconButton>
         </div>
         <Divider />
+        <ListItem >
+          <ListItemIcon>
+            <DashboardIcon />
+          </ListItemIcon>
+          <ListItemText
+            primary={
+              <Typography className={classes.disabled}>Dashboard</Typography>
+            }
+          />
+        </ListItem>
         <List>
-          <SideNavItems navItems={NavItems1()} handleDrawerOpen={handleDrawerOpen}/>
+          <SideNavItems
+            navItems={NavItems1()}
+            handleDrawerOpen={handleDrawerOpen}
+          />
         </List>
         <Divider />
+        <ListItem >
+          <ListItemIcon>
+            <DashboardIcon />
+          </ListItemIcon>
+          <ListItemText
+            primary={
+              <Typography className={classes.disabled}>
+                Other Actions
+              </Typography>
+            }
+          />
+        </ListItem>
+        <List>
+          <SideNavItems
+            navItems={NavItems1()}
+            handleDrawerOpen={handleDrawerOpen}
+          />
+        </List>
       </Drawer>
     </Paper>
   );
