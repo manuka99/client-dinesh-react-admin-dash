@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme) =>
       display: "inline-block",
     },
     buttonProgress: {
-      color: theme.palette.primary.main,
+      // color: theme.palette.primary.main,
       position: "absolute",
       top: "20%",
       left: "45%",
@@ -18,19 +18,19 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-function ButtonProgress({ loading, handleButtonClick, name, ...rest }) {
+function ButtonProgress({ loading, handleButtonClick, name, spinColor, ...rest }) {
   const classes = useStyles();
   return (
     <div className={classes.wrapper}>
-      <Button
-        {...rest}
-        disabled={loading}
-        onClick={handleButtonClick}
-      >
+      <Button {...rest} disabled={loading} onClick={handleButtonClick}>
         {name}
       </Button>
       {loading && (
-        <CircularProgress size={26} className={classes.buttonProgress} />
+        <CircularProgress
+          size={26}
+          color={spinColor}
+          className={classes.buttonProgress}
+        />
       )}
     </div>
   );

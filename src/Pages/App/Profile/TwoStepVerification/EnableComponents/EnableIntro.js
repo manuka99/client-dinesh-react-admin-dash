@@ -10,6 +10,7 @@ import ScreenLockPortraitIcon from "@material-ui/icons/ScreenLockPortrait";
 import LockOpenIcon from "@material-ui/icons/LockOpen";
 import ButtonProgress from "../../../../../components/common/ButtonProgress/ButtonProgress";
 import EnableSuccess from "./EnableSuccess";
+import ConfirmPassword from "../../../../../components/ConfirmPassword/ConfirmPassword";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -39,21 +40,31 @@ function EnableIntro() {
     "9d850-1b911",
     "9d850-1b911",
   ]);
+  const [qrCode, setQrCode] = useState(null);
+  const [isConfirming, setIsConfirming] = useState(false);
 
-  const handleButtonClick = () => {
+  const enable_2fa = () => {
     if (!btnLoader) {
       setBtnLoader(true);
       window.setTimeout(() => {
         setBtnLoader(false);
         setIsEnableSuccess(true);
+        // setIsConfirming(true);
       }, 2000);
     }
+  };
+
+  const handlePasswordConfirm = () => {
+    setIsConfirming(false);
+    enable_2fa();
   };
 
   return (
     <div className={classes.root}>
       {isEnableSuccess ? (
         <EnableSuccess recoveryCodes={recoveryCodes} />
+      ) : isConfirming ? (
+        <ConfirmPassword handlePasswordConfirm={handlePasswordConfirm} />
       ) : (
         <React.Fragment>
           <Typography variant="body2" color="textSecondary">
@@ -121,7 +132,8 @@ function EnableIntro() {
               fullWidth
               name="Enable two step verification"
               loading={btnLoader}
-              handleButtonClick={handleButtonClick}
+              handleButtonClick={enable_2fa}
+              spinColor="secondary"
             >
               Continue
             </ButtonProgress>

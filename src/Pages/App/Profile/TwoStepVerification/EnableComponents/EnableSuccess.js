@@ -1,14 +1,13 @@
-import React, { useState } from "react";
+import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import CardActionArea from "@material-ui/core/CardActionArea";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
-import CardMedia from "@material-ui/core/CardMedia";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
-import FiberManualRecordTwoToneIcon from "@material-ui/icons/FiberManualRecordTwoTone";
 import { Box, Grid } from "@material-ui/core";
 import swal from "sweetalert";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import { useNavigate, usePrompt } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,6 +32,11 @@ const useStyles = makeStyles((theme) => ({
 
 function EnableSuccess({ recoveryCodes }) {
   const classes = useStyles();
+  let navigate = useNavigate();
+  usePrompt(
+    "Have you downloaded or copied your recovery codes and scan the Qr code ? these credential are required at your next sign in.",
+    true
+  );
 
   const downloadTxtFile = () => {
     const element = document.createElement("a");
@@ -76,6 +80,39 @@ function EnableSuccess({ recoveryCodes }) {
       "success"
     );
   };
+
+  const promptBeforeExit = () => {
+    // swal({
+    //   title: "Are you sure?",
+    //   text:
+    //     "Have you downloaded or copied your recovery codes and scan the Qr code, these credential are required at your next sign in.",
+    //   icon: "warning",
+    //   buttons: true,
+    //   dangerMode: true,
+    // }).then((willDelete) => {
+    //   if (willDelete) {
+    navigate("/app/profile");
+    //   } else {
+    //     swal(
+    //       "Download, print, or copy your recovery codes and scan the Qr code before continuing two-factor authentication."
+    //     );
+    //   }
+    // });
+  };
+
+  // // before window close
+  // window.onbeforeunload = function () {
+  //   promptBeforeExit();
+  //   return false;
+  // };
+  // window.addEventListener(
+  //   "beforeunload",
+  //   function (e) {
+  //     promptBeforeExit();
+  //     return false;
+  //   },
+  //   false
+  // );
 
   return (
     <div className={classes.root}>
@@ -180,6 +217,18 @@ function EnableSuccess({ recoveryCodes }) {
           above steps properly. You can request support from our team at any
           moment.
         </Typography>
+        <br />
+        <br />
+        <Button
+          size="large"
+          variant="contained"
+          color="primary"
+          onClick={promptBeforeExit}
+          fullWidth
+          startIcon={<ArrowBackIcon />}
+        >
+          Back to Main Menu
+        </Button>
       </CardContent>
     </div>
   );
