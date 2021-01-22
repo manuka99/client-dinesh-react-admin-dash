@@ -12,7 +12,7 @@ import Error500 from "../Pages/Errors/Error500";
 import Profile from "../Pages/App/Profile/Profile";
 import Account from "../Pages/App/Profile/Account";
 import Security from "../Pages/App/Profile/Security";
-import TwoStepVerification from "../Pages/App/Profile/TwoStepVerification";
+import Main from "../Pages/App/Profile/TwoStepVerification/Main";
 
 export const AllRoutes = () => {
   return (
@@ -35,7 +35,7 @@ export const AllRoutes = () => {
         <AuthRoute path="/profile" element={<Profile />}>
           <AuthRoute path="/" element={<Account />} />
           <AuthRoute path="/security" element={<Security />} />
-          <AuthRoute path="/two-step-verification" element={<TwoStepVerification />} />
+          <AuthRoute path="/two-step-verification" element={<Main />} />
         </AuthRoute>
         <AuthRoute hasAnyRoles={["Editor"]} path="/fruits" element={<Fruits />}>
           <AuthRoute path="/fruit" element={<Fruits />} />

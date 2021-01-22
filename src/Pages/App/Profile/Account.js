@@ -6,6 +6,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import { Box } from "@material-ui/core";
 import ButtonProgress from "../../../components/common/ButtonProgress/ButtonProgress";
+import SaveIcon from "@material-ui/icons/Save";
 
 function Account() {
   const [loading, setLoading] = React.useState(false);
@@ -120,6 +121,10 @@ function Account() {
           </Grid>
           <Grid item xs={12}>
             <ButtonProgress
+              variant="contained"
+              color="primary"
+              size="medium"
+              startIcon={<SaveIcon />}
               name="Update profile"
               loading={loading}
               handleButtonClick={handleButtonClick}

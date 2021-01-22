@@ -1,7 +1,6 @@
 import React from "react";
 import Button from "@material-ui/core/Button";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
-import SaveIcon from "@material-ui/icons/Save";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
 const useStyles = makeStyles((theme) =>
@@ -19,17 +18,14 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-function ButtonProgress({ loading, handleButtonClick, name }) {
+function ButtonProgress({ loading, handleButtonClick, name, ...rest }) {
   const classes = useStyles();
   return (
     <div className={classes.wrapper}>
       <Button
-        variant="contained"
-        color="primary"
-        size="medium"
+        {...rest}
         disabled={loading}
         onClick={handleButtonClick}
-        startIcon={<SaveIcon />}
       >
         {name}
       </Button>

@@ -60,6 +60,7 @@ function Profile() {
       <Paper elevation={4} component={Container} maxWidth="xl">
         <div className={classes.root}>
           <AppBar
+            elevation="8"
             variant="elevation"
             color="default"
             className={classes.appbar}
