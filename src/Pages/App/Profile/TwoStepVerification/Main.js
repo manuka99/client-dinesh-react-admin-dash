@@ -4,6 +4,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import EnableComponent from "./EnableComponents/EnableComponent";
 import DisableComponent from "./DisableComponent";
 import api from "./../../../../util/api";
+export const TwoFactorStateContext = React.createContext();
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -21,8 +22,10 @@ function Main() {
   const classes = useStyles();
   const [isEnabled, setIsEnabled] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [twoFactorStatusChanged, setTwoFactorStatusChanged] = useState(false);
 
   useEffect(() => {
+    setLoading(true);
     api()
       .get("/user")
       .then((res) => {
@@ -33,23 +36,29 @@ function Main() {
       .finally(() => {
         setLoading(false);
       });
-  }, []);
+  }, [twoFactorStatusChanged]);
+
+  const update2faStatus = () => {
+    setTwoFactorStatusChanged(!twoFactorStatusChanged);
+  };
 
   return (
     <div className={classes.root}>
-      {loading ? (
-        <div className={classes.loaderWrapper}>
-          <CircularProgress
-            className={classes.loader}
-            size="50px"
-            disableShrink
-          />
-        </div>
-      ) : isEnabled ? (
-        <DisableComponent />
-      ) : (
-        <EnableComponent />
-      )}
+      <TwoFactorStateContext.Provider value={{ dispatch: update2faStatus }}>
+        {loading ? (
+          <div className={classes.loaderWrapper}>
+            <CircularProgress
+              className={classes.loader}
+              size="50px"
+              disableShrink
+            />
+          </div>
+        ) : isEnabled ? (
+          <DisableComponent />
+        ) : (
+          <EnableComponent />
+        )}
+      </TwoFactorStateContext.Provider>
     </div>
   );
 }

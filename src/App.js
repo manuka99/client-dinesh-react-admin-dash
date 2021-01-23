@@ -8,8 +8,6 @@ import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { AllRoutes } from "./Routes/Routes";
 import Loading from "./Pages/Loading/Loading";
 import { get_app_theme, set_app_theme } from "./util/themeService";
-import DefaultTheme from "./assets/Theme/DefaultTheme";
-import DarkTheme from "./assets/Theme/DarkTheme";
 
 function App(props) {
   const navigate = useNavigate();

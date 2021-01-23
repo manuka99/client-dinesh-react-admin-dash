@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
@@ -7,6 +7,8 @@ import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { useNavigate, usePrompt } from "react-router-dom";
 import RecoveryCodes from "../RecoveryCodesComponent/RecoveryCodes";
 import api from "../../../../../util/api";
+import { TwoFactorStateContext } from "../Main";
+import swal from "sweetalert";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -23,6 +25,7 @@ const useStyles = makeStyles((theme) => ({
 function EnableSuccess() {
   const [recoveryCodes, setRecoveryCodes] = useState([]);
   const [qrCode, setQrCode] = useState("");
+  const twoFactorStateContext = useContext(TwoFactorStateContext);
   const classes = useStyles();
 
   useEffect(() => {
@@ -37,7 +40,22 @@ function EnableSuccess() {
   );
 
   const promptBeforeExit = () => {
-    navigate("/app/profile");
+    swal({
+      title: "Are you sure?",
+      text:
+        "Have you downloaded or copied your recovery codes and scan the Qr code, these credential are required at your next sign in.",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    }).then((willDelete) => {
+      if (willDelete) {
+        twoFactorStateContext.dispatch();
+      } else {
+        swal(
+          "Download, print, or copy your recovery codes and scan the Qr code before continuing two-factor authentication."
+        );
+      }
+    });
   };
 
   const fetchQrCode = () => {

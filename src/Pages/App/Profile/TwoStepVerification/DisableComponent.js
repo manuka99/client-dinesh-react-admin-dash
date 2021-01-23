@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import CardActions from "@material-ui/core/CardActions";
@@ -9,6 +9,10 @@ import Typography from "@material-ui/core/Typography";
 import ButtonProgress from "../../../../components/common/ButtonProgress/ButtonProgress";
 import { Grid } from "@material-ui/core";
 import RecoveryCodes from "./RecoveryCodesComponent/RecoveryCodes";
+import api from "../../../../util/api";
+import swal from "sweetalert";
+import ConfirmPassword from "../../../../components/ConfirmPassword/ConfirmPassword";
+import { TwoFactorStateContext } from "./Main";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,21 +26,70 @@ const useStyles = makeStyles((theme) => ({
 
 function DisableComponent() {
   const classes = useStyles();
-
+  const [isConfirming, setIsConfirming] = useState(false);
   const [rCodesLoading, setRCodesLoading] = useState(false);
   const [disable2faLoading, setDisable2faLoading] = useState(false);
-  const [recoveryCodes, setRecoveryCodes] = useState(["24323"]);
+  const [recoveryCodes, setRecoveryCodes] = useState([]);
+  const twoFactorStateContext = useContext(TwoFactorStateContext);
 
   const handleDisable2fa = () => {
     setDisable2faLoading(true);
+    api()
+      .delete("/user/two-factor-authentication")
+      .then((res) => {
+        twoFactorStateContext.dispatch();
+      })
+      .catch((error) => {
+        if (error.response) {
+          if (error.response.status === 423) setIsConfirming(true);
+        } else swal(error.message);
+      })
+      .finally(() => {
+        setDisable2faLoading(false);
+      });
+  };
+
+  const handleUpdateRecoveryCodes = () => {
+    setRCodesLoading(true);
+    api()
+      .post("/user/two-factor-recovery-codes")
+      .then((res) => {
+        handleGetRecoveryCodes();
+      })
+      .catch((error) => {
+        setRCodesLoading(false);
+        if (error.response) {
+          if (error.response.status === 423) setIsConfirming(true);
+        } else swal(error.message);
+      });
   };
 
   const handleGetRecoveryCodes = () => {
-    setRCodesLoading(true);
+    api()
+      .get("/user/two-factor-recovery-codes")
+      .then((res) => {
+        setRecoveryCodes(res.data);
+      })
+      .catch((error) => {
+        if (error.response) {
+          if (error.response.status === 423) setIsConfirming(true);
+        } else swal(error.message);
+      })
+      .finally(() => {
+        setRCodesLoading(false);
+      });
+  };
+
+  const handlePasswordConfirmation = () => {
+    setIsConfirming(false);
+    handleUpdateRecoveryCodes();
   };
 
   return (
     <div className={classes.root}>
+      {isConfirming && (
+        <ConfirmPassword handlePasswordConfirm={handlePasswordConfirmation} />
+      )}
       <CardActionArea>
         <CardMedia
           className={classes.image}
@@ -73,8 +126,6 @@ function DisableComponent() {
         {recoveryCodes.length > 0 && (
           <RecoveryCodes recoveryCodes={recoveryCodes} />
         )}
-
-        <br />
         <br />
         <Grid container spacing={2}>
           <Grid item xs={4.4}>
@@ -85,7 +136,7 @@ function DisableComponent() {
               name="Refresh recovery codes"
               spinColor="primary"
               loading={rCodesLoading}
-              handleButtonClick={handleGetRecoveryCodes}
+              handleButtonClick={handleUpdateRecoveryCodes}
             />
           </Grid>
           <Grid item xs={7.6}>

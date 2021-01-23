@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
@@ -16,7 +16,7 @@ import Error from "../../components/alerts/Error";
 import { LogIn as loginAuth } from "../../util/auth";
 import ButtonProgress from "../../components/common/ButtonProgress/ButtonProgress";
 import LockIcon from "@material-ui/icons/Lock";
-import { useNavigate } from "react-router-dom";
+import { Button, Paper } from "@material-ui/core";
 
 function Copyright() {
   return (
@@ -24,7 +24,7 @@ function Copyright() {
       {"Copyright © "}
       <Link color="inherit" href="https://material-ui.com/">
         {"Pizza Apes "}
-      </Link> 
+      </Link>
       {new Date().getFullYear()}
     </Typography>
   );
@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
   },
   avatar: {
-    margin: theme.spacing(1),
+    margin: theme.spacing(2),
     backgroundColor: theme.palette.secondary.main,
   },
   form: {
@@ -50,50 +50,23 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Login() {
+function TwoFactorChallenge() {
   const [errors, setErrors] = React.useState({});
   const [loading, setLoading] = useState(false);
-
-  const [userLogin, setUserLogin] = React.useState({
-    email: null,
-    password: null,
-    remember: false,
-  });
-
+  const [data, setData] = useState({});
+  const [isTOTP, setIsTOTP] = useState(false);
   const classes = useStyles();
-  let navigate = useNavigate();
+  const codeRef = useRef("");
 
-  const handleForm = (event) => {
-    setUserLogin({
-      ...userLogin,
-      [event.target.name]: event.target.value,
-    });
-    setErrors({ ...errors, [event.target.name]: null });
-  };
-
-  const handleCheck = (event) => {
-    setUserLogin({
-      ...userLogin,
-      [event.target.name]: event.target.checked,
-    });
-  };
-
-  const submitForm = (event) => {
-    setErrors({});
+  const submitCode = (event) => {
     event.preventDefault();
     setLoading(true);
     api()
-      .post("/login", userLogin)
+      .post("/two-factor-challenge", data)
       .then((res) => {
-        setLoading(false);
-        if (res.status === 200) {
-          if (res.data.two_factor) {
-            navigate("/two-factor-challenge");
-          } else loginAuth();
-        }
+        loginAuth();
       })
       .catch((error) => {
-        setLoading(false);
         if (error.response) {
           let status = error.response.status;
           let data = error.response.data;
@@ -106,7 +79,26 @@ export default function Login() {
             });
           }
         }
+      })
+      .finally(() => {
+        setLoading(false);
       });
+  };
+
+  const handleForm = (event) => {
+    setData({
+      [event.target.name]: event.target.value,
+      email: "manukayasas99@gmail.com",
+      password: "password",
+    });
+    setErrors({ ...errors, [event.target.name]: null });
+  };
+
+  const switchModes = () => {
+    setIsTOTP(!isTOTP);
+    console.log(codeRef);
+    codeRef.current.value = "";
+    setErrors({});
   };
 
   return (
@@ -116,47 +108,42 @@ export default function Login() {
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
         </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign in
+        <Typography variant="h6" gutterBottom>
+          Two Factor Authentication Challenge
+        </Typography>
+        <Typography variant="body2" gutterBottom>
+          Two factor authentication feature is enabled, therefore the user is
+          required to input a six digit numeric token during the authentication
+          process. This token is generated using a time-based one-time password
+          (TOTP) that can be retrieved from any TOTP compatible mobile
+          authentication application such as Google Authenticator.
+        </Typography>
+        <br />
+        <Paper elevation={8}>
+          <img
+            width="340px"
+            src="/images/what-is-two-factor-authentication.gif"
+          />
+        </Paper>
+        <br />
+        <Typography variant="subtitle2" color="textSecondary">
+          {isTOTP
+            ? " *Enter the TOTP code recieved on your mobile authentication application"
+            : "* Enter any of the Recovery codes recieved when setting up two factor authentication."}
         </Typography>
         {errors.message && <Error message={errors.message} />}
-        <form className={classes.form} onSubmit={submitForm}>
+        <form className={classes.form} onSubmit={submitCode}>
           <TextField
-            error={errors.email}
+            inputRef={codeRef}
+            error={isTOTP ? errors.code : errors.recovery_code}
             variant="outlined"
             margin="normal"
             fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
+            label={isTOTP ? "TOTP token" : "Recovery code"}
+            name={isTOTP ? "code" : "recovery_code"}
             autoFocus
             onChange={handleForm}
-            helperText={errors.email && errors.email}
-          />
-          <TextField
-            error={errors.password}
-            variant="outlined"
-            margin="normal"
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-            onChange={handleForm}
-            helperText={errors.password && errors.password}
-          />
-          <FormControlLabel
-            control={
-              <Checkbox
-                value="true"
-                name="remember"
-                color="primary"
-                onChange={handleCheck}
-              />
-            }
-            label="Remember me"
+            helperText={isTOTP ? errors.code : errors.recovery_code}
           />
           <Box mt={1} mb={2}>
             <ButtonProgress
@@ -164,7 +151,7 @@ export default function Login() {
               fullWidth
               variant="contained"
               color="primary"
-              name="Sign In"
+              name="Verify code"
               loading={loading}
               startIcon={<LockIcon />}
             />
@@ -172,14 +159,14 @@ export default function Login() {
 
           <Grid container>
             <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
-            </Grid>
-            <Grid item>
-              <Link href="#" variant="body2">
-                {"Login as a customer?"}
-              </Link>
+              <Button
+                color="primary"
+                size="small"
+                variant="text"
+                onClick={switchModes}
+              >
+                {isTOTP ? "No access for mobile?" : "Enter TOTP code"}
+              </Button>
             </Grid>
           </Grid>
           <Box mt={5}>
@@ -190,3 +177,5 @@ export default function Login() {
     </Container>
   );
 }
+
+export default TwoFactorChallenge;
