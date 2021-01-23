@@ -40,7 +40,7 @@ function EnableComponent() {
             <CardContent>
               <Typography gutterBottom variant="h6">
                 Two factor authentication is
-                <span style={{ color: "#FF6633" }}> disabled.</span>
+                <span style={{ color: "#FF6633" }}> not enabled.</span>
               </Typography>
               <Typography variant="body2" color="textSecondary">
                 Use your phone as your second step to sign in. Two-factor

@@ -14,6 +14,7 @@ import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
 import BlockIcon from "@material-ui/icons/Block";
+import api from "../../util/api";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -67,13 +68,25 @@ function ConfirmPassword({ handlePasswordConfirm }) {
   const [userData, setUserData] = useState({
     email: currentUser.user_data.user.email,
   });
-  const [errors, setErrors] = useState([]);
+  const [errors, setErrors] = useState({});
 
   const classes = useStyles();
 
-  const submitConfirmPassword = () => {
+  const submitConfirmPassword = (e) => {
+    e.preventDefault();
     setConfirmLoading(true);
-    handlePasswordConfirm();
+    api()
+      .post("/user/confirm-password", userData)
+      .then((res) => {
+        if (res.status === 201) handlePasswordConfirm();
+      })
+      .catch((err) => {
+        if (err.response.status === 422)
+          setErrors({ ...err.response.data.errors });
+      })
+      .finally(() => {
+        setConfirmLoading(false);
+      });
   };
 
   const cancelVerification = () => {
@@ -82,6 +95,7 @@ function ConfirmPassword({ handlePasswordConfirm }) {
   };
 
   const handleFormChange = (e) => {
+    setErrors({});
     setUserData({ ...userData, [e.target.name]: e.target.value });
   };
 
@@ -119,60 +133,63 @@ function ConfirmPassword({ handlePasswordConfirm }) {
               You are trying to access a password protected content therefore
               user must validate their credentials befour proceeding.
             </Typography>
-            <Grid className={classes.forms} container spacing={3}>
-              <Grid item xs={12}>
-                <TextField
-                  name="email"
-                  type="email"
-                  label="Email"
-                  variant="outlined"
-                  fullWidth
-                  required
-                  defaultValue={currentUser.user_data.user.email}
-                  onChange={handleFormChange}
-                />
+            <form onSubmit={submitConfirmPassword}>
+              <Grid className={classes.forms} container spacing={3}>
+                <Grid item xs={12}>
+                  <TextField
+                    name="email"
+                    type="email"
+                    label="Email"
+                    variant="outlined"
+                    fullWidth
+                    required
+                    disabled
+                    defaultValue={currentUser.user_data.user.email}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    error={errors.password}
+                    type="password"
+                    name="password"
+                    label="Password"
+                    variant="outlined"
+                    fullWidth
+                    required
+                    autoFocus
+                    helperText={errors.password}
+                    onChange={handleFormChange}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <ButtonProgress
+                    type="submit"
+                    size="medium"
+                    color="primary"
+                    name="Verify password"
+                    variant="outlined"
+                    loading={confirmLoading}
+                    startIcon={<LockOpenIcon />}
+                    spinColor="primary"
+                    fullWidth
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Button
+                    size="medium"
+                    color="secondary"
+                    variant="outlined"
+                    loading={confirmLoading}
+                    handleButtonClick={cancelVerification}
+                    startIcon={<BlockIcon />}
+                    onClick={cancelVerification}
+                    fullWidth
+                  >
+                    Cancel verification
+                  </Button>
+                </Grid>
               </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  type="password"
-                  name="password"
-                  label="Password"
-                  variant="outlined"
-                  fullWidth
-                  required
-                  autoFocus
-                  helperText=""
-                  onChange={handleFormChange}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <ButtonProgress
-                  size="medium"
-                  color="primary"
-                  name="Verify password"
-                  variant="outlined"
-                  loading={confirmLoading}
-                  handleButtonClick={submitConfirmPassword}
-                  startIcon={<LockOpenIcon />}
-                  spinColor="primary"
-                  fullWidth
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <Button
-                  size="medium"
-                  color="secondary"
-                  variant="outlined"
-                  loading={confirmLoading}
-                  handleButtonClick={cancelVerification}
-                  startIcon={<BlockIcon />}
-                  onClick={cancelVerification}
-                  fullWidth
-                >
-                  Cancel verification
-                </Button>
-              </Grid>
-            </Grid>
+            </form>
           </CardContent>
         </Card>
       </Fade>

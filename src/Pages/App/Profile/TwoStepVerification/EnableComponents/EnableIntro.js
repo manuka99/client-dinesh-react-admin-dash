@@ -12,6 +12,7 @@ import ButtonProgress from "../../../../../components/common/ButtonProgress/Butt
 import EnableSuccess from "./EnableSuccess";
 import ConfirmPassword from "../../../../../components/ConfirmPassword/ConfirmPassword";
 import Error from "../../../../../components/alerts/Error";
+import api from "../../../../../util/api";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -31,48 +32,49 @@ const useStyles = makeStyles((theme) => ({
 function EnableIntro() {
   const classes = useStyles();
   const [btnLoader, setBtnLoader] = useState(false);
-  const [isEnableSuccess, setIsEnableSuccess] = useState(false);
-  const [recoveryCodes, setRecoveryCodes] = useState([
-    "9d850-1b911",
-    "9d850-1b911",
-    "9d850-1b911",
-    "9d850-1b911",
-    "9d850-1b911",
-    "9d850-1b911",
-    "9d850-1b911",
-  ]);
-  const [qrCode, setQrCode] = useState(null);
   const [isConfirming, setIsConfirming] = useState(false);
   const [errors, setErrors] = useState([]);
+  const [isEnableSuccess, setIsEnableSuccess] = useState(false);
 
   const enable_2fa = () => {
-    if (!btnLoader) {
-      setBtnLoader(true);
-      window.setTimeout(() => {
+    setBtnLoader(true);
+    api()
+      .post("/user/two-factor-authentication")
+      .then((res) => {
+        if (res.status === 200 || res.status === 204) {
+          setIsEnableSuccess(true);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        if (err.response) {
+          if (err.response.status === 423) {
+            setErrors([...errors, err.response.data]);
+            setIsConfirming(true);
+          }
+        }
+      })
+      .finally(() => {
         setBtnLoader(false);
-        setIsEnableSuccess(true);
-        // setIsConfirming(true);
-      }, 2000);
-    }
+      });
   };
 
   const handlePasswordConfirm = (status = true) => {
     if (status) {
-      setIsConfirming(false);
       enable_2fa();
     } else {
-      setIsConfirming(false);
       setErrors([
         ...errors,
         { message: "Password verification cancelled with error code 419" },
       ]);
     }
+    setIsConfirming(false);
   };
 
   return (
     <div className={classes.root}>
       {isEnableSuccess ? (
-        <EnableSuccess recoveryCodes={recoveryCodes} />
+        <EnableSuccess />
       ) : (
         <React.Fragment>
           {isConfirming && (

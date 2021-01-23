@@ -1,23 +1,35 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
-import { Box, Grid } from "@material-ui/core";
-import swal from "sweetalert";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { useNavigate, usePrompt } from "react-router-dom";
 import RecoveryCodes from "../RecoveryCodesComponent/RecoveryCodes";
+import api from "../../../../../util/api";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
   },
+  qrCode: {
+    // display: "flex",
+    // alignItems: "center",
+    // justifyContent: "center",
+    margin: "20px 0",
+  },
 }));
 
-function EnableSuccess({ recoveryCodes }) {
+function EnableSuccess() {
+  const [recoveryCodes, setRecoveryCodes] = useState([]);
+  const [qrCode, setQrCode] = useState("");
   const classes = useStyles();
+
+  useEffect(() => {
+    fetchQrCode();
+    fetchRecoveryCodes();
+  }, []);
+
   let navigate = useNavigate();
   usePrompt(
     "Have you downloaded or copied your recovery codes and scan the Qr code ? these credential are required at your next sign in.",
@@ -26,6 +38,30 @@ function EnableSuccess({ recoveryCodes }) {
 
   const promptBeforeExit = () => {
     navigate("/app/profile");
+  };
+
+  const fetchQrCode = () => {
+    api()
+      .get("/user/two-factor-qr-code")
+      .then((res) => {
+        setQrCode(res.data.svg);
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const fetchRecoveryCodes = () => {
+    api()
+      .get("/user/two-factor-recovery-codes")
+      .then((res) => {
+        setRecoveryCodes(res.data);
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
@@ -57,6 +93,9 @@ function EnableSuccess({ recoveryCodes }) {
         <Typography variant="h6" gutterBottom>
           2. Scan this barcode using your mobile.
         </Typography>
+        <div className={classes.qrCode}>
+          {qrCode && <span dangerouslySetInnerHTML={{ __html: qrCode }} />}
+        </div>
         <Typography variant="body2">
           Scan the image above with the two-factor authentication app on your
           phone.After scanning the barcode image, the app will display a

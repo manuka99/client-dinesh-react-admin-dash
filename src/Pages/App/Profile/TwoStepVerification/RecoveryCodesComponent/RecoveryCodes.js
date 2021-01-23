@@ -16,16 +16,11 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     objectFit: "contain",
   },
-  rCodes: {
-    display: "flex",
-    alignItems: "center",
-    flexWrap: "wrap",
-  },
   rCode: {
-    flexBasis: "33.33333%",
-    fontSize: "18px",
+    fontSize: "16px",
     fontWeight: "bold",
     cursor: "text",
+    whiteSpace: "nowrap",
   },
 }));
 
@@ -41,22 +36,6 @@ function RecoveryCodes({ recoveryCodes }) {
     element.download = "pizza-apes-recovery-codes.txt";
     document.body.appendChild(element); // Required for this to work in FireFox
     element.click();
-  };
-
-  const printHtml = () => {
-    return (
-      <div id="print_codes">
-        <Grid container spacing={2}>
-          {recoveryCodes.map((code) => {
-            return (
-              <Grid item xs={12} sm={4} md={3}>
-                <li className={classes.rCode}>{code}</li>
-              </Grid>
-            );
-          })}
-        </Grid>
-      </div>
-    );
   };
 
   const printCodes = () => {};
@@ -91,15 +70,17 @@ function RecoveryCodes({ recoveryCodes }) {
             two-factor authentication setup below.
           </Typography>
         </Box>
-        <Grid container spacing={3}>
-          {recoveryCodes.map((code) => {
-            return (
-              <Grid item xs={12} sm={4} md={3}>
-                <li className={classes.rCode}>{code}</li>
-              </Grid>
-            );
-          })}
-        </Grid>
+        <Box mt={2} mb={1}>
+          <Grid container spacing={3}>
+            {recoveryCodes.map((code) => {
+              return (
+                <Grid item xs={12} sm={6} lg={4}>
+                  <li className={classes.rCode}>{code}</li>
+                </Grid>
+              );
+            })}
+          </Grid>
+        </Box>
         <input
           id="recovery_codes_id"
           type="text"
