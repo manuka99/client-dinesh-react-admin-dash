@@ -9,6 +9,11 @@ const useStyles = makeStyles((theme) =>
       position: "relative",
       display: "inline-block",
     },
+    wrapperFullWidth: {
+      position: "relative",
+      display: "block",
+      width: "100%",
+    },
     buttonProgress: {
       // color: theme.palette.primary.main,
       position: "absolute",
@@ -18,10 +23,18 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-function ButtonProgress({ loading, handleButtonClick, name, spinColor, ...rest }) {
+function ButtonProgress({
+  loading,
+  handleButtonClick,
+  name,
+  spinColor,
+  ...rest
+}) {
   const classes = useStyles();
   return (
-    <div className={classes.wrapper}>
+    <div
+      className={rest.fullWidth ? classes.wrapperFullWidth : classes.wrapper}
+    >
       <Button {...rest} disabled={loading} onClick={handleButtonClick}>
         {name}
       </Button>

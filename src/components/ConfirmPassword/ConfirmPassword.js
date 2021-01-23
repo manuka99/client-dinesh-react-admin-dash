@@ -155,6 +155,7 @@ function ConfirmPassword({ handlePasswordConfirm }) {
                   handleButtonClick={submitConfirmPassword}
                   startIcon={<LockOpenIcon />}
                   spinColor="primary"
+                  fullWidth
                 />
               </Grid>
               <Grid item xs={12}>
@@ -166,6 +167,7 @@ function ConfirmPassword({ handlePasswordConfirm }) {
                   handleButtonClick={cancelVerification}
                   startIcon={<BlockIcon />}
                   onClick={cancelVerification}
+                  fullWidth
                 >
                   Cancel verification
                 </Button>

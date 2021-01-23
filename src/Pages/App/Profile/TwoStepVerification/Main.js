@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
 
 function Main() {
   const classes = useStyles();
-  const [isEnabled, setIsEnabled] = useState(false);
+  const [isEnabled, setIsEnabled] = useState(true);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -36,7 +36,7 @@ function Main() {
             size="50px"
             disableShrink
           />
-          ;
+           
         </div>
       ) : isEnabled ? (
         <DisableComponent />

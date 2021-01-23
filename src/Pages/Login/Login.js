@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -14,8 +14,9 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import api from "../../util/api";
 import Error from "../../components/alerts/Error";
-import { LogIn as loginAuth, isLoggedIn } from "../../util/auth";
-import { Navigate } from "react-router-dom";
+import { LogIn as loginAuth } from "../../util/auth";
+import ButtonProgress from "../../components/common/ButtonProgress/ButtonProgress";
+import LockIcon from "@material-ui/icons/Lock";
 
 function Copyright() {
   return (
@@ -23,9 +24,8 @@ function Copyright() {
       {"Copyright © "}
       <Link color="inherit" href="https://material-ui.com/">
         Your Website
-      </Link>{" "}
+      </Link>
       {new Date().getFullYear()}
-      {"."}
     </Typography>
   );
 }
@@ -51,11 +51,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Login() {
-  const { userAuth } = isLoggedIn();
-
   const classes = useStyles();
 
   const [errors, setErrors] = React.useState({});
+  const [loading, setLoading] = useState(false);
 
   const [userLogin, setUserLogin] = React.useState({
     email: null,
@@ -81,15 +80,17 @@ export default function Login() {
   const submitForm = (event) => {
     setErrors({});
     event.preventDefault();
+    setLoading(true);
     api()
       .post("/login", userLogin)
       .then((res) => {
-        console.log(res);
+        setLoading(false);
         if (res.status === 200) {
           loginAuth();
         }
       })
       .catch((error) => {
+        setLoading(false);
         if (error.response) {
           let status = error.response.status;
           let data = error.response.data;
@@ -154,15 +155,18 @@ export default function Login() {
             }
             label="Remember me"
           />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-          >
-            Sign In
-          </Button>
+          <Box mt={1} mb={2}>
+            <ButtonProgress
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              name="Sign In"
+              loading={loading}
+              startIcon={<LockIcon />}
+            />
+          </Box>
+
           <Grid container>
             <Grid item xs>
               <Link href="#" variant="body2">

@@ -50,8 +50,8 @@ function EnableIntro() {
       setBtnLoader(true);
       window.setTimeout(() => {
         setBtnLoader(false);
-        // setIsEnableSuccess(true);
-        setIsConfirming(true);
+        setIsEnableSuccess(true);
+        // setIsConfirming(true);
       }, 2000);
     }
   };

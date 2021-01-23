@@ -8,25 +8,11 @@ import { Box, Grid } from "@material-ui/core";
 import swal from "sweetalert";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { useNavigate, usePrompt } from "react-router-dom";
+import RecoveryCodes from "../RecoveryCodesComponent/RecoveryCodes";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
-  },
-  image: {
-    width: "100%",
-    objectFit: "contain",
-  },
-  rCodes: {
-    display: "flex",
-    alignItems: "center",
-    flexWrap: "wrap",
-  },
-  rCode: {
-    flexBasis: "33.33333%",
-    fontSize: "18px",
-    fontWeight: "bold",
-    cursor: "text",
   },
 }));
 
@@ -38,81 +24,9 @@ function EnableSuccess({ recoveryCodes }) {
     true
   );
 
-  const downloadTxtFile = () => {
-    const element = document.createElement("a");
-    const file = new Blob([recoveryCodes.join("\n")], {
-      type: "text/plain",
-    });
-    element.href = URL.createObjectURL(file);
-    element.download = "pizza-apes-recovery-codes.txt";
-    document.body.appendChild(element); // Required for this to work in FireFox
-    element.click();
-  };
-
-  const printHtml = () => {
-    return (
-      <div id="print_codes">
-        <Grid container spacing={2}>
-          {recoveryCodes.map((code) => {
-            return (
-              <Grid item xs={12} sm={4} md={3}>
-                <li className={classes.rCode}>{code}</li>
-              </Grid>
-            );
-          })}
-        </Grid>
-      </div>
-    );
-  };
-
-  const printCodes = () => {};
-
-  const copyToClipBoard = () => {
-    var cb = document.getElementById("recovery_codes_id");
-    cb.value = recoveryCodes.join("\n");
-    cb.style.display = "block";
-    cb.select();
-    document.execCommand("copy");
-    cb.style.display = "none";
-    swal(
-      "Copied succesfully!",
-      "Recovery codes have been copied successfully. Treat your recovery codes with the same level of attention as you would your password.",
-      "success"
-    );
-  };
-
   const promptBeforeExit = () => {
-    // swal({
-    //   title: "Are you sure?",
-    //   text:
-    //     "Have you downloaded or copied your recovery codes and scan the Qr code, these credential are required at your next sign in.",
-    //   icon: "warning",
-    //   buttons: true,
-    //   dangerMode: true,
-    // }).then((willDelete) => {
-    //   if (willDelete) {
     navigate("/app/profile");
-    //   } else {
-    //     swal(
-    //       "Download, print, or copy your recovery codes and scan the Qr code before continuing two-factor authentication."
-    //     );
-    //   }
-    // });
   };
-
-  // // before window close
-  // window.onbeforeunload = function () {
-  //   promptBeforeExit();
-  //   return false;
-  // };
-  // window.addEventListener(
-  //   "beforeunload",
-  //   function (e) {
-  //     promptBeforeExit();
-  //     return false;
-  //   },
-  //   false
-  // );
 
   return (
     <div className={classes.root}>
@@ -137,71 +51,8 @@ function EnableSuccess({ recoveryCodes }) {
             Authentication at any moment by confirming your password.
           </strong>
         </Typography>
-        <br />
-        <Typography variant="h6" gutterBottom>
-          1. Save these recovery codes.
-        </Typography>
-        <Typography variant="body2">
-          Recovery codes are used to access your account in the event you cannot
-          receive two-factor authentication codes.
-        </Typography>
-        <Box p={2} mt={2} mb={3} bgcolor="warning.light" color="white">
-          <Typography variant="body2">
-            Download, print, or copy your recovery codes before continuing
-            two-factor authentication setup below.
-          </Typography>
-        </Box>
-        <Grid container spacing={2}>
-          {recoveryCodes.map((code) => {
-            return (
-              <Grid item xs={12} sm={4} md={3}>
-                <li className={classes.rCode}>{code}</li>
-              </Grid>
-            );
-          })}
-        </Grid>
-        <input
-          id="recovery_codes_id"
-          type="text"
-          hidden
-          style={{ display: "none" }}
-        />
-        <br />
-        <Typography variant="subtitle2" color="error">
-          Treat your recovery codes with the same level of attention as you
-          would your password! We recommend saving them with a password manager
-          such as Lastpass, 1Password, or Keeper.
-        </Typography>
+        <RecoveryCodes recoveryCodes={recoveryCodes} />
       </CardContent>
-
-      <CardActions>
-        <Button
-          size="small"
-          variant="outlined"
-          color="primary"
-          onClick={downloadTxtFile}
-          F
-        >
-          Download
-        </Button>
-        <Button
-          size="small"
-          variant="outlined"
-          color="primary"
-          onclick={printCodes}
-        >
-          Print
-        </Button>
-        <Button
-          size="small"
-          variant="outlined"
-          color="primary"
-          onClick={copyToClipBoard}
-        >
-          Copy
-        </Button>
-      </CardActions>
-      <br />
       <CardContent>
         <Typography variant="h6" gutterBottom>
           2. Scan this barcode using your mobile.
