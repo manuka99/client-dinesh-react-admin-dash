@@ -17,8 +17,7 @@ export default function api(nonApi = false) {
         if (error.response.status === 401) {
           LogOut();
           // return Promise.reject({ status: 401, errors: ["Unauthorized"] });
-        }
-        if (error.response.status === 403) {
+        } else if (error.response.status === 403) {
           store.dispatch(
             set_error_data({
               title:
@@ -36,9 +35,8 @@ export default function api(nonApi = false) {
           //     errorsRaw: errors,
           //     errors: errors.reduce((error) => error),
           //   });
-        }
-      }
-      return Promise.reject(error);
+        } else return Promise.reject(error);
+      } else return Promise.reject(error);
     }
   );
 

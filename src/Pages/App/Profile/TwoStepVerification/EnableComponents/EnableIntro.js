@@ -11,6 +11,7 @@ import LockOpenIcon from "@material-ui/icons/LockOpen";
 import ButtonProgress from "../../../../../components/common/ButtonProgress/ButtonProgress";
 import EnableSuccess from "./EnableSuccess";
 import ConfirmPassword from "../../../../../components/ConfirmPassword/ConfirmPassword";
+import Error from "../../../../../components/alerts/Error";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -42,31 +43,41 @@ function EnableIntro() {
   ]);
   const [qrCode, setQrCode] = useState(null);
   const [isConfirming, setIsConfirming] = useState(false);
+  const [errors, setErrors] = useState([]);
 
   const enable_2fa = () => {
     if (!btnLoader) {
       setBtnLoader(true);
       window.setTimeout(() => {
         setBtnLoader(false);
-        setIsEnableSuccess(true);
-        // setIsConfirming(true);
+        // setIsEnableSuccess(true);
+        setIsConfirming(true);
       }, 2000);
     }
   };
 
-  const handlePasswordConfirm = () => {
-    setIsConfirming(false);
-    enable_2fa();
+  const handlePasswordConfirm = (status = true) => {
+    if (status) {
+      setIsConfirming(false);
+      enable_2fa();
+    } else {
+      setIsConfirming(false);
+      setErrors([
+        ...errors,
+        { message: "Password verification cancelled with error code 419" },
+      ]);
+    }
   };
 
   return (
     <div className={classes.root}>
       {isEnableSuccess ? (
         <EnableSuccess recoveryCodes={recoveryCodes} />
-      ) : isConfirming ? (
-        <ConfirmPassword handlePasswordConfirm={handlePasswordConfirm} />
       ) : (
         <React.Fragment>
+          {isConfirming && (
+            <ConfirmPassword handlePasswordConfirm={handlePasswordConfirm} />
+          )}
           <Typography variant="body2" color="textSecondary">
             Two-factor authentication adds an extra layer of security to your
             account. In addition to your username and password, you’ll need to
@@ -134,10 +145,11 @@ function EnableIntro() {
               loading={btnLoader}
               handleButtonClick={enable_2fa}
               spinColor="secondary"
-            >
-              Continue
-            </ButtonProgress>
+            />
           </CardActions>
+          {errors.map((error, index) => {
+            return <Error key={index} message={error.message} />;
+          })}
         </React.Fragment>
       )}
     </div>

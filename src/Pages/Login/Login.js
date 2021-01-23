@@ -55,11 +55,11 @@ export default function Login() {
 
   const classes = useStyles();
 
-  const [errors, setErrors] = React.useState([]);
+  const [errors, setErrors] = React.useState({});
 
   const [userLogin, setUserLogin] = React.useState({
-    email: "",
-    password: "",
+    email: null,
+    password: null,
     remember: false,
   });
 
@@ -68,6 +68,7 @@ export default function Login() {
       ...userLogin,
       [event.target.name]: event.target.value,
     });
+    setErrors({ ...errors, [event.target.name]: null });
   };
 
   const handleCheck = (event) => {
@@ -78,25 +79,28 @@ export default function Login() {
   };
 
   const submitForm = (event) => {
-    console.log(userLogin);
+    setErrors({});
     event.preventDefault();
     api()
       .post("/login", userLogin)
       .then((res) => {
         console.log(res);
         if (res.status === 200) {
-          console.log(res);
           loginAuth();
         }
       })
       .catch((error) => {
-        if (error.status === 422) setErrors([...errors, error.errors]);
-        else {
-          //too many requests
-          setErrors([
-            ...errors,
-            "Request limit exceeded please try again shortly.",
-          ]);
+        if (error.response) {
+          let status = error.response.status;
+          let data = error.response.data;
+          if (status === 422) {
+            setErrors({ message: data.message, ...data.errors });
+            console.log(errors);
+          } else if (status === 429) {
+            setErrors({
+              message: "To many attemps therefore please try again shortly.",
+            });
+          }
         }
       });
   };
@@ -111,11 +115,10 @@ export default function Login() {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        {errors.map((error, index) => (
-          <Error key={index} message={error} />
-        ))}
+        {errors.message && <Error message={errors.message} />}
         <form className={classes.form} onSubmit={submitForm}>
           <TextField
+            error={errors.email}
             variant="outlined"
             margin="normal"
             fullWidth
@@ -125,8 +128,10 @@ export default function Login() {
             autoComplete="email"
             autoFocus
             onChange={handleForm}
+            helperText={errors.email && errors.email}
           />
           <TextField
+            error={errors.password}
             variant="outlined"
             margin="normal"
             fullWidth
@@ -136,6 +141,7 @@ export default function Login() {
             id="password"
             autoComplete="current-password"
             onChange={handleForm}
+            helperText={errors.password && errors.password}
           />
           <FormControlLabel
             control={
