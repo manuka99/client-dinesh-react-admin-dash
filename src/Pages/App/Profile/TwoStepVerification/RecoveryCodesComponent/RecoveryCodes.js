@@ -57,7 +57,7 @@ function RecoveryCodes({ recoveryCodes }) {
 
   return (
     <React.Fragment>
-      <Box mt={3} mb={1}>
+      <Box mt={3} mb={4}>
         <Typography variant="h6" gutterBottom>
           1. Save these recovery codes.
         </Typography>

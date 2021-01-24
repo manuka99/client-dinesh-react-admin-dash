@@ -9,7 +9,7 @@ import LockIcon from "@material-ui/icons/Lock";
 import ScreenLockPortraitIcon from "@material-ui/icons/ScreenLockPortrait";
 import LockOpenIcon from "@material-ui/icons/LockOpen";
 import ButtonProgress from "../../../../../components/common/ButtonProgress/ButtonProgress";
-import EnableSuccess from "./EnableSuccess";
+import EnableSteps from "./EnableSteps";
 import ConfirmPassword from "../../../../../components/ConfirmPassword/ConfirmPassword";
 import Error from "../../../../../components/alerts/Error";
 import api from "../../../../../util/api";
@@ -34,7 +34,7 @@ function EnableIntro() {
   const [btnLoader, setBtnLoader] = useState(false);
   const [isConfirming, setIsConfirming] = useState(false);
   const [errors, setErrors] = useState([]);
-  const [isEnableSuccess, setIsEnableSuccess] = useState(false);
+  const [isEnableSteps, setIsEnableSteps] = useState(false);
 
   const enable_2fa = () => {
     setBtnLoader(true);
@@ -42,7 +42,7 @@ function EnableIntro() {
       .post("/user/two-factor-authentication")
       .then((res) => {
         if (res.status === 200 || res.status === 204) {
-          setIsEnableSuccess(true);
+          setIsEnableSteps(true);
         }
       })
       .catch((err) => {
@@ -73,8 +73,8 @@ function EnableIntro() {
 
   return (
     <div className={classes.root}>
-      {isEnableSuccess ? (
-        <EnableSuccess />
+      {isEnableSteps ? (
+        <EnableSteps />
       ) : (
         <React.Fragment>
           {isConfirming && (
@@ -140,13 +140,13 @@ function EnableIntro() {
           <CardActions>
             <ButtonProgress
               size="medium"
-              variant="outlined"
-              color="secondary"
+              variant="contained"
+              color="primary"
               fullWidth
-              name="Enable two step verification"
+              name="set up two step verification"
               loading={btnLoader}
               handleButtonClick={enable_2fa}
-              spinColor="secondary"
+              spinColor="primary"
             />
           </CardActions>
           {errors.map((error, index) => {

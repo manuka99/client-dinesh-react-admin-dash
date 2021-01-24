@@ -133,6 +133,7 @@ function TwoFactorChallenge() {
         {errors.message && <Error message={errors.message} />}
         <form className={classes.form} onSubmit={submitCode}>
           <TextField
+            required
             inputRef={codeRef}
             error={isTOTP ? errors.code : errors.recovery_code}
             variant="outlined"
