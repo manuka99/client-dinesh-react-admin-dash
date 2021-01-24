@@ -4,7 +4,7 @@ import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
-import { useNavigate, usePrompt } from "react-router-dom";
+import { usePrompt } from "react-router-dom";
 import RecoveryCodes from "../RecoveryCodesComponent/RecoveryCodes";
 import api from "../../../../../util/api";
 import { TwoFactorStateContext } from "../Main";
@@ -33,7 +33,6 @@ function EnableSuccess() {
     fetchRecoveryCodes();
   }, []);
 
-  let navigate = useNavigate();
   usePrompt(
     "Have you downloaded or copied your recovery codes and scan the Qr code ? these credential are required at your next sign in.",
     true

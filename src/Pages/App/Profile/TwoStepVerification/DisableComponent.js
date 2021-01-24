@@ -1,7 +1,6 @@
 import React, { useState, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import CardActionArea from "@material-ui/core/CardActionArea";
-import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Button from "@material-ui/core/Button";
@@ -31,6 +30,7 @@ function DisableComponent() {
   const [disable2faLoading, setDisable2faLoading] = useState(false);
   const [recoveryCodes, setRecoveryCodes] = useState([]);
   const twoFactorStateContext = useContext(TwoFactorStateContext);
+  const [confirmRequiredAction, setConfirmRequiredAction] = useState("");
 
   const handleDisable2fa = () => {
     setDisable2faLoading(true);
@@ -41,7 +41,11 @@ function DisableComponent() {
       })
       .catch((error) => {
         if (error.response) {
-          if (error.response.status === 423) setIsConfirming(true);
+          if (error.response.status === 423) {
+            setIsConfirming(true);
+            setConfirmRequiredAction("disable2fa");
+            console.log(confirmRequiredAction);
+          }
         } else swal(error.message);
       })
       .finally(() => {
@@ -59,7 +63,10 @@ function DisableComponent() {
       .catch((error) => {
         setRCodesLoading(false);
         if (error.response) {
-          if (error.response.status === 423) setIsConfirming(true);
+          if (error.response.status === 423) {
+            setIsConfirming(true);
+            setConfirmRequiredAction("updateRecovery");
+          }
         } else swal(error.message);
       });
   };
@@ -82,7 +89,14 @@ function DisableComponent() {
 
   const handlePasswordConfirmation = () => {
     setIsConfirming(false);
-    handleUpdateRecoveryCodes();
+    console.log("sdds", confirmRequiredAction);
+    if (confirmRequiredAction === "updateRecovery") {
+      handleUpdateRecoveryCodes();
+    }
+    if (confirmRequiredAction === "disable2fa") {
+      handleDisable2fa();
+    }
+    setConfirmRequiredAction("");
   };
 
   return (

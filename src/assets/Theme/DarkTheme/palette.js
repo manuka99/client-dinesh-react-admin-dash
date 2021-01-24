@@ -1,7 +1,4 @@
-const white = "#FFFFFF";
-const black = "#000000";
-
-export default {
+const data = {
   type: "dark",
   primary: {
     main: "#0f0",
@@ -9,10 +6,6 @@ export default {
   },
   secondary: {
     main: "#ff0080",
-  },
-  background: {
-    default: "#2d2b2b",
-    paper: "#4a4848",
   },
   info: {
     main: "#2196f3",
@@ -31,3 +24,5 @@ export default {
     paper: "#24344d",
   },
 };
+
+export default data;

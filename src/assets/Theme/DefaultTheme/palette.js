@@ -1,4 +1,4 @@
-export default {
+const data = {
   primary: {
     main: "#006bfa",
     light: "#2f6cad",
@@ -17,3 +17,5 @@ export default {
     paper: "#ffffff",
   },
 };
+
+export default data;

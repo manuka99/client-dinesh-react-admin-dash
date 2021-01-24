@@ -1,6 +1,3 @@
-import react from "react";
-import Cookies from "js-cookie";
-import cookie from "cookie";
 import store from "../Redux/store";
 import { user_login, user_logout } from "../Redux";
 import api from "./api";
@@ -34,8 +31,8 @@ export function isLoggedIn(roles = null) {
 
 const roleValidated = (roles, user_data) => {
   let validated = false;
-  roles.map((role) => {
-    user_data.roles.map((user_role) => {
+  roles.forEach((role) => {
+    user_data.roles.forEach((user_role) => {
       if (role === user_role.name) {
         console.log(`Role: ${role}, ${user_role.name}`);
         validated = true;

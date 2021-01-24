@@ -2,7 +2,7 @@ import React from "react";
 import Typography from "@material-ui/core/Typography";
 import { Outlet, useLocation } from "react-router";
 import { NavLink } from "react-router-dom";
-import { makeStyles, Theme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Box from "@material-ui/core/Box";
@@ -70,7 +70,6 @@ function Profile() {
               variant="fullWidth"
               value={pathname}
               aria-label="profile tabs"
-              variant="fullWidth"
               TabIndicatorProps={{
                 style: { height: "4px" },
               }}

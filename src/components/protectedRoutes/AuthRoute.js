@@ -1,7 +1,5 @@
-import react from "react";
-import api from "../../util/api";
 import { Route, Navigate } from "react-router-dom";
-import { isLoggedIn, LogOut } from "../../util/auth";
+import { isLoggedIn } from "../../util/auth";
 
 function AuthRoute({ path, hasAnyRoles, ...rest }) {
   const { userAuth, userRoleValidated } = isLoggedIn(hasAnyRoles);

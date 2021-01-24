@@ -1,12 +1,9 @@
 import React from "react";
-import { withStyles, Theme, createStyles } from "@material-ui/core/styles";
-import { purple } from "@material-ui/core/colors";
+import { withStyles, createStyles } from "@material-ui/core/styles";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
-import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-import store from "../../Redux/store";
 import { connect } from "react-redux";
 import { set_app_theme } from "../../Redux";
 

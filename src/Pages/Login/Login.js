@@ -17,6 +17,7 @@ import { LogIn as loginAuth } from "../../util/auth";
 import ButtonProgress from "../../components/common/ButtonProgress/ButtonProgress";
 import LockIcon from "@material-ui/icons/Lock";
 import { useNavigate } from "react-router-dom";
+import { Button } from "@material-ui/core";
 
 function Copyright() {
   return (
@@ -39,7 +40,8 @@ const useStyles = makeStyles((theme) => ({
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
+    backgroundColor: theme.palette.neutral.reverse,
+    color: theme.palette.neutral.straight,
   },
   form: {
     width: "100%", // Fix IE 11 issue.
@@ -172,14 +174,14 @@ export default function Login() {
 
           <Grid container>
             <Grid item xs>
-              <Link href="#" variant="body2">
+              <Button variant="text" color="primary"  size="small" >
                 Forgot password?
-              </Link>
+              </Button>
             </Grid>
             <Grid item>
-              <Link href="#" variant="body2">
+              <Button variant="text" color="primary" size="small">
                 {"Login as a customer?"}
-              </Link>
+              </Button>
             </Grid>
           </Grid>
           <Box mt={5}>

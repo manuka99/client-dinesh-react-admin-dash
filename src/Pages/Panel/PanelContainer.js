@@ -3,7 +3,6 @@ import React, { useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import {
   CssBaseline,
-  Typography,
   MainDashStyles,
 } from "../../assets/StyleImports";
 import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";

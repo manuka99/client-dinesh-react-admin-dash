@@ -2,8 +2,6 @@ import React, { useRef, useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
 import Link from "@material-ui/core/Link";
 import Container from "@material-ui/core/Container";
 import Box from "@material-ui/core/Box";
@@ -39,7 +37,8 @@ const useStyles = makeStyles((theme) => ({
   },
   avatar: {
     margin: theme.spacing(2),
-    backgroundColor: theme.palette.secondary.main,
+    backgroundColor: theme.palette.neutral.reverse,
+    color: theme.palette.neutral.straight,
   },
   form: {
     width: "100%", // Fix IE 11 issue.
@@ -54,13 +53,14 @@ function TwoFactorChallenge() {
   const [errors, setErrors] = React.useState({});
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState({});
-  const [isTOTP, setIsTOTP] = useState(false);
+  const [isTOTP, setIsTOTP] = useState(true);
   const classes = useStyles();
   const codeRef = useRef("");
 
   const submitCode = (event) => {
     event.preventDefault();
     setLoading(true);
+    console.log(data);
     api()
       .post("/two-factor-challenge", data)
       .then((res) => {
@@ -88,8 +88,6 @@ function TwoFactorChallenge() {
   const handleForm = (event) => {
     setData({
       [event.target.name]: event.target.value,
-      email: "manukayasas99@gmail.com",
-      password: "password",
     });
     setErrors({ ...errors, [event.target.name]: null });
   };
@@ -122,6 +120,7 @@ function TwoFactorChallenge() {
         <Paper elevation={8}>
           <img
             width="340px"
+            alt="What is two factor authentication"
             src="/images/what-is-two-factor-authentication.gif"
           />
         </Paper>
@@ -160,7 +159,7 @@ function TwoFactorChallenge() {
           <Grid container>
             <Grid item xs>
               <Button
-                color="primary"
+                color="secondary"
                 size="small"
                 variant="text"
                 onClick={switchModes}

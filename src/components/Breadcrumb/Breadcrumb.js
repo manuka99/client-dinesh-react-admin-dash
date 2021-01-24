@@ -3,10 +3,9 @@ import Typography from "@material-ui/core/Typography";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Link from "@material-ui/core/Link";
 import { Box } from "@material-ui/core";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import HomeIcon from "@material-ui/icons/Home";
-import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
-import WhatshotIcon from "@material-ui/icons/Whatshot";
+import { makeStyles, createStyles } from "@material-ui/core/styles";
 import GrainIcon from "@material-ui/icons/Grain";
 
 const useStyles = makeStyles((theme) =>
@@ -29,7 +28,6 @@ const useStyles = makeStyles((theme) =>
 
 export function Breadcrumb() {
   const classes = useStyles();
-  let navigate = useNavigate();
   let location = useLocation();
   let currentRoutes = [];
 
@@ -98,7 +96,6 @@ export function Breadcrumb() {
           <Typography
             color="textPrimary"
             className={classes.textLink}
-            className={classes.link}
           >
             <GrainIcon className={classes.icon} />
             Panel

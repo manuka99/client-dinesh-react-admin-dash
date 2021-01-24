@@ -1,4 +1,4 @@
-export default {
+const data =  {
   fontWeightMedium: 600,
   fontWeightBold: 800,
   fontFamily: [
@@ -9,3 +9,5 @@ export default {
     "sans-serif",
   ].join(","),
 };
+
+export default data;

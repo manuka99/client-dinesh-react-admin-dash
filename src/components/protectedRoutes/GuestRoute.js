@@ -1,5 +1,3 @@
-import react from "react";
-import api from "../../util/api";
 import { Route, Navigate } from "react-router-dom";
 import { isLoggedIn} from "../../util/auth";
 
