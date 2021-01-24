@@ -29,8 +29,7 @@ function Main() {
     api()
       .get("/user")
       .then((res) => {
-        console.log(res);
-        setIsEnabled(res.data.user.two_factor_authentication_enabled);
+        setIsEnabled(res.data.user.is_two_factor_enabled);
       })
       .catch((e) => console.log(e))
       .finally(() => {
