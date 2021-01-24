@@ -29,10 +29,12 @@ function App(props) {
     props.fetch_user_data();
     if (props.login) navigate("/");
     if (props.logout) navigate("/login");
+    // eslint-disable-next-line
   }, [props.login, props.logout]);
 
   useEffect(() => {
     set_app_theme(APP_THEME_DATA);
+    // eslint-disable-next-line
   }, [props.theme]);
 
   return (

@@ -21,6 +21,7 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "bold",
     cursor: "text",
     whiteSpace: "nowrap",
+    listStylePosition: "inside",
   },
 }));
 

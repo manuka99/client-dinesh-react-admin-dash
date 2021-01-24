@@ -44,7 +44,6 @@ function DisableComponent() {
           if (error.response.status === 423) {
             setIsConfirming(true);
             setConfirmRequiredAction("disable2fa");
-            console.log(confirmRequiredAction);
           }
         } else swal(error.message);
       })
@@ -87,16 +86,17 @@ function DisableComponent() {
       });
   };
 
-  const handlePasswordConfirmation = () => {
+  const handlePasswordConfirmation = (status = true) => {
     setIsConfirming(false);
-    console.log("sdds", confirmRequiredAction);
-    if (confirmRequiredAction === "updateRecovery") {
-      handleUpdateRecoveryCodes();
+    if (status) {
+      if (confirmRequiredAction === "updateRecovery") {
+        handleUpdateRecoveryCodes();
+      }
+      if (confirmRequiredAction === "disable2fa") {
+        handleDisable2fa();
+      }
+      setConfirmRequiredAction("");
     }
-    if (confirmRequiredAction === "disable2fa") {
-      handleDisable2fa();
-    }
-    setConfirmRequiredAction("");
   };
 
   return (

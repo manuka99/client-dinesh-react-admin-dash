@@ -112,6 +112,11 @@ function EnableSuccess() {
         </Typography>
         <div className={classes.qrCode}>
           {qrCode && <span dangerouslySetInnerHTML={{ __html: qrCode }} />}
+          <br />
+          <Typography variant="caption">
+            (If you find it difficult to scan the QR code please disable dark
+            mode.)
+          </Typography>
         </div>
         <Typography variant="body2">
           Scan the image above with the two-factor authentication app on your

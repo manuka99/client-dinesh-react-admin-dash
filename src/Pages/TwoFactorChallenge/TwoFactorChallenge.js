@@ -116,15 +116,15 @@ function TwoFactorChallenge() {
           (TOTP) that can be retrieved from any TOTP compatible mobile
           authentication application such as Google Authenticator.
         </Typography>
-        <br />
-        <Paper elevation={8}>
-          <img
-            width="340px"
-            alt="What is two factor authentication"
-            src="/images/what-is-two-factor-authentication.gif"
-          />
-        </Paper>
-        <br />
+        <Box mt={2} mb={3}>
+          <Paper elevation={8}>
+            <img
+              width="340px"
+              alt="What is two factor authentication"
+              src="/images/what-is-two-factor-authentication.gif"
+            />
+          </Paper>
+        </Box>
         <Typography variant="subtitle2" color="textSecondary">
           {isTOTP
             ? " *Enter the TOTP code recieved on your mobile authentication application"
