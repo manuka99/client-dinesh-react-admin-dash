@@ -33,6 +33,17 @@ function App(props) {
   }, [props.login, props.logout]);
 
   useEffect(() => {
+    if (props.login) navigate("/");
+    if (props.logout) navigate("/login");
+    // eslint-disable-next-line
+  }, [props.authStatus]);
+
+  useEffect(() => {
+    navigate(props.redirect.route);
+    // eslint-disable-next-line
+  }, [props.redirect.status]);
+
+  useEffect(() => {
     set_app_theme(APP_THEME_DATA);
     // eslint-disable-next-line
   }, [props.theme]);
@@ -54,9 +65,11 @@ function App(props) {
 const mapStateToProps = (state) => {
   return {
     loading: state.currentUser.loading,
+    authStatus: state.currentUser.status,
     login: state.currentUser.login,
     logout: state.currentUser.logout,
     theme: state.currentUser.theme,
+    redirect: state.redirect,
   };
 };
 

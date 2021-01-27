@@ -7,8 +7,13 @@ export function LogIn() {
 }
 
 export function LogOut() {
-  api().post("/logout");
-  store.dispatch(user_logout());
+  api()
+    .post("/logout")
+    .then((res) => {})
+    .catch((error) => {})
+    .finally(() => {
+      store.dispatch(user_logout());
+    });
 }
 
 export function isLoggedIn(roles = null) {

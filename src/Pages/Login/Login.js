@@ -92,7 +92,7 @@ export default function Login() {
           .then((res) => {
             setLoading(false);
             if (res.status === 200) {
-              if (res.data.two_factor) {
+              if (res.data.two_factor === true) {
                 navigate("/two-factor-challenge");
               } else loginAuth();
             }

@@ -1,7 +1,6 @@
 import axios from "axios";
-import { LogOut } from "./auth";
 import store from "../Redux/store";
-import { set_error_data } from "../Redux";
+import { set_error_data, user_logout } from "../Redux";
 import swal from "sweetalert";
 
 export default function api(nonApi = false) {
@@ -16,8 +15,7 @@ export default function api(nonApi = false) {
       //  const originalRequest = error.config;
       if (error.response) {
         if (error.response.status === 401) {
-          LogOut();
-          // return Promise.reject({ status: 401, errors: ["Unauthorized"] });
+          store.dispatch(user_logout());
         } else if (error.response.status === 403) {
           //no required roles
           store.dispatch(
