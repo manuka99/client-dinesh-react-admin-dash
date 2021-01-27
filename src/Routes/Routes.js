@@ -11,7 +11,7 @@ import Error406 from "../Pages/Errors/Error406";
 import Error500 from "../Pages/Errors/Error500";
 import Profile from "../Pages/App/Profile/Profile";
 import Account from "../Pages/App/Profile/Account";
-import Security from "../Pages/App/Profile/Security";
+import Security from "../Pages/App/Profile/Security/Security";
 import Main from "../Pages/App/Profile/TwoStepVerification/Main";
 import TwoFactorChallenge from "../Pages/TwoFactorChallenge/TwoFactorChallenge";
 

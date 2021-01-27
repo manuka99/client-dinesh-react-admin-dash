@@ -61,7 +61,7 @@ function EnableSteps() {
           if (err.response.status === 423) {
             setIsConfirming(true);
           }
-        } else swal(err.message);
+        }
       });
   };
 
@@ -76,7 +76,7 @@ function EnableSteps() {
           if (err.response.status === 423) {
             setIsConfirming(true);
           }
-        } else swal(err.message);
+        }
       });
   };
 
@@ -99,8 +99,8 @@ function EnableSteps() {
               setErrors({ ...e.response.data });
             } else if (e.response.status === 423) {
               setIsConfirming(true);
-            } else swal(e.response.message);
-          } else swal(e.message);
+            }
+          }
         })
         .finally(() => {
           setLoading(false);
@@ -152,7 +152,10 @@ function EnableSteps() {
                 size="small"
                 variant="outlined"
                 color="secondary"
-                onClick={() => twoFactorStateContext.dispatch()}
+                onClick={() => {
+                  api().delete("/user/two-factor-authentication");
+                  twoFactorStateContext.dispatch();
+                }}
                 startIcon={<CancelIcon />}
               >
                 Cancel

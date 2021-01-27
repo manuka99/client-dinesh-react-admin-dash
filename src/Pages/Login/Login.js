@@ -25,7 +25,7 @@ function Copyright() {
       {"Copyright © "}
       <Link color="inherit" href="https://material-ui.com/">
         {"Pizza Apes "}
-      </Link> 
+      </Link>
       {new Date().getFullYear()}
     </Typography>
   );
@@ -84,30 +84,35 @@ export default function Login() {
     setErrors({});
     event.preventDefault();
     setLoading(true);
-    api()
-      .post("/login", userLogin)
+    api(true)
+      .get("/sanctum/csrf-cookie")
       .then((res) => {
-        setLoading(false);
-        if (res.status === 200) {
-          if (res.data.two_factor) {
-            navigate("/two-factor-challenge");
-          } else loginAuth();
-        }
-      })
-      .catch((error) => {
-        setLoading(false);
-        if (error.response) {
-          let status = error.response.status;
-          let data = error.response.data;
-          if (status === 422) {
-            setErrors({ message: data.message, ...data.errors });
-            console.log(errors);
-          } else if (status === 429) {
-            setErrors({
-              message: "To many attemps therefore please try again shortly.",
-            });
-          }
-        }
+        api()
+          .post("/login", userLogin)
+          .then((res) => {
+            setLoading(false);
+            if (res.status === 200) {
+              if (res.data.two_factor) {
+                navigate("/two-factor-challenge");
+              } else loginAuth();
+            }
+          })
+          .catch((error) => {
+            setLoading(false);
+            if (error.response) {
+              let status = error.response.status;
+              let data = error.response.data;
+              if (status === 422) {
+                setErrors({ message: data.message, ...data.errors });
+                console.log(errors);
+              } else if (status === 429) {
+                setErrors({
+                  message:
+                    "To many attemps therefore please try again shortly.",
+                });
+              }
+            }
+          });
       });
   };
 
@@ -174,7 +179,7 @@ export default function Login() {
 
           <Grid container>
             <Grid item xs>
-              <Button variant="text" color="primary"  size="small" >
+              <Button variant="text" color="primary" size="small">
                 Forgot password?
               </Button>
             </Grid>

@@ -31,7 +31,6 @@ function Main() {
       .then((res) => {
         setIsEnabled(res.data.user.is_two_factor_enabled);
       })
-      .catch((e) => console.log(e))
       .finally(() => {
         setLoading(false);
       });

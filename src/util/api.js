@@ -2,6 +2,7 @@ import axios from "axios";
 import { LogOut } from "./auth";
 import store from "../Redux/store";
 import { set_error_data } from "../Redux";
+import swal from "sweetalert";
 
 export default function api(nonApi = false) {
   const api = axios.create({
@@ -18,6 +19,7 @@ export default function api(nonApi = false) {
           LogOut();
           // return Promise.reject({ status: 401, errors: ["Unauthorized"] });
         } else if (error.response.status === 403) {
+          //no required roles
           store.dispatch(
             set_error_data({
               title:
@@ -26,17 +28,22 @@ export default function api(nonApi = false) {
                 "You either tried some shady route or you came here by mistake. Whichever it is, try using the navigation, if you think this is an mistake please refresh or try log in again.",
             })
           );
-          // return Promise.reject({ status: 403, errors: ["Not an admin"] });
-          // } else if (error.response.status === 422) {
-          //   let errors = Object.values(error.response.data.errors || {});
-
-          //   return Promise.reject({
-          //     status: 422,
-          //     errorsRaw: errors,
-          //     errors: errors.reduce((error) => error),
-          //   });
-        } else return Promise.reject(error);
-      } else return Promise.reject(error);
+        } else if (error.response.status === 419) {
+          swal("Unexpected error 419: Refresh the webpage and try again");
+        } else if (error.response.status === 422) {
+          //errors in form submit
+          return Promise.reject(error);
+        } else if (error.response.status === 423) {
+          //password confirmation
+          return Promise.reject(error);
+        } else {
+          swal(error.message);
+          return Promise.reject(error);
+        }
+      } else {
+        swal(error.message);
+        return Promise.reject(error);
+      }
     }
   );
 

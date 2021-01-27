@@ -135,14 +135,25 @@ export default function TopNavBar({ open, handleDrawerOpen }) {
             <div className={classes.searchIcon}>
               <SearchIcon />
             </div>
-            <InputBase
-              placeholder="Search…"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              inputProps={{ "aria-label": "search" }}
-            />
+            <form>
+              <InputBase
+                placeholder="Search…"
+                classes={{
+                  root: classes.inputRoot,
+                  input: classes.inputInput,
+                }}
+                inputProps={{
+                  "aria-label": "search",
+                  autocomplete: "off",
+                  form: {
+                    autocomplete: "off",
+                  },
+                }}
+                name="search"
+                type="text"
+                autoComplete="tel-national username"
+              />
+            </form>
           </div>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>

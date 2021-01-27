@@ -9,7 +9,6 @@ import ButtonProgress from "../../../../components/common/ButtonProgress/ButtonP
 import { Grid } from "@material-ui/core";
 import RecoveryCodes from "./RecoveryCodesComponent/RecoveryCodes";
 import api from "../../../../util/api";
-import swal from "sweetalert";
 import ConfirmPassword from "../../../../components/ConfirmPassword/ConfirmPassword";
 import { TwoFactorStateContext } from "./Main";
 
@@ -45,7 +44,7 @@ function DisableComponent() {
             setIsConfirming(true);
             setConfirmRequiredAction("disable2fa");
           }
-        } else swal(error.message);
+        }
       })
       .finally(() => {
         setDisable2faLoading(false);
@@ -66,7 +65,7 @@ function DisableComponent() {
             setIsConfirming(true);
             setConfirmRequiredAction("updateRecovery");
           }
-        } else swal(error.message);
+        }
       });
   };
 
@@ -79,7 +78,7 @@ function DisableComponent() {
       .catch((error) => {
         if (error.response) {
           if (error.response.status === 423) setIsConfirming(true);
-        } else swal(error.message);
+        }
       })
       .finally(() => {
         setRCodesLoading(false);
