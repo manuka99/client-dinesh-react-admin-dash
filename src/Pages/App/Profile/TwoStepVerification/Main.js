@@ -29,8 +29,9 @@ function Main() {
     api()
       .get("/user")
       .then((res) => {
-        setIsEnabled(res.data.user.is_two_factor_enabled);
+        if (res.data) setIsEnabled(res.data.user.is_two_factor_enabled);
       })
+      .catch((err) => {})
       .finally(() => {
         setLoading(false);
       });

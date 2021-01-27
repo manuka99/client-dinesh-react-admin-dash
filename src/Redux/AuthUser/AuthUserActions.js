@@ -61,7 +61,6 @@ export const fetch_user_data = () => {
         dispatch(fetch_auth_user_data_success(payload));
       })
       .catch((error) => {
-        dispatch(fetch_auth_user_data_error(error));
         if (error.response) {
           // The request was made and the server responded with a status code
           // that falls out of the range of 2xx
@@ -75,6 +74,7 @@ export const fetch_user_data = () => {
                 "User must log in to access protected features."
               )
             );
+          else dispatch(fetch_auth_user_data_error(error.message));
         } else if (error.request) {
           // The request was made but no response was received
           // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
@@ -83,6 +83,7 @@ export const fetch_user_data = () => {
         } else {
           // Something happened in setting up the request that triggered an Error
           console.log("Error", error.message);
+          dispatch(fetch_auth_user_data_error(error.message));
         }
         console.log(error.config);
       });

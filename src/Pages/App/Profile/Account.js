@@ -30,6 +30,7 @@ function Account() {
       .then((res) => {
         setUserData({ ...res.data.user });
       })
+      .catch((err) => {})
       .finally(() => {
         setLoading(false);
         setEditData(false);
