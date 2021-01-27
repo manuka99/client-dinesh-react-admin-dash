@@ -4,7 +4,7 @@ import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
-import { Box } from "@material-ui/core";
+import { Box, Divider } from "@material-ui/core";
 import ButtonProgress from "../../../../components/common/ButtonProgress/ButtonProgress";
 import SaveIcon from "@material-ui/icons/Save";
 import api from "../../../../util/api";
@@ -64,8 +64,9 @@ function Security() {
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
-        #1 Update user password
+        Update user password
       </Typography>
+      <Divider />
       {errors.message && <Error message={errors.message} />}
       <Box mt={1}>
         <form autoComplete="off" onSubmit={updatePassword}>
@@ -90,7 +91,6 @@ function Security() {
                   }}
                   onChange={formDataChanged}
                   fullWidth
-                  autoFocus
                   value={passwordData.current_password}
                 />
               </Grid>
@@ -176,9 +176,11 @@ function Security() {
         </form>
       </Box>
       <br />
+      <br />
       <Typography variant="h6" gutterBottom>
-        #2 Email verification
+        Email verification
       </Typography>
+      <Divider />
     </React.Fragment>
   );
 }
