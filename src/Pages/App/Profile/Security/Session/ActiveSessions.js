@@ -3,10 +3,8 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { Box, Button, CircularProgress, Divider } from "@material-ui/core";
 import api from "../../../../../util/api";
-import swal from "sweetalert";
 import { makeStyles } from "@material-ui/core/styles";
 import SyncIcon from "@material-ui/icons/Sync";
-import DevicesIcon from "@material-ui/icons/Devices";
 import moment from "moment";
 import DeviceDetector from "device-detector-js";
 import PhoneAndroidIcon from "@material-ui/icons/PhoneAndroid";
@@ -51,7 +49,7 @@ function ActiveSessions() {
           setSessionsData({ ...res.data });
         })
         .catch((error) => {
-          swal(error.message);
+          console.log(error);
         })
         .finally(() => {
           setRequestLoading(false);

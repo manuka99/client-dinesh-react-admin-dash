@@ -1,8 +1,8 @@
 import { Route, Navigate } from "react-router-dom";
 import { isLoggedIn} from "../../util/auth";
 
-function GuestRoute({ path, hasAnyRoles, ...rest }) {
-  const { userAuth } = isLoggedIn(hasAnyRoles);
+function GuestRoute({ path, ...rest }) {
+  const { userAuth } = isLoggedIn();
   return !userAuth ? (
     <Route {...rest} />
   ) : (

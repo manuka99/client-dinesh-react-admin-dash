@@ -8,7 +8,6 @@ import {
 } from "./AuthUserActionTypes";
 
 const initialState = {
-  status: false,
   login: false,
   logout: false,
   error: "",
@@ -41,14 +40,12 @@ export const AuthUserReducer = (state = initialState, action) => {
     case USER_LOGIN:
       return {
         ...state,
-        status: !state.status,
         login: true,
         logout: false,
       };
     case USER_LOGOUT:
       return {
         ...state,
-        status: !state.status,
         login: false,
         logout: true,
       };

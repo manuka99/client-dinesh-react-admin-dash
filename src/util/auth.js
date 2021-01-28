@@ -1,9 +1,9 @@
 import store from "../Redux/store";
-import { user_login, user_logout } from "../Redux";
+import {fetch_user_data } from "../Redux";
 import api from "./api";
 
 export function LogIn() {
-  store.dispatch(user_login());
+  store.dispatch(fetch_user_data());
 }
 
 export function LogOut() {
@@ -12,7 +12,7 @@ export function LogOut() {
     .then((res) => {})
     .catch((error) => {})
     .finally(() => {
-      store.dispatch(user_logout());
+      store.dispatch(fetch_user_data());
     });
 }
 
@@ -23,7 +23,8 @@ export function isLoggedIn(roles = null) {
   let userAuth = false;
   let userRoleValidated = false;
 
-  if (user_data !== "") userAuth = true;
+  if (user_data !== null && user_data.user !== null && user_data.user.id)
+    userAuth = true;
 
   if (userAuth) {
     if (roles !== undefined && roles !== null && roles.length !== 0)
@@ -36,15 +37,16 @@ export function isLoggedIn(roles = null) {
 
 const roleValidated = (roles, user_data) => {
   let validated = false;
-  roles.forEach((role) => {
-    user_data.roles.forEach((user_role) => {
-      if (role === user_role.name) {
-        console.log(`Role: ${role}, ${user_role.name}`);
-        validated = true;
-      }
+  if (roles != null && user_data.roles != null) {
+    roles.forEach((role) => {
+      user_data.roles.forEach((user_role) => {
+        if (role === user_role.name) {
+          console.log(`Role: ${role}, ${user_role.name}`);
+          validated = true;
+        }
+      });
     });
-  });
-  console.log(`Validated: ${validated}`);
+  }
   return validated;
 };
 

@@ -23,20 +23,15 @@ function App(props) {
 
   useEffect(() => {
     api(true).get("/sanctum/csrf-cookie");
+    props.fetch_user_data();
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
-    props.fetch_user_data();
     if (props.login) navigate("/");
     if (props.logout) navigate("/login");
     // eslint-disable-next-line
   }, [props.login, props.logout]);
-
-  useEffect(() => {
-    if (props.login) navigate("/");
-    if (props.logout) navigate("/login");
-    // eslint-disable-next-line
-  }, [props.authStatus]);
 
   useEffect(() => {
     navigate(props.redirect.route);
@@ -65,7 +60,6 @@ function App(props) {
 const mapStateToProps = (state) => {
   return {
     loading: state.currentUser.loading,
-    authStatus: state.currentUser.status,
     login: state.currentUser.login,
     logout: state.currentUser.logout,
     theme: state.currentUser.theme,

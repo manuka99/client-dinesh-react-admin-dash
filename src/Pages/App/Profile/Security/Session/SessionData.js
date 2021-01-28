@@ -19,6 +19,7 @@ import {
   useMediaQuery,
   Box,
 } from "@material-ui/core";
+import ButtonProgress from "../../../../../components/common/ButtonProgress/ButtonProgress";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -81,6 +82,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SessionData({ id, onClose }) {
   const [loading, setloading] = useState(true);
+  const [revokeLoading, setRevokeLoading] = useState(false);
   const [session, setsession] = useState({});
   const [current, setCurrent] = useState("");
   const [geoData, setGeoData] = useState({});
@@ -88,6 +90,7 @@ export default function SessionData({ id, onClose }) {
   const classes = useStyles();
   const theme = useTheme();
   const mobileDevice = useMediaQuery(theme.breakpoints.down("sm"));
+  const device = deviceDetector.parse(session.user_agent);
 
   useEffect(() => {
     api()
@@ -99,12 +102,44 @@ export default function SessionData({ id, onClose }) {
         console.log(res.data);
       })
       .catch((error) => {
-        swal(error.message);
+        // swal(error.message);
       })
       .finally(() => {
         setloading(false);
       });
-  }, []);
+  }, [id]);
+
+  const revokeDevicePromt = () => {
+    swal({
+      title: "Are you sure?",
+      text:
+        "Once revoked, you will be logged out from the revoked device and cannot undo the operation, but you can still log in by validating your credentials.",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    }).then((res) => {
+      if (res) {
+        revokeDevice();
+      } else {
+      }
+    });
+  };
+
+  const revokeDevice = () => {
+    setRevokeLoading(true);
+    api()
+      .post(`/user/revoke-session/${id}`)
+      .then((res) => {
+        if (res.data.success) swal("", res.data.success, "success");
+        else if (res.data.error) swal("", res.data.error, "error");
+      })
+      .catch((error) => {
+        // swal(error.message);
+      })
+      .finally(() => {
+        setRevokeLoading(false);
+      });
+  };
 
   return (
     <div>
@@ -191,7 +226,6 @@ export default function SessionData({ id, onClose }) {
                               current === session.id && classes.activeSession
                             }
                             fontSize="large"
-                            F
                           />
                         )}
                       </Grid>
@@ -216,35 +250,56 @@ export default function SessionData({ id, onClose }) {
                             : moment.unix(session.last_activity).fromNow()}
                         </Grid>
                         <Grid item>
-                          {`${
-                            deviceDetector.parse(session.user_agent).os.name
-                          } | ${
-                            deviceDetector.parse(session.user_agent).client.name
-                          }`}
+                          {`${device.os.name} | ${device.client.name}`}
                         </Grid>
                       </Grid>
 
                       <Grid item xs={12}>
-                        <Button
+                        <ButtonProgress
                           justify="flex-end"
                           variant="contained"
                           color="secondary"
                           size="small"
-                        >
-                          Revoke device
-                        </Button>
+                          loading={revokeLoading}
+                          handleButtonClick={revokeDevicePromt}
+                          name="Revoke device"
+                        />
                       </Grid>
+                      <br />
                     </Grid>
                     <Grid
                       container
                       xs={12}
                       sm={6}
                       direction="column"
-                      alignItems="center"
+                      alignItems="flex-start"
                       alignContent="center"
                       justify="center"
                     >
-                      sdsdsdsd
+                      <Typography variant="body2" gutterBottom>
+                        <strong> Last location:</strong>
+                      </Typography>
+                      <Typography variant="body2" gutterBottom>
+                        {`${geoData.city}, ${geoData.state_name}, ${geoData.country}`}
+                      </Typography>
+                      <Typography variant="body2" gutterBottom>
+                        <strong> Time zone:</strong>
+                      </Typography>
+                      <Typography variant="body2" gutterBottom>
+                        {`${geoData.timezone}`}
+                      </Typography>
+                      <Typography variant="body2" gutterBottom>
+                        <strong> Device:</strong>
+                      </Typography>
+                      <Typography variant="body2" gutterBottom>
+                        {`${device.device.type} | ${device.device.brand} | ${device.device.model}`}
+                      </Typography>
+                      <Typography variant="body2" gutterBottom>
+                        <strong> Client:</strong>
+                      </Typography>
+                      <Typography variant="body2" gutterBottom>
+                        {`${device.client.type} | ${device.client.name} | ${device.os.name}`}
+                      </Typography>
                     </Grid>
                   </Grid>
                 ) : (

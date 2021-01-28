@@ -38,7 +38,8 @@ function VerifyEmail() {
         .catch((error) => {
           if (error.response) {
             console.log(error.data);
-          } else swal(error.message);
+          } 
+           console.log(error);
         })
         .finally(() => {
           setRequest(false);
@@ -65,7 +66,7 @@ function VerifyEmail() {
           );
         })
         .catch((error) => {
-          swal(error.message);
+           console.log(error);
         })
         .finally(() => {
           setVerifyLoading(false);

@@ -1,6 +1,6 @@
 import axios from "axios";
 import store from "../Redux/store";
-import { set_error_data, user_logout } from "../Redux";
+import { set_error_data, fetch_user_data } from "../Redux";
 import swal from "sweetalert";
 
 export default function api(nonApi = false) {
@@ -15,7 +15,8 @@ export default function api(nonApi = false) {
       //  const originalRequest = error.config;
       if (error.response) {
         if (error.response.status === 401) {
-          store.dispatch(user_logout());
+          store.dispatch(fetch_user_data());
+          // store.dispatch(change_redirect_route("/login"));
         } else if (error.response.status === 403) {
           //no required roles
           store.dispatch(
