@@ -1,3 +1,4 @@
+import React, { lazy, Suspense } from "react";
 import Fruits from "../components/Fruits";
 import Login from "../Pages/Login/Login";
 import { Route, Routes, Navigate } from "react-router-dom";
@@ -9,12 +10,43 @@ import Error403 from "../Pages/Errors/Error403";
 import Error404 from "../Pages/Errors/Error404";
 import Error406 from "../Pages/Errors/Error406";
 import Error500 from "../Pages/Errors/Error500";
+
 import Profile from "../Pages/App/Profile/Profile";
 import Account from "../Pages/App/Profile/Account";
 import Security from "../Pages/App/Profile/Security/Security";
 import Main from "../Pages/App/Profile/TwoStepVerification/Main";
+
 import TwoFactorChallenge from "../Pages/TwoFactorChallenge/TwoFactorChallenge";
 import ForgotPassword from "../Pages/Login/ForgotPassword";
+
+// const Fruits = lazy(() => import("../components/Fruits"));
+// const Login = lazy(() => import("../Pages/Login/Login"));
+// const PanelContainer = lazy(() => import("../Pages/Panel/PanelContainer"));
+// const Dashboard = lazy(() => import("../Pages/App/Reports/Dashboard"));
+// const AuthRoute = lazy(() => import("../components/protectedRoutes/AuthRoute"));
+// const GuestRoute = lazy(() =>
+//   import("../components/protectedRoutes/GuestRoute")
+// );
+// const Error403 = lazy(() => import("../Pages/Errors/Error403"));
+// const Error404 = lazy(() => import("../Pages/Errors/Error404"));
+// const Error406 = lazy(() => import("../Pages/Errors/Error406"));
+// const Error500 = lazy(() => import("../Pages/Errors/Error500"));
+
+// const Profile = lazy(() => {
+//   return new Promise((resolve) => {
+//     setTimeout(() => resolve(import("../Pages/App/Profile/Profile")), 3000);
+//   });
+// });
+// const Account = lazy(() => import("../Pages/App/Profile/Account"));
+// const Security = lazy(() => import("../Pages/App/Profile/Security/Security"));
+// const Main = lazy(() =>
+//   import("../Pages/App/Profile/TwoStepVerification/Main")
+// );
+
+// const TwoFactorChallenge = lazy(() =>
+//   import("../Pages/TwoFactorChallenge/TwoFactorChallenge")
+// );
+// const ForgotPassword = lazy(() => import("../Pages/Login/ForgotPassword"));
 
 export const AllRoutes = () => {
   return (

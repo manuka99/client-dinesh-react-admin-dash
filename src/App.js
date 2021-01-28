@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "./util/api";
 import { connect } from "react-redux";
@@ -8,9 +8,12 @@ import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { AllRoutes } from "./Routes/Routes";
 import Loading from "./Pages/Loading/Loading";
 import { get_app_theme, set_app_theme } from "./util/themeService";
+import { useLocation } from "react-router-dom";
 
 function App(props) {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [locationRequired, setlocationRequired] = useState("");
 
   console.log(` props.theme : ${props.theme}`);
 
@@ -23,12 +26,16 @@ function App(props) {
 
   useEffect(() => {
     api(true).get("/sanctum/csrf-cookie");
+    setlocationRequired(location.pathname);
     props.fetch_user_data();
     // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
-    if (props.login) navigate("/");
+    if (props.login) {
+      locationRequired ? navigate(locationRequired) : navigate("/");
+      setlocationRequired("");
+    }
     if (props.logout) navigate("/login");
     // eslint-disable-next-line
   }, [props.login, props.logout]);
