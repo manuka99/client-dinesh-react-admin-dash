@@ -8,16 +8,16 @@ import Link from "@material-ui/core/Link";
 import Container from "@material-ui/core/Container";
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import PersonIcon from "@material-ui/icons/Person";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import api from "../../util/api";
 import Error from "../../components/alerts/Error";
-import { LogIn as loginAuth } from "../../util/auth";
 import ButtonProgress from "../../components/common/ButtonProgress/ButtonProgress";
 import LockIcon from "@material-ui/icons/Lock";
-import { useNavigate, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { Button } from "@material-ui/core";
+import swal from "sweetalert";
 
 function Copyright() {
   return (
@@ -52,32 +52,21 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Login() {
+export default function ForgotPassword() {
   const [errors, setErrors] = React.useState({});
   const [loading, setLoading] = useState(false);
-
-  const [userLogin, setUserLogin] = React.useState({
-    email: null,
-    password: null,
-    remember: false,
+  const [userData, setUserData] = React.useState({
+    email: "",
   });
 
   const classes = useStyles();
-  let navigate = useNavigate();
 
   const handleForm = (event) => {
-    setUserLogin({
-      ...userLogin,
+    setUserData({
+      ...userData,
       [event.target.name]: event.target.value,
     });
     setErrors({ ...errors, [event.target.name]: null });
-  };
-
-  const handleCheck = (event) => {
-    setUserLogin({
-      ...userLogin,
-      [event.target.name]: event.target.checked,
-    });
   };
 
   const submitForm = (event) => {
@@ -88,28 +77,27 @@ export default function Login() {
       .get("/sanctum/csrf-cookie")
       .then((res) => {
         api()
-          .post("/login", userLogin)
+          .post("/forgot-password", userData)
           .then((res) => {
+            setLoading(false);
             if (res.status === 200) {
-              if (res.data.two_factor === true) {
-                navigate("/two-factor-challenge");
-              } else loginAuth();
+              swal(
+                "",
+                `Password reset link has been set to the email address: ${userData.email}`,
+                "success"
+              );
             }
           })
           .catch((error) => {
+            setLoading(false);
             if (error.response) {
               let status = error.response.status;
               let data = error.response.data;
               if (status === 422) {
                 setErrors({ message: data.message, ...data.errors });
                 console.log(errors);
-              } else if (status === 429) {
-                setErrors({
-                  message:
-                    "To many attemps therefore please try again shortly.",
-                });
-              }
-            }
+              } else swal(error.message);
+            } else swal(error.message);
           })
           .finally(() => {
             setLoading(false);
@@ -122,10 +110,14 @@ export default function Login() {
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
+          <PersonIcon />
         </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign in to Pizza Apes
+        <Typography variant="h5" gutterBottom>
+          Reset your password
+        </Typography>
+        <Typography variant="body2">
+          Enter your user account's verified email address and we will send you
+          a password reset link.
         </Typography>
         {errors.message && <Error message={errors.message} />}
         <form className={classes.form} onSubmit={submitForm}>
@@ -134,7 +126,6 @@ export default function Login() {
             variant="outlined"
             margin="normal"
             fullWidth
-            id="email"
             label="Email Address"
             name="email"
             autoComplete="email"
@@ -142,60 +133,16 @@ export default function Login() {
             onChange={handleForm}
             helperText={errors.email && errors.email}
           />
-          <TextField
-            error={errors.password}
-            variant="outlined"
-            margin="normal"
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-            onChange={handleForm}
-            helperText={errors.password && errors.password}
-          />
-          <FormControlLabel
-            control={
-              <Checkbox
-                value="true"
-                name="remember"
-                color="primary"
-                onChange={handleCheck}
-              />
-            }
-            label="Remember me"
-          />
           <Box mt={1} mb={2}>
             <ButtonProgress
               type="submit"
               fullWidth
               variant="contained"
               color="primary"
-              name="Sign In"
+              name="Send password reset email"
               loading={loading}
-              startIcon={<LockIcon />}
             />
           </Box>
-
-          <Grid container>
-            <Grid item xs>
-              <Button
-                variant="text"
-                color="primary"
-                size="small"
-                component={NavLink}
-                to="/forgot-password"
-              >
-                Forgot password?
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button variant="text" color="primary" size="small">
-                {"Customer portal?"}
-              </Button>
-            </Grid>
-          </Grid>
           <Box mt={5}>
             <Copyright />
           </Box>

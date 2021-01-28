@@ -14,12 +14,14 @@ import Account from "../Pages/App/Profile/Account";
 import Security from "../Pages/App/Profile/Security/Security";
 import Main from "../Pages/App/Profile/TwoStepVerification/Main";
 import TwoFactorChallenge from "../Pages/TwoFactorChallenge/TwoFactorChallenge";
+import ForgotPassword from "../Pages/Login/ForgotPassword";
 
 export const AllRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<Navigate replace={true} to="/app" />} />
       <GuestRoute path="/login" element={<Login />} />
+      <GuestRoute path="/forgot-password" element={<ForgotPassword />} />
       <GuestRoute
         path="/two-factor-challenge"
         element={<TwoFactorChallenge />}
