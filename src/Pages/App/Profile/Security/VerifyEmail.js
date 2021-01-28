@@ -9,6 +9,7 @@ import swal from "sweetalert";
 import { makeStyles } from "@material-ui/core/styles";
 import LockIcon from "@material-ui/icons/Lock";
 import DoneOutlineIcon from "@material-ui/icons/DoneOutline";
+import SyncIcon from "@material-ui/icons/Sync";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -24,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
 function VerifyEmail() {
   const [userData, setuserData] = useState({});
   const [verifyLoading, setVerifyLoading] = useState(false);
-  const [request, setRequest] = useState(false);
+  const [request, setRequest] = useState(true);
   const classes = useStyles();
 
   useEffect(() => {
@@ -73,7 +74,7 @@ function VerifyEmail() {
   };
 
   return (
-    <Box mt={2} mb={3}>
+    <Box mt={3} mb={3}>
       <Typography variant="h6" gutterBottom>
         Primary email address
       </Typography>
@@ -138,6 +139,7 @@ function VerifyEmail() {
                 variant="outlined"
                 color="primary"
                 onClick={() => setRequest(true)}
+                startIcon={<SyncIcon />}
               >
                 Refresh verification state
               </Button>
