@@ -18,6 +18,8 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import DashboardIcon from "@material-ui/icons/Dashboard";
+import { makeStyles } from "@material-ui/styles";
+import { Avatar } from "@material-ui/core";
 
 function SideNavBar({ open, handleDrawerOpen, handleDrawerClose }) {
   const classes = MainDashStyles();
@@ -40,7 +42,23 @@ function SideNavBar({ open, handleDrawerOpen, handleDrawerClose }) {
         }}
       >
         <div className={classes.toolbar}>
-          <IconButton onClick={handleDrawerClose}>
+          <div className={`${classes.profile} ${!open && classes.hideProfile}`}>
+            <Avatar
+              alt="Person"
+              className={classes.avatar}
+              src="/images/user-avatar.png"
+            />
+            <Typography variant="h6" className={classes.name}>
+              trmanus sdsdsdsdssdzxzxzsdd ddd
+            </Typography>
+            <Typography variant="body2" className={classes.name}>
+              Admin Editor
+            </Typography>
+          </div>
+          <IconButton
+            className={classes.drawerStatusIcon}
+            onClick={handleDrawerClose}
+          >
             {theme.direction === "rtl" ? (
               <ChevronRightIcon />
             ) : (
@@ -49,40 +67,43 @@ function SideNavBar({ open, handleDrawerOpen, handleDrawerClose }) {
           </IconButton>
         </div>
         <Divider />
-        <ListItem >
-          <ListItemIcon>
-            <DashboardIcon />
-          </ListItemIcon>
-          <ListItemText
-            primary={
-              <Typography className={classes.disabled}>Dashboard</Typography>
-            }
-          />
-        </ListItem>
         <List>
-          <SideNavItems
-            navItems={NavItems1()}
-            handleDrawerOpen={handleDrawerOpen}
-          />
-        </List>
-        <Divider />
-        <ListItem >
-          <ListItemIcon>
-            <DashboardIcon />
-          </ListItemIcon>
-          <ListItemText
-            primary={
-              <Typography className={classes.disabled}>
-                Other Actions
-              </Typography>
-            }
-          />
-        </ListItem>
-        <List>
-          <SideNavItems
-            navItems={NavItems1()}
-            handleDrawerOpen={handleDrawerOpen}
-          />
+          <ListItem>
+            <ListItemIcon>
+              <DashboardIcon />
+            </ListItemIcon>
+            <ListItemText
+              primary={
+                <Typography className={classes.disabled}>Dashboard</Typography>
+              }
+            />
+          </ListItem>
+          <List>
+            <SideNavItems
+              drawerOpenStatus={open}
+              navItems={NavItems1()}
+              handleDrawerOpen={handleDrawerOpen}
+            />
+          </List>
+          <Divider />
+          <ListItem>
+            <ListItemIcon>
+              <DashboardIcon />
+            </ListItemIcon>
+            <ListItemText
+              primary={
+                <Typography className={classes.disabled}>
+                  Other Actions
+                </Typography>
+              }
+            />
+          </ListItem>
+          <List>
+            <SideNavItems
+              navItems={NavItems1()}
+              handleDrawerOpen={handleDrawerOpen}
+            />
+          </List>
         </List>
       </Drawer>
     </Paper>

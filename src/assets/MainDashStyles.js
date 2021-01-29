@@ -1,10 +1,6 @@
-import {
-  createStyles,
-  fade,
-  makeStyles,
-} from "@material-ui/core/styles";
+import { createStyles, fade, makeStyles } from "@material-ui/core/styles";
 
-const drawerWidth = 240;
+const drawerWidth = 280;
 const MainDashStyles = makeStyles((theme) =>
   createStyles({
     root: {
@@ -13,22 +9,24 @@ const MainDashStyles = makeStyles((theme) =>
     appBar: {
       backgroundColor: theme.palette.neutral.dark,
       color: "white",
-      zIndex: theme.zIndex.drawer + 1,
       transition: theme.transitions.create(["width", "margin"], {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen,
       }),
+      zIndex: theme.zIndex.drawer + 1,
       height: "68px",
       display: "flex",
       justifyContent: "center",
     },
     appBarShift: {
       marginLeft: drawerWidth,
-      width: `calc(100% - ${drawerWidth}px)`,
       transition: theme.transitions.create(["width", "margin"], {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.enteringScreen,
       }),
+      [theme.breakpoints.up("sm")]: {
+        width: `calc(100% - ${drawerWidth}px)`,
+      },
     },
     hide: {
       display: "none",
@@ -37,6 +35,7 @@ const MainDashStyles = makeStyles((theme) =>
       width: drawerWidth,
       flexShrink: 0,
       whiteSpace: "nowrap",
+      zIndex: theme.zIndex.drawer + 2,
     },
     drawerOpen: {
       width: drawerWidth,
@@ -44,12 +43,15 @@ const MainDashStyles = makeStyles((theme) =>
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.enteringScreen,
       }),
+      position: "fixed",
     },
     drawerClose: {
-      transition: theme.transitions.create("width", {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
-      }),
+      [theme.breakpoints.up("xs")]: {
+        transition: theme.transitions.create("width", {
+          easing: theme.transitions.easing.sharp,
+          duration: theme.transitions.duration.leavingScreen,
+        }),
+      },
       overflowX: "hidden",
       [theme.breakpoints.down("md")]: {
         width: 0,
@@ -61,15 +63,28 @@ const MainDashStyles = makeStyles((theme) =>
     toolbar: {
       display: "flex",
       alignItems: "center",
-      justifyContent: "flex-end",
-      padding: theme.spacing(0, 1),
-      // necessary for content to be below app bar
-      ...theme.mixins.toolbar,
+      justifyContent: "center",
+      position: "relative",
+      marginRight: theme.spacing(1),
+
+    },
+    drawerStatusIcon: {
+      position: "absolute",
+      right: "0",
     },
     content: {
       marginTop: "10px",
       flexGrow: 1,
       padding: theme.spacing(3),
+    },
+    constentShift: {
+      [theme.breakpoints.up("sm")]: {
+        marginLeft: drawerWidth,
+      },
+      transition: theme.transitions.create(["margin"], {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
     },
     // asasas
     grow: {
@@ -143,6 +158,32 @@ const MainDashStyles = makeStyles((theme) =>
     },
     disabled: {
       color: theme.palette.text.disabled,
+    },
+    // profile avatar
+    profile: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      marginBottom: theme.spacing(2),
+      marginTop: theme.spacing(2),
+      paddingRight: theme.spacing(10),
+      paddingLeft: theme.spacing(10),
+      boxSizing: "border-box",
+    },
+    avatar: {
+      width: 60,
+      height: 60,
+    },
+    hideProfile: {
+      display: "none",
+    },
+    name: {
+      whiteSpace: "nowrap",
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+      maxWidth: "180px",
+      textTransform: "capitalize",
     },
   })
 );

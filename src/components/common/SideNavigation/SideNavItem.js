@@ -71,7 +71,7 @@ function SideNavItem({ navItem, ids, handleNestedChildren, spacing, ...rest }) {
           (ids[navItem.id] ? <ExpandLess /> : <ExpandMore />)}
       </ListItem>
       {navItem.hasChildren && (
-        <Collapse in={ids[navItem.id]} timeout="auto" unmountOnExit>
+        <Collapse in={ids[navItem.id]} timeout="auto">
           <List component="div" disablePadding>
             {navItem.children.map((childItem) => {
               return (

@@ -1,32 +1,33 @@
 import React, { lazy, Suspense } from "react";
-import Fruits from "../components/Fruits";
-import Login from "../Pages/Login/Login";
 import { Route, Routes, Navigate } from "react-router-dom";
-import PanelContainer from "../Pages/Panel/PanelContainer";
-import Dashboard from "../Pages/App/Reports/Dashboard";
+import ProgressBar from "react-topbar-progress-indicator";
+import loadable from "@loadable/component";
 import AuthRoute from "../components/protectedRoutes/AuthRoute";
 import GuestRoute from "../components/protectedRoutes/GuestRoute";
-import Error403 from "../Pages/Errors/Error403";
-import Error404 from "../Pages/Errors/Error404";
-import Error406 from "../Pages/Errors/Error406";
-import Error500 from "../Pages/Errors/Error500";
+import DashboardFallback from "../components/Progress/DashboardFallback";
 
-import Profile from "../Pages/App/Profile/Profile";
-import Account from "../Pages/App/Profile/Account";
-import Security from "../Pages/App/Profile/Security/Security";
-import Main from "../Pages/App/Profile/TwoStepVerification/Main";
+// import Fruits from "../components/Fruits";
+// import Login from "../Pages/Login/Login";
+// import PanelContainer from "../Pages/Panel/PanelContainer";
+// import Dashboard from "../Pages/App/Reports/Dashboard";
+// import Error403 from "../Pages/Errors/Error403";
+// import Error404 from "../Pages/Errors/Error404";
+// import Error406 from "../Pages/Errors/Error406";
+// import Error500 from "../Pages/Errors/Error500";
 
-import TwoFactorChallenge from "../Pages/TwoFactorChallenge/TwoFactorChallenge";
-import ForgotPassword from "../Pages/Login/ForgotPassword";
+// import Profile from "../Pages/App/Profile/Profile";
+// import Account from "../Pages/App/Profile/Account";
+// import Security from "../Pages/App/Profile/Security/Security";
+// import Main from "../Pages/App/Profile/TwoStepVerification/Main";
 
+// import TwoFactorChallenge from "../Pages/TwoFactorChallenge/TwoFactorChallenge";
+// import ForgotPassword from "../Pages/Login/ForgotPassword";
+
+// lazy
 // const Fruits = lazy(() => import("../components/Fruits"));
 // const Login = lazy(() => import("../Pages/Login/Login"));
 // const PanelContainer = lazy(() => import("../Pages/Panel/PanelContainer"));
 // const Dashboard = lazy(() => import("../Pages/App/Reports/Dashboard"));
-// const AuthRoute = lazy(() => import("../components/protectedRoutes/AuthRoute"));
-// const GuestRoute = lazy(() =>
-//   import("../components/protectedRoutes/GuestRoute")
-// );
 // const Error403 = lazy(() => import("../Pages/Errors/Error403"));
 // const Error404 = lazy(() => import("../Pages/Errors/Error404"));
 // const Error406 = lazy(() => import("../Pages/Errors/Error406"));
@@ -47,6 +48,68 @@ import ForgotPassword from "../Pages/Login/ForgotPassword";
 //   import("../Pages/TwoFactorChallenge/TwoFactorChallenge")
 // );
 // const ForgotPassword = lazy(() => import("../Pages/Login/ForgotPassword"));
+
+// loadable
+const Login = loadable(() => import("../Pages/Login/Login"), {
+  fallback: <ProgressBar />,
+});
+const TwoFactorChallenge = loadable(
+  () => import("../Pages/TwoFactorChallenge/TwoFactorChallenge"),
+  {
+    fallback: <ProgressBar />,
+  }
+);
+const ForgotPassword = loadable(() => import("../Pages/Login/ForgotPassword"), {
+  fallback: <ProgressBar />,
+});
+const Error403 = loadable(() => import("../Pages/Errors/Error403"), {
+  fallback: <ProgressBar />,
+});
+const Error404 = loadable(() => import("../Pages/Errors/Error404"), {
+  fallback: <ProgressBar />,
+});
+const Error406 = loadable(() => import("../Pages/Errors/Error406"), {
+  fallback: <ProgressBar />,
+});
+const Error500 = loadable(() => import("../Pages/Errors/Error500"), {
+  fallback: <ProgressBar />,
+});
+// panel
+const PanelContainer = loadable(() => import("../Pages/Panel/PanelContainer"), {
+  fallback: <DashboardFallback />,
+});
+const Dashboard = loadable(() => import("../Pages/App/Reports/Dashboard"), {
+  fallback: <DashboardFallback />,
+});
+const Fruits = loadable(() => import("../components/Fruits"), {
+  fallback: <DashboardFallback />,
+});
+
+const Profile = loadable(
+  () => {
+    return new Promise((resolve) => {
+      setTimeout(() => resolve(import("../Pages/App/Profile/Profile")), 30000);
+    });
+  },
+  {
+    fallback: <DashboardFallback />,
+  }
+);
+const Account = loadable(() => import("../Pages/App/Profile/Account"), {
+  fallback: <DashboardFallback />,
+});
+const Security = loadable(
+  () => import("../Pages/App/Profile/Security/Security"),
+  {
+    fallback: <DashboardFallback />,
+  }
+);
+const Main = loadable(
+  () => import("../Pages/App/Profile/TwoStepVerification/Main"),
+  {
+    fallback: <DashboardFallback />,
+  }
+);
 
 export const AllRoutes = () => {
   return (
