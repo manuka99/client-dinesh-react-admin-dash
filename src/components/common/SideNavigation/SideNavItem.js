@@ -19,6 +19,7 @@ function SideNavItem({ navItem, ids, handleNestedChildren, spacing, ...rest }) {
     createStyles({
       nested: {
         paddingLeft: theme.spacing(spacing),
+        color: "rgba(255, 255, 255, 0.7)",
       },
       typo_bold: {
         fontWeight: "bold",
@@ -27,8 +28,18 @@ function SideNavItem({ navItem, ids, handleNestedChildren, spacing, ...rest }) {
       typo_normal: {
         fontSize: "15px",
       },
-      icon_color: {
-        color: theme.palette.neutral.main,
+      selectedItem: {
+        borderLeft: `4px solid ${theme.palette.neutral.reverse}`,
+        paddingLeft: theme.spacing(spacing - 0.6),
+        color: "white",
+        fontWeight: "bold",
+        boxSizing: "border-box",
+        "& $icon": {
+          color: "white",
+        },
+      },
+      icon: {
+        color: "rgba(255, 255, 255, 0.7)",
       },
     })
   );
@@ -43,7 +54,9 @@ function SideNavItem({ navItem, ids, handleNestedChildren, spacing, ...rest }) {
         component={NavLink}
         to={navItem.to}
         className={classes.nested}
-        activeClassName={!ids[navItem.id] && "Mui-selected"}
+        activeClassName={
+          !ids[navItem.id] && `Mui-selected ${classes.selectedItem}`
+        }
         // {...(navItem.hasChildren
         //   ? {
         //       onClick: (e) => handleNestedChildren(navItem.id, e),
@@ -53,7 +66,9 @@ function SideNavItem({ navItem, ids, handleNestedChildren, spacing, ...rest }) {
           handleNestedChildren(navItem.id, e, navItem.hasChildren)
         }
       >
-        <ListItemIcon className={classes.icon_color}>
+        <ListItemIcon
+          className={classes.icon}
+        >
           {navItem.iconFront}
         </ListItemIcon>
         <ListItemText

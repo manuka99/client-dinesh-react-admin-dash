@@ -6,9 +6,11 @@ const MainDashStyles = makeStyles((theme) =>
     root: {
       display: "flex",
     },
-    appBar: {
+    paper: {
       backgroundColor: theme.palette.neutral.dark,
       color: "white",
+    },
+    appBar: {
       transition: theme.transitions.create(["width", "margin"], {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen,
@@ -66,11 +68,16 @@ const MainDashStyles = makeStyles((theme) =>
       justifyContent: "center",
       position: "relative",
       marginRight: theme.spacing(1),
-
     },
     drawerStatusIcon: {
       position: "absolute",
       right: "0",
+    },
+    drawerIcon: {
+      color: "rgba(255, 255, 255, 0.6)",
+    },
+    disabled: {
+      color: "rgba(255, 255, 255, 0.6)",
     },
     content: {
       marginTop: "10px",
@@ -105,9 +112,9 @@ const MainDashStyles = makeStyles((theme) =>
     search: {
       position: "relative",
       borderRadius: theme.shape.borderRadius,
-      backgroundColor: fade(theme.palette.common.white, 0.15),
+      backgroundColor: fade(theme.palette.neutral.reverse, 0.15),
       "&:hover": {
-        backgroundColor: fade(theme.palette.common.white, 0.25),
+        backgroundColor: fade(theme.palette.neutral.reverse, 0.25),
       },
       marginLeft: 0,
       marginRight: 0,
@@ -155,9 +162,6 @@ const MainDashStyles = makeStyles((theme) =>
       [theme.breakpoints.up("md")]: {
         display: "none",
       },
-    },
-    disabled: {
-      color: theme.palette.text.disabled,
     },
     // profile avatar
     profile: {

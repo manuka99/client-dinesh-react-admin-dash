@@ -12,13 +12,12 @@ import {
   Typography,
 } from "../../../assets/StyleImports";
 import SideNavItems from "./SideNavItems";
-import { NavItems1 } from "./NavItems";
+import { NavItems1, NavItems2 } from "./NavItems";
 import Paper from "@material-ui/core/Paper";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import DashboardIcon from "@material-ui/icons/Dashboard";
-import { makeStyles } from "@material-ui/styles";
 import { Avatar } from "@material-ui/core";
 
 function SideNavBar({ open, handleDrawerOpen, handleDrawerClose }) {
@@ -56,7 +55,7 @@ function SideNavBar({ open, handleDrawerOpen, handleDrawerClose }) {
             </Typography>
           </div>
           <IconButton
-            className={classes.drawerStatusIcon}
+            className={`${classes.drawerStatusIcon} ${classes.drawerIcon}`}
             onClick={handleDrawerClose}
           >
             {theme.direction === "rtl" ? (
@@ -69,7 +68,7 @@ function SideNavBar({ open, handleDrawerOpen, handleDrawerClose }) {
         <Divider />
         <List>
           <ListItem>
-            <ListItemIcon>
+            <ListItemIcon className={classes.drawerIcon}>
               <DashboardIcon />
             </ListItemIcon>
             <ListItemText
@@ -87,7 +86,7 @@ function SideNavBar({ open, handleDrawerOpen, handleDrawerClose }) {
           </List>
           <Divider />
           <ListItem>
-            <ListItemIcon>
+            <ListItemIcon className={classes.drawerIcon}>
               <DashboardIcon />
             </ListItemIcon>
             <ListItemText
@@ -100,7 +99,7 @@ function SideNavBar({ open, handleDrawerOpen, handleDrawerClose }) {
           </ListItem>
           <List>
             <SideNavItems
-              navItems={NavItems1()}
+              navItems={NavItems2()}
               handleDrawerOpen={handleDrawerOpen}
             />
           </List>

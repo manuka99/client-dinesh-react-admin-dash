@@ -11,12 +11,16 @@ const data = {
     dark: "#007168",
     light: "#4db0a8",
     lighter: "#dce8e7",
-    straight: "white",
-    reverse: "black",
+    straight: "#ffffff",
+    reverse: "#000000",
   },
   background: {
     default: "#dce8e7",
     paper: "#ffffff",
+  },
+  action: {
+    selected: "rgba(1, 1, 1, 0.2)",
+    hover: "rgba(1, 1, 1, 0.08)"
   },
 };
 

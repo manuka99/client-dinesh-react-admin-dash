@@ -89,3 +89,91 @@ export const NavItems1 = () => {
     },
   ];
 };
+export const NavItems2 = () => {
+  return [
+    {
+      id: 1,
+      name: "Reports",
+      to: "/data/reports",
+      iconFront: <InboxIcon />,
+      hasChildren: true,
+      isChild: false,
+      children: [
+        {
+          id: 2,
+          name: "Dashboard",
+          to: "/data/reports/dashboard",
+          iconFront: <InboxIcon />,
+          hasChildren: false,
+          isChild: true,
+        },
+        {
+          id: 3,
+          name: "Statistics",
+          to: "/data/reports/statistics",
+          iconFront: <InboxIcon />,
+          hasChildren: false,
+          isChild: true,
+        },
+        {
+          id: 4,
+          name: "Statistics-data",
+          to: "/data/reports/statistics-data",
+          iconFront: <InboxIcon />,
+          hasChildren: false,
+          isChild: true,
+        },
+      ],
+    },
+    {
+      id: 5,
+      name: "Users",
+      to: "/data/fruits",
+      iconFront: <InboxIcon />,
+      hasChildren: true,
+      isChild: false,
+      children: [
+        {
+          id: 6,
+          name: "Admin",
+          to: "/data/fruits/fruit",
+          iconFront: <InboxIcon />,
+          hasChildren: false,
+          isChild: true,
+        },
+        {
+          id: 7,
+          name: "Member",
+          to: "/data/users/member",
+          iconFront: <InboxIcon />,
+          hasChildren: false,
+          isChild: true,
+        },
+      ],
+    },
+    {
+      id: 8,
+      name: "Profile",
+      to: "/data/profile",
+      iconFront: <AccountBoxIcon />,
+      hasChildren: false,
+      isChild: false,
+    },
+    {
+      id: 9,
+      name: "Fruits",
+      to: "/data/fruits",
+      iconFront: <InboxIcon />,
+      hasChildren: false,
+      isChild: false,
+    },
+    {
+      id: 10,
+      name: "Exams",
+      to: "/data/quiz",
+      iconFront: <InboxIcon />,
+      hasChildren: false,
+      isChild: false,
+    },
+  ];
+};

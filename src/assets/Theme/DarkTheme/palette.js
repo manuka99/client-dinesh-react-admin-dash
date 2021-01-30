@@ -16,8 +16,8 @@ const data = {
   neutral: {
     main: "#2979ff",
     dark: "#37474f",
-    straight: "black",
-    reverse: "white",
+    straight: "#000000",
+    reverse: "#ffffff",
   },
   background: {
     default: "#192231",

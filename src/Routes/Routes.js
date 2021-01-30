@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from "react";
+import React from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
 import ProgressBar from "react-topbar-progress-indicator";
 import loadable from "@loadable/component";
