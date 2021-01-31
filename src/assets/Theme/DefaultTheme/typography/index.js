@@ -1,6 +1,6 @@
 const data =  {
-  fontWeightMedium: 600,
-  fontWeightBold: 800,
+  // fontWeightMedium: 600,
+  // fontWeightBold: 800,
   fontFamily: [
     "Nunito",
     "Roboto",

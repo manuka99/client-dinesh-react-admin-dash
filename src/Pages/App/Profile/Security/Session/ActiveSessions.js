@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
 
 function ActiveSessions() {
   const [requestLoading, setRequestLoading] = useState(true);
-  const [sessionsData, setSessionsData] = useState({});
+  const [sessionsData, setSessionsData] = useState([]);
   const classes = useStyles();
   const deviceDetector = new DeviceDetector();
   const [moreOnSession, setMoreOnSession] = useState("");

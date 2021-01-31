@@ -4,11 +4,9 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
-import Link from "@material-ui/core/Link";
 import Container from "@material-ui/core/Container";
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import api from "../../util/api";
@@ -17,23 +15,15 @@ import { LogIn as loginAuth } from "../../util/auth";
 import ButtonProgress from "../../components/common/ButtonProgress/ButtonProgress";
 import LockIcon from "@material-ui/icons/Lock";
 import { useNavigate, NavLink } from "react-router-dom";
-import { Button } from "@material-ui/core";
-
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {"Copyright © "}
-      <Link color="inherit" href="https://material-ui.com/">
-        {"Pizza Apes "}
-      </Link>
-      {new Date().getFullYear()}
-    </Typography>
-  );
-}
+import { Button, Paper } from "@material-ui/core";
+import FacebookIcon from "../../../src/icons/Facebook";
+import GoogleIcon from "../../../src/icons/Google";
+import Copyright from "../../components/Copyright";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
-    margin: theme.spacing(8, 4),
+    margin: theme.spacing(8, 2),
+    padding: theme.spacing(4),
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
@@ -118,15 +108,47 @@ export default function Login() {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" style={{ maxWidth: "640px" }}>
       <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign in to Pizza Apes
+      <Paper className={classes.paper}>
+        <Avatar
+          className={classes.avatar}
+          style={{ height: "48px", width: "48px" }}
+        />
+        <Typography variant="h4">Pizza Apes</Typography>
+        <Typography color="textSecondary" variant="body2">
+          Sign in on the administration platform
         </Typography>
+        <br />
+        <Grid container spacing={3}>
+          <Grid item xs={12} md={6}>
+            <Button
+              color="primary"
+              fullWidth
+              startIcon={<FacebookIcon />}
+              size="large"
+              style={{ backgroundColor: "#0000ff", color: "white" }}
+              variant="contained"
+            >
+              Login with Facebook
+            </Button>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Button
+              fullWidth
+              startIcon={<GoogleIcon />}
+              size="large"
+              variant="contained"
+            >
+              Login with Google
+            </Button>
+          </Grid>
+        </Grid>
+        <Box mt={3}>
+          <Typography align="center" color="textSecondary" variant="body1">
+            or login with email address
+          </Typography>
+        </Box>
         {errors.message && <Error message={errors.message} />}
         <form className={classes.form} onSubmit={submitForm}>
           <TextField
@@ -173,12 +195,13 @@ export default function Login() {
               variant="contained"
               color="primary"
               name="Sign In"
+              size="large"
               loading={loading}
               startIcon={<LockIcon />}
             />
           </Box>
 
-          <Grid container>
+          <Grid container spacing={1}>
             <Grid item xs>
               <Button
                 variant="text"
@@ -200,7 +223,7 @@ export default function Login() {
             <Copyright />
           </Box>
         </form>
-      </div>
+      </Paper>
     </Container>
   );
 }

@@ -2,7 +2,6 @@ import React, { useRef, useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-import Link from "@material-ui/core/Link";
 import Container from "@material-ui/core/Container";
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
@@ -15,22 +14,13 @@ import { LogIn as loginAuth } from "../../util/auth";
 import ButtonProgress from "../../components/common/ButtonProgress/ButtonProgress";
 import LockIcon from "@material-ui/icons/Lock";
 import { Button, Paper } from "@material-ui/core";
+import Copyright from "../../components/Copyright";
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {"Copyright © "}
-      <Link color="inherit" href="https://material-ui.com/">
-        {"Pizza Apes "}
-      </Link>
-      {new Date().getFullYear()}
-    </Typography>
-  );
-}
 
 const useStyles = makeStyles((theme) => ({
   paper: {
-    margin: theme.spacing(8, 4),
+    margin: theme.spacing(8, 2),
+    padding: theme.spacing(4),
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
@@ -100,80 +90,87 @@ function TwoFactorChallenge() {
   };
 
   return (
-    <Container component="main" maxWidth="sm">
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography variant="h6" gutterBottom>
-          Two Factor Authentication Challenge
-        </Typography>
-        <Typography variant="body2" gutterBottom>
-          Two factor authentication feature is enabled, therefore the user is
-          required to input a six digit numeric token during the authentication
-          process. This token is generated using a time-based one-time password
-          (TOTP) that can be retrieved from any TOTP compatible mobile
-          authentication application such as Google Authenticator.
-        </Typography>
-        <Box mt={2} mb={3}>
-          <Paper elevation={8}>
-            <img
-              width="340px"
-              alt="What is two factor authentication"
-              src="/images/what-is-two-factor-authentication.gif"
-            />
-          </Paper>
-        </Box>
-        <Typography variant="subtitle2" color="textSecondary">
-          {isTOTP
-            ? " *Enter the TOTP code recieved on your mobile authentication application"
-            : "* Enter any of the Recovery codes recieved when setting up two factor authentication."}
-        </Typography>
-        {errors.message && <Error message={errors.message} />}
-        <form className={classes.form} onSubmit={submitCode}>
-          <TextField
-            required
-            inputRef={codeRef}
-            error={isTOTP ? errors.code : errors.recovery_code}
-            variant="outlined"
-            margin="normal"
-            fullWidth
-            label={isTOTP ? "TOTP token" : "Recovery code"}
-            name={isTOTP ? "code" : "recovery_code"}
-            autoFocus
-            onChange={handleForm}
-            helperText={isTOTP ? errors.code : errors.recovery_code}
-          />
-          <Box mt={1} mb={2}>
-            <ButtonProgress
-              type="submit"
+    <Container component="main" style={{ maxWidth: "640px" }}>
+      <Paper>
+        <CssBaseline />
+        <div className={classes.paper}>
+          <Avatar
+            className={classes.avatar}
+            style={{ height: "48px", width: "48px" }}
+          >
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography variant="h6" gutterBottom>
+            Two Factor Authentication Challenge
+          </Typography>
+          <Typography variant="body2" gutterBottom>
+            Two factor authentication feature is enabled, therefore the user is
+            required to input a six digit numeric token during the
+            authentication process. This token is generated using a time-based
+            one-time password (TOTP) that can be retrieved from any TOTP
+            compatible mobile authentication application such as Google
+            Authenticator.
+          </Typography>
+          <Box mt={2} mb={3}>
+            <Paper elevation={8}>
+              <img
+                width="340px"
+                alt="What is two factor authentication"
+                src="/images/what-is-two-factor-authentication.gif"
+              />
+            </Paper>
+          </Box>
+          <Typography variant="subtitle2" color="textSecondary">
+            {isTOTP
+              ? " *Enter the TOTP code recieved on your mobile authentication application"
+              : "* Enter any of the Recovery codes recieved when setting up two factor authentication."}
+          </Typography>
+          {errors.message && <Error message={errors.message} />}
+          <form className={classes.form} onSubmit={submitCode}>
+            <TextField
+              required
+              inputRef={codeRef}
+              error={isTOTP ? errors.code : errors.recovery_code}
+              variant="outlined"
+              margin="normal"
               fullWidth
-              variant="contained"
-              color="primary"
-              name="Verify code"
-              loading={loading}
-              startIcon={<LockIcon />}
+              label={isTOTP ? "TOTP token" : "Recovery code"}
+              name={isTOTP ? "code" : "recovery_code"}
+              autoFocus
+              onChange={handleForm}
+              helperText={isTOTP ? errors.code : errors.recovery_code}
             />
-          </Box>
+            <Box mt={1} mb={2}>
+              <ButtonProgress
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                name="Verify code"
+                size="large"
+                loading={loading}
+                startIcon={<LockIcon />}
+              />
+            </Box>
 
-          <Grid container>
-            <Grid item xs>
-              <Button
-                color="secondary"
-                size="small"
-                variant="text"
-                onClick={switchModes}
-              >
-                {isTOTP ? "No access for mobile?" : "Enter TOTP code"}
-              </Button>
+            <Grid container>
+              <Grid item xs>
+                <Button
+                  color="secondary"
+                  size="small"
+                  variant="text"
+                  onClick={switchModes}
+                >
+                  {isTOTP ? "No access for mobile?" : "Enter TOTP code"}
+                </Button>
+              </Grid>
             </Grid>
-          </Grid>
-          <Box mt={5}>
-            <Copyright />
-          </Box>
-        </form>
-      </div>
+            <Box mt={5}>
+              <Copyright />
+            </Box>
+          </form>
+        </div>
+      </Paper>
     </Container>
   );
 }

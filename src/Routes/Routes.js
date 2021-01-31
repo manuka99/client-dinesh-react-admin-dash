@@ -88,7 +88,7 @@ const Fruits = loadable(() => import("../components/Fruits"), {
 const Profile = loadable(
   () => {
     return new Promise((resolve) => {
-      setTimeout(() => resolve(import("../Pages/App/Profile/Profile")), 30000);
+      setTimeout(() => resolve(import("../Pages/App/Profile/Profile")), 3000);
     });
   },
   {

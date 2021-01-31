@@ -2,32 +2,22 @@ import React, { useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-import Link from "@material-ui/core/Link";
 import Container from "@material-ui/core/Container";
 import Box from "@material-ui/core/Box";
-import PersonIcon from "@material-ui/icons/Person";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import api from "../../util/api";
 import Error from "../../components/alerts/Error";
 import ButtonProgress from "../../components/common/ButtonProgress/ButtonProgress";
 import swal from "sweetalert";
+import Paper from "@material-ui/core/Paper";
+import Copyright from "../../components/Copyright";
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {"Copyright © "}
-      <Link color="inherit" href="https://material-ui.com/">
-        {"Pizza Apes "}
-      </Link>
-      {new Date().getFullYear()}
-    </Typography>
-  );
-}
 
 const useStyles = makeStyles((theme) => ({
   paper: {
-    margin: theme.spacing(8, 4),
+    margin: theme.spacing(8, 2),
+    padding: theme.spacing(4),
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
@@ -100,12 +90,13 @@ export default function ForgotPassword() {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" style={{ maxWidth: "640px" }}>
       <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <PersonIcon />
-        </Avatar>
+      <Paper className={classes.paper}>
+        <Avatar
+          className={classes.avatar}
+          style={{ height: "48px", width: "48px" }}
+        />
         <Typography variant="h5" gutterBottom>
           Reset your password
         </Typography>
@@ -141,7 +132,7 @@ export default function ForgotPassword() {
             <Copyright />
           </Box>
         </form>
-      </div>
+      </Paper>
     </Container>
   );
 }
