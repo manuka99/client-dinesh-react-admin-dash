@@ -32,13 +32,15 @@ function App(props) {
   }, []);
 
   useEffect(() => {
-    if (props.login) {
-      locationRequired ? navigate(locationRequired) : navigate("/");
+    if (props.is2faRequired) navigate("/two-factor-challenge");
+    else if (props.login) {
+      locationRequired !== "/login"
+        ? navigate(locationRequired)
+        : navigate("/");
       setlocationRequired("");
-    }
-    if (props.logout) navigate("/login");
+    } else if (props.logout) navigate("/login");
     // eslint-disable-next-line
-  }, [props.login, props.logout]);
+  }, [props.is2faRequired, props.login, props.logout]);
 
   useEffect(() => {
     navigate(props.redirect.route);
@@ -68,6 +70,7 @@ const mapStateToProps = (state) => {
   return {
     loading: state.currentUser.loading,
     login: state.currentUser.login,
+    is2faRequired: state.currentUser.is2faRequired,
     logout: state.currentUser.logout,
     theme: state.currentUser.theme,
     redirect: state.redirect,

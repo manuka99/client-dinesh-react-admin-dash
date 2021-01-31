@@ -3,6 +3,7 @@ import {
   FETCH_USER_ERROR,
   FETCH_USER_REQUEST,
   USER_LOGIN,
+  USER_2FA_REQUIRED,
   USER_LOGOUT,
   SET_APP_THEME,
 } from "./AuthUserActionTypes";
@@ -34,6 +35,13 @@ export const user_login = () => {
   };
 };
 
+// 2fa is enabled and required
+export const user_2fa = () => {
+  return {
+    type: USER_2FA_REQUIRED,
+  };
+};
+
 export const user_logout = () => {
   return {
     type: USER_LOGOUT,
@@ -60,7 +68,10 @@ export const fetch_user_data = () => {
           roles: res.data.roles,
         };
         dispatch(fetch_auth_user_data_success(payload));
-        if (payload.user !== null && payload.user.id) dispatch(user_login());
+        if (payload.user !== null && payload.user.id)
+          payload.user.prompt2fa
+            ? dispatch(user_2fa())
+            : dispatch(user_login());
         else dispatch(user_logout());
       })
       .catch((error) => {

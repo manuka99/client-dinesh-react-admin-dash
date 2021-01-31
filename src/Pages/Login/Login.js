@@ -70,13 +70,6 @@ export default function Login() {
     });
   };
 
-  const googleSignIn = () => {
-    api()
-      .get("/auth/google/redirect")
-      .then((res) => console.log(res))
-      .catch((error) => console.log(error));
-  };
-
   const submitForm = (event) => {
     setErrors({});
     event.preventDefault();
@@ -87,11 +80,7 @@ export default function Login() {
         api()
           .post("/login", userLogin)
           .then((res) => {
-            if (res.status === 200) {
-              if (res.data.two_factor === true) {
-                navigate("/two-factor-challenge");
-              } else loginAuth();
-            }
+            loginAuth();
           })
           .catch((error) => {
             if (error.response) {
@@ -135,7 +124,7 @@ export default function Login() {
               startIcon={<FacebookIcon />}
               size="large"
               component="a"
-              href="http://localhost:8000/auth/google/redirect"
+              href="http://localhost:8000/auth/facebook/redirect"
               style={{ backgroundColor: "#0000ff", color: "white" }}
               variant="contained"
             >
@@ -148,9 +137,8 @@ export default function Login() {
               startIcon={<GoogleIcon />}
               size="large"
               variant="contained"
-              // component="a"
-              // href="http://localhost:8000/auth/google/redirect"
-              onClick={googleSignIn}
+              component="a"
+              href="http://localhost:8000/auth/google/redirect/api"
             >
               Login with Google
             </Button>

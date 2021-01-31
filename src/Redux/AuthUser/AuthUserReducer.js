@@ -3,12 +3,14 @@ import {
   FETCH_USER_ERROR,
   FETCH_USER_REQUEST,
   USER_LOGIN,
+  USER_2FA_REQUIRED,
   USER_LOGOUT,
   SET_APP_THEME,
 } from "./AuthUserActionTypes";
 
 const initialState = {
   login: false,
+  is2faRequired: false,
   logout: false,
   error: "",
   user_data: "",
@@ -40,12 +42,21 @@ export const AuthUserReducer = (state = initialState, action) => {
     case USER_LOGIN:
       return {
         ...state,
+        is2faRequired: false,
         login: true,
+        logout: false,
+      };
+    case USER_2FA_REQUIRED:
+      return {
+        ...state,
+        is2faRequired: true,
+        login: false,
         logout: false,
       };
     case USER_LOGOUT:
       return {
         ...state,
+        is2faRequired: false,
         login: false,
         logout: true,
       };

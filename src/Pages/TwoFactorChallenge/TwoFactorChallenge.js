@@ -15,7 +15,8 @@ import ButtonProgress from "../../components/common/ButtonProgress/ButtonProgres
 import LockIcon from "@material-ui/icons/Lock";
 import { Button, Paper } from "@material-ui/core";
 import Copyright from "../../components/Copyright";
-
+import store from "../../Redux/store";
+import {fetch_user_data } from "../../Redux";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -37,15 +38,22 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  user_details: {
+    flexGrow: 1,
+    margin: theme.spacing(1, 0, 2, 0),
+  },
 }));
 
 function TwoFactorChallenge() {
   const [errors, setErrors] = React.useState({});
   const [loading, setLoading] = useState(false);
+  const [loadingLogout, setLoadingLogout] = useState(false);
   const [data, setData] = useState({});
   const [isTOTP, setIsTOTP] = useState(true);
   const classes = useStyles();
   const codeRef = useRef("");
+  const state = store.getState().currentUser;
+  const user_data = state.user_data;
 
   const submitCode = (event) => {
     event.preventDefault();
@@ -89,6 +97,17 @@ function TwoFactorChallenge() {
     setErrors({});
   };
 
+  const logout = () => {
+    setLoadingLogout(true);
+    api()
+      .post("/forget/two-factor-login")
+      .then((res) =>  store.dispatch(fetch_user_data()))
+      .catch((error) => console.log(error))
+      .finally(() => {
+        setLoadingLogout(false);
+      });
+  };
+
   return (
     <Container component="main" style={{ maxWidth: "640px" }}>
       <Paper>
@@ -111,6 +130,38 @@ function TwoFactorChallenge() {
             compatible mobile authentication application such as Google
             Authenticator.
           </Typography>
+
+          <div className={classes.user_details}>
+            <Grid container spacing={6} justify="center">
+              <Grid item xs={1}>
+                <Avatar />
+              </Grid>
+              <Grid item xs={7}>
+                <Grid container direction="column">
+                  <Typography variant="body2">
+                    <strong>
+                      {user_data.user.fname} {user_data.user.lname}
+                    </strong>
+                  </Typography>
+                  <Typography variant="body2">
+                    {user_data.user.email}
+                  </Typography>
+                </Grid>
+              </Grid>
+              <Grid item xs={3}>
+                <ButtonProgress
+                  type="submit"
+                  fullWidth
+                  variant="outlined"
+                  color="primary"
+                  name="logout"
+                  size="small"
+                  loading={loadingLogout}
+                  handleButtonClick={logout}
+                />
+              </Grid>
+            </Grid>
+          </div>
           <Box mt={2} mb={3}>
             <Paper elevation={8}>
               <img

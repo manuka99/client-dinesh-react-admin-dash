@@ -20,11 +20,12 @@ export function isLoggedIn(roles = null) {
   const state = store.getState().currentUser;
   const user_data = state.user_data;
 
+  let is2faRequired = false;
   let userAuth = false;
   let userRoleValidated = false;
 
   if (user_data !== null && user_data.user !== null && user_data.user.id)
-    userAuth = true;
+    state.is2faRequired ? (is2faRequired = true) : (userAuth = true);
 
   if (userAuth) {
     if (roles !== undefined && roles !== null && roles.length !== 0)
@@ -32,7 +33,7 @@ export function isLoggedIn(roles = null) {
     else userRoleValidated = true;
   }
 
-  return { userAuth, userRoleValidated };
+  return {is2faRequired, userAuth, userRoleValidated };
 }
 
 const roleValidated = (roles, user_data) => {
