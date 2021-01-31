@@ -70,6 +70,13 @@ export default function Login() {
     });
   };
 
+  const googleSignIn = () => {
+    api()
+      .get("/auth/google/redirect")
+      .then((res) => console.log(res))
+      .catch((error) => console.log(error));
+  };
+
   const submitForm = (event) => {
     setErrors({});
     event.preventDefault();
@@ -127,6 +134,8 @@ export default function Login() {
               fullWidth
               startIcon={<FacebookIcon />}
               size="large"
+              component="a"
+              href="http://localhost:8000/auth/google/redirect"
               style={{ backgroundColor: "#0000ff", color: "white" }}
               variant="contained"
             >
@@ -139,6 +148,9 @@ export default function Login() {
               startIcon={<GoogleIcon />}
               size="large"
               variant="contained"
+              // component="a"
+              // href="http://localhost:8000/auth/google/redirect"
+              onClick={googleSignIn}
             >
               Login with Google
             </Button>
