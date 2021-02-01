@@ -62,7 +62,7 @@ export const fetch_user_data = () => {
     api()
       .get("/redux/user")
       .then((res) => {
-        console.log("ssss");
+        console.log(res);
         const payload = {
           user: res.data.user,
           roles: res.data.roles,

@@ -19,10 +19,12 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import { Avatar } from "@material-ui/core";
+import store from "../../../Redux/store";
 
 function SideNavBar({ open, handleDrawerOpen, handleDrawerClose }) {
   const classes = MainDashStyles();
   const theme = useTheme();
+  const user_data = store.getState().currentUser.user_data;
 
   return (
     <Paper elevation={1}>
@@ -48,10 +50,12 @@ function SideNavBar({ open, handleDrawerOpen, handleDrawerClose }) {
               src="/images/user-avatar.png"
             />
             <Typography variant="h6" className={classes.name}>
-              trmanus sdsdsdsdssdzxzxzsdd ddd
+              {user_data.user.fname} {user_data.user.lname}
             </Typography>
             <Typography variant="body2" className={classes.name}>
-              Admin Editor
+              {user_data.roles.length > 0
+                ? user_data.roles.map((role) => role.name)
+                : "Guest mode"}
             </Typography>
           </div>
           <IconButton

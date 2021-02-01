@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
@@ -14,7 +14,7 @@ import Error from "../../components/alerts/Error";
 import { LogIn as loginAuth } from "../../util/auth";
 import ButtonProgress from "../../components/common/ButtonProgress/ButtonProgress";
 import LockIcon from "@material-ui/icons/Lock";
-import { useNavigate, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { Button, Paper } from "@material-ui/core";
 import FacebookIcon from "../../../src/icons/Facebook";
 import GoogleIcon from "../../../src/icons/Google";
@@ -51,9 +51,15 @@ export default function Login() {
     password: null,
     remember: false,
   });
-
   const classes = useStyles();
-  let navigate = useNavigate();
+
+  useEffect(() => {
+    api()
+      .get("/login-error")
+      .then((res) => setErrors({ ...errors, social: res.data }))
+      .catch((error) => console.log(error));
+    // eslint-disable-next-line
+  }, []);
 
   const handleForm = (event) => {
     setUserLogin({
@@ -112,43 +118,47 @@ export default function Login() {
           style={{ height: "48px", width: "48px" }}
         />
         <Typography variant="h4">Pizza Apes</Typography>
+
         <Typography color="textSecondary" variant="body2">
           Sign in on the administration platform
         </Typography>
-        <br />
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={6}>
-            <Button
-              color="primary"
-              fullWidth
-              startIcon={<FacebookIcon />}
-              size="large"
-              component="a"
-              href="http://localhost:8000/auth/facebook/redirect"
-              style={{ backgroundColor: "#0000ff", color: "white" }}
-              variant="contained"
-            >
-              Login with Facebook
-            </Button>
+        <Box mt={2} mb={2} width="100%">
+          <Grid container spacing={3}>
+            {errors.social && <Error item xs={12} message={errors.social} />}
+
+            <Grid item xs={12} md={6}>
+              <Button
+                color="primary"
+                fullWidth
+                startIcon={<FacebookIcon />}
+                size="large"
+                component="a"
+                href="http://localhost:8000/auth/facebook/redirect/api"
+                style={{ backgroundColor: "#0000ff", color: "white" }}
+                variant="contained"
+              >
+                Login with Facebook
+              </Button>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Button
+                fullWidth
+                startIcon={<GoogleIcon />}
+                size="large"
+                variant="contained"
+                component="a"
+                href="http://localhost:8000/auth/google/redirect/api"
+              >
+                Login with Google
+              </Button>
+            </Grid>
           </Grid>
-          <Grid item xs={12} md={6}>
-            <Button
-              fullWidth
-              startIcon={<GoogleIcon />}
-              size="large"
-              variant="contained"
-              component="a"
-              href="http://localhost:8000/auth/google/redirect/api"
-            >
-              Login with Google
-            </Button>
-          </Grid>
-        </Grid>
-        <Box mt={3}>
-          <Typography align="center" color="textSecondary" variant="body1">
-            or login with email address
-          </Typography>
         </Box>
+
+        <Typography align="center" color="textSecondary" variant="body1">
+          or login with email address
+        </Typography>
+
         {errors.message && <Error message={errors.message} />}
         <form className={classes.form} onSubmit={submitForm}>
           <TextField

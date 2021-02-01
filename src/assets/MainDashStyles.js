@@ -38,6 +38,7 @@ const MainDashStyles = makeStyles((theme) =>
       flexShrink: 0,
       whiteSpace: "nowrap",
       zIndex: theme.zIndex.drawer + 2,
+      overflowX: "hidden",
     },
     drawerOpen: {
       width: drawerWidth,
@@ -46,6 +47,7 @@ const MainDashStyles = makeStyles((theme) =>
         duration: theme.transitions.duration.enteringScreen,
       }),
       position: "fixed",
+      overflowX: "hidden",
     },
     drawerClose: {
       [theme.breakpoints.up("xs")]: {
