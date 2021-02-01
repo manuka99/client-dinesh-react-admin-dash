@@ -80,8 +80,8 @@ export default function ForgotPassword() {
               if (status === 422) {
                 setErrors({ message: data.message, ...data.errors });
                 console.log(errors);
-              } else swal(error.message);
-            } else swal(error.message);
+              }
+            }
           })
           .finally(() => {
             setLoading(false);
