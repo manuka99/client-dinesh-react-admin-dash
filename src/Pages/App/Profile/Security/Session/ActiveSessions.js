@@ -5,7 +5,6 @@ import { Box, Button, CircularProgress, Divider } from "@material-ui/core";
 import api from "../../../../../util/api";
 import { makeStyles } from "@material-ui/core/styles";
 import SyncIcon from "@material-ui/icons/Sync";
-import moment from "moment";
 import PhoneAndroidIcon from "@material-ui/icons/PhoneAndroid";
 import ComputerIcon from "@material-ui/icons/Computer";
 import SessionData from "./SessionData";
@@ -155,7 +154,7 @@ function ActiveSessions() {
                       >
                         {sessionsData.current === session.id
                           ? "Current device"
-                          : moment.unix(session.last_activity).fromNow()}
+                          : session.last_online}
                       </Grid>
                       {session.deviceType === "bot" ? (
                         <Grid item>Robot | Machine</Grid>

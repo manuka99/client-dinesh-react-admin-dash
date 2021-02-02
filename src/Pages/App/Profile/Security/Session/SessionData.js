@@ -7,7 +7,6 @@ import Grid from "@material-ui/core/Grid";
 import { CircularProgress, Divider } from "@material-ui/core";
 import api from "../../../../../util/api";
 import swal from "sweetalert";
-import moment from "moment";
 import PhoneAndroidIcon from "@material-ui/icons/PhoneAndroid";
 import ComputerIcon from "@material-ui/icons/Computer";
 import Error from "../../../../../components/alerts/Error";
@@ -256,7 +255,7 @@ export default function SessionData({ id, onClose }) {
                         >
                           {current === session.id
                             ? "Current device"
-                            : moment.unix(session.last_activity).fromNow()}
+                            : session.last_online}
                         </Grid>
                         {session.deviceType === "bot" ? (
                           <Grid item>Robot | Machine</Grid>
