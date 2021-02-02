@@ -8,7 +8,6 @@ import { CircularProgress, Divider } from "@material-ui/core";
 import api from "../../../../../util/api";
 import swal from "sweetalert";
 import moment from "moment";
-import DeviceDetector from "device-detector-js";
 import PhoneAndroidIcon from "@material-ui/icons/PhoneAndroid";
 import ComputerIcon from "@material-ui/icons/Computer";
 import Error from "../../../../../components/alerts/Error";
@@ -20,6 +19,7 @@ import {
   Box,
 } from "@material-ui/core";
 import ButtonProgress from "../../../../../components/common/ButtonProgress/ButtonProgress";
+import BugReportIcon from "@material-ui/icons/BugReport";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -92,11 +92,9 @@ export default function SessionData({ id, onClose }) {
   const [session, setsession] = useState({});
   const [current, setCurrent] = useState("");
   const [geoData, setGeoData] = useState({});
-  const deviceDetector = new DeviceDetector();
   const classes = useStyles();
   const theme = useTheme();
   const mobileDevice = useMediaQuery(theme.breakpoints.down("sm"));
-  const device = deviceDetector.parse(session.user_agent);
 
   useEffect(() => {
     api()
@@ -218,18 +216,25 @@ export default function SessionData({ id, onClose }) {
                       key={session.id}
                     >
                       <Grid item xs={12}>
-                        {deviceDetector.parse(session.user_agent).device
-                          .type === "desktop" ? (
+                        {session.deviceType === "desktop" ? (
                           <ComputerIcon
                             className={`${
                               current === session.id && classes.activeSession
                             } ${classes.sessionIcon}`}
                           />
+                        ) : session.deviceType === "bot" ? (
+                          <BugReportIcon
+                            className={
+                              current === session.id && classes.activeSession
+                            }
+                            fontSize="large"
+                          />
                         ) : (
                           <PhoneAndroidIcon
-                            className={`${
+                            className={
                               current === session.id && classes.activeSession
-                            } ${classes.sessionIcon}`}
+                            }
+                            fontSize="large"
                           />
                         )}
                       </Grid>
@@ -253,9 +258,11 @@ export default function SessionData({ id, onClose }) {
                             ? "Current device"
                             : moment.unix(session.last_activity).fromNow()}
                         </Grid>
-                        <Grid item>
-                          {`${device.os.name} | ${device.client.name}`}
-                        </Grid>
+                        {session.deviceType === "bot" ? (
+                          <Grid item>Robot | Machine</Grid>
+                        ) : (
+                          <Grid item>{`${session.osInfo}`}</Grid>
+                        )}
                       </Grid>
 
                       <Grid item xs={12}>
@@ -292,18 +299,44 @@ export default function SessionData({ id, onClose }) {
                       <Typography variant="body2" gutterBottom>
                         {`${geoData.timezone}`}
                       </Typography>
-                      <Typography variant="body2" gutterBottom>
-                        <strong> Device:</strong>
-                      </Typography>
-                      <Typography variant="body2" gutterBottom>
-                        {`${device.device.type} | ${device.device.brand} | ${device.device.model}`}
-                      </Typography>
-                      <Typography variant="body2" gutterBottom>
-                        <strong> Client:</strong>
-                      </Typography>
-                      <Typography variant="body2" gutterBottom>
-                        {`${device.client.type} | ${device.client.name} | ${device.os.name}`}
-                      </Typography>
+
+                      {session.deviceType === "bot" ? (
+                        <React.Fragment>
+                          <Typography variant="body2" gutterBottom>
+                            <strong> Client:</strong>
+                          </Typography>
+                          <Typography variant="body2" gutterBottom noWrap>
+                            Robot | Machine
+                          </Typography>
+                          <Button
+                            variant="outlined"
+                            color="secondary"
+                            size="small"
+                          >
+                            Know more about bots
+                          </Button>
+                        </React.Fragment>
+                      ) : (
+                        <React.Fragment>
+                          <Typography variant="body2" gutterBottom>
+                            <strong> Device:</strong>
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            gutterBottom
+                            noWrap
+                            style={{ textTransform: "capitalize" }}
+                          >
+                            {`${session.deviceType} | ${session.brand} | ${session.model}`}
+                          </Typography>
+                          <Typography variant="body2" gutterBottom>
+                            <strong> Client:</strong>
+                          </Typography>
+                          <Typography variant="body2" gutterBottom noWrap>
+                            {`${session.osInfo} | ${session.deviceInfo}`}
+                          </Typography>
+                        </React.Fragment>
+                      )}
                     </Grid>
                   </Grid>
                 ) : (

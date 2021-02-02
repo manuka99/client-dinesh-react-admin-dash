@@ -6,10 +6,10 @@ import api from "../../../../../util/api";
 import { makeStyles } from "@material-ui/core/styles";
 import SyncIcon from "@material-ui/icons/Sync";
 import moment from "moment";
-import DeviceDetector from "device-detector-js";
 import PhoneAndroidIcon from "@material-ui/icons/PhoneAndroid";
 import ComputerIcon from "@material-ui/icons/Computer";
 import SessionData from "./SessionData";
+import BugReportIcon from "@material-ui/icons/BugReport";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -37,7 +37,6 @@ function ActiveSessions() {
   const [requestLoading, setRequestLoading] = useState(true);
   const [sessionsData, setSessionsData] = useState([]);
   const classes = useStyles();
-  const deviceDetector = new DeviceDetector();
   const [moreOnSession, setMoreOnSession] = useState("");
 
   useEffect(() => {
@@ -111,9 +110,16 @@ function ActiveSessions() {
                     key={session.id}
                   >
                     <Grid item xs={12}>
-                      {deviceDetector.parse(session.user_agent).device.type ===
-                      "desktop" ? (
+                      {session.deviceType === "desktop" ? (
                         <ComputerIcon
+                          className={
+                            sessionsData.current === session.id &&
+                            classes.activeSession
+                          }
+                          fontSize="large"
+                        />
+                      ) : session.deviceType === "bot" ? (
+                        <BugReportIcon
                           className={
                             sessionsData.current === session.id &&
                             classes.activeSession
@@ -127,7 +133,6 @@ function ActiveSessions() {
                             classes.activeSession
                           }
                           fontSize="large"
-                          F
                         />
                       )}
                     </Grid>
@@ -152,13 +157,11 @@ function ActiveSessions() {
                           ? "Current device"
                           : moment.unix(session.last_activity).fromNow()}
                       </Grid>
-                      <Grid item>
-                        {`${
-                          deviceDetector.parse(session.user_agent).os.name
-                        } | ${
-                          deviceDetector.parse(session.user_agent).client.name
-                        }`}
-                      </Grid>
+                      {session.deviceType === "bot" ? (
+                        <Grid item>Robot | Machine</Grid>
+                      ) : (
+                        <Grid item>{`${session.osInfo}`}</Grid>
+                      )}
                     </Grid>
 
                     <Grid item xs={12}>
