@@ -78,6 +78,12 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     boxSizing: "border-box",
   },
+  activeSession: {
+    color: theme.palette.neutral.main,
+  },
+  sessionIcon: {
+    fontSize: "48px",
+  },
 }));
 
 export default function SessionData({ id, onClose }) {
@@ -215,17 +221,15 @@ export default function SessionData({ id, onClose }) {
                         {deviceDetector.parse(session.user_agent).device
                           .type === "desktop" ? (
                           <ComputerIcon
-                            className={
+                            className={`${
                               current === session.id && classes.activeSession
-                            }
-                            fontSize="large"
+                            } ${classes.sessionIcon}`}
                           />
                         ) : (
                           <PhoneAndroidIcon
-                            className={
+                            className={`${
                               current === session.id && classes.activeSession
-                            }
-                            fontSize="large"
+                            } ${classes.sessionIcon}`}
                           />
                         )}
                       </Grid>

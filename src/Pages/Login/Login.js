@@ -133,7 +133,7 @@ export default function Login() {
                 startIcon={<FacebookIcon />}
                 size="large"
                 component="a"
-                href="http://localhost:8000/auth/facebook/redirect/api"
+                href="http://localhost:8000/api/auth/facebook/redirect/"
                 style={{ backgroundColor: "#0000ff", color: "white" }}
                 variant="contained"
               >
@@ -147,7 +147,7 @@ export default function Login() {
                 size="large"
                 variant="contained"
                 component="a"
-                href="http://localhost:8000/auth/google/redirect/api"
+                href="http://localhost:8000/api/auth/google/redirect/"
               >
                 Login with Google
               </Button>
