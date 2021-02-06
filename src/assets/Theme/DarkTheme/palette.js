@@ -18,6 +18,7 @@ const data = {
     dark: "#37474f",
     straight: "#000000",
     reverse: "#ffffff",
+    brown: "rgba(135, 91, 53, 0.2)",
   },
   background: {
     default: "#192231",

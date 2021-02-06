@@ -110,6 +110,34 @@ const Main = loadable(
     fallback: <DashboardFallback />,
   }
 );
+// products
+const ProductMain = loadable(() => import("../Pages/App/Product/ProductMain"), {
+  fallback: <DashboardFallback />,
+});
+const AllProductsMain = loadable(
+  () => import("../Pages/App/Product/AllProducts/AllProductsMain"),
+  {
+    fallback: <DashboardFallback />,
+  }
+);
+const NewProduct = loadable(
+  () => import("../Pages/App/Product/NewProduct/NewProduct"),
+  {
+    fallback: <DashboardFallback />,
+  }
+);
+const ProductItem = loadable(
+  () => import("../Pages/App/Product/ProductItem/ProductItem"),
+  {
+    fallback: <DashboardFallback />,
+  }
+);
+const CategoriesMain = loadable(
+  () => import("../Pages/App/Product/Categories/CategoriesMain"),
+  {
+    fallback: <DashboardFallback />,
+  }
+);
 
 export const AllRoutes = () => {
   return (
@@ -138,6 +166,17 @@ export const AllRoutes = () => {
           <AuthRoute path="/" element={<Account />} />
           <AuthRoute path="/security" element={<Security />} />
           <AuthRoute path="/two-step-verification" element={<Main />} />
+        </AuthRoute>
+        {/* products */}
+        <AuthRoute path="/products" element={<ProductMain />}>
+          <AuthRoute
+            path="/"
+            element={<Navigate replace={true} to="/app/products/all" />}
+          />
+          <AuthRoute path="/all" element={<AllProductsMain />} />
+          <AuthRoute path="/new" element={<NewProduct />} />
+          <AuthRoute path="/edit/:product_id" element={<ProductItem />} />
+          <AuthRoute path="/categories" element={<CategoriesMain />} />
         </AuthRoute>
         <AuthRoute hasAnyRoles={["Editor"]} path="/fruits" element={<Fruits />}>
           <AuthRoute path="/fruit" element={<Fruits />} />

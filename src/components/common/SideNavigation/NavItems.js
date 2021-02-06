@@ -1,5 +1,9 @@
 import { InboxIcon } from "../../../assets/StyleImports";
 import AccountBoxIcon from "@material-ui/icons/AccountBox";
+import LocalDiningIcon from "@material-ui/icons/LocalDining";
+import ListIcon from "@material-ui/icons/List";
+import CreateIcon from "@material-ui/icons/Create";
+import AcUnitIcon from "@material-ui/icons/AcUnit";
 
 export const NavItems1 = () => {
   return [
@@ -73,14 +77,40 @@ export const NavItems1 = () => {
     },
     {
       id: 9,
-      name: "Fruits",
-      to: "/app/fruits",
-      iconFront: <InboxIcon />,
-      hasChildren: false,
+      name: "Products",
+      to: "/app/products",
+      iconFront: <LocalDiningIcon />,
+      hasChildren: true,
       isChild: false,
+      children: [
+        {
+          id: 10,
+          name: "All products",
+          to: "/app/products/all",
+          iconFront: <ListIcon />,
+          hasChildren: false,
+          isChild: true,
+        },
+        {
+          id: 11,
+          name: "Add new",
+          to: "/app/products/new",
+          iconFront: <CreateIcon />,
+          hasChildren: false,
+          isChild: true,
+        },
+        {
+          id: 12,
+          name: "Categories",
+          to: "/app/products/categories",
+          iconFront: <AcUnitIcon />,
+          hasChildren: false,
+          isChild: true,
+        },
+      ],
     },
     {
-      id: 10,
+      id: 13,
       name: "Exams",
       to: "/app/quiz",
       iconFront: <InboxIcon />,

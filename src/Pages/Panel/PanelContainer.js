@@ -1,6 +1,6 @@
 import { Box } from "@material-ui/core";
 import React, { useState, useEffect } from "react";
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { CssBaseline, MainDashStyles } from "../../assets/StyleImports";
 import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
 import SideNavBar from "../../components/common/SideNavigation/SideNavBar";
@@ -8,7 +8,6 @@ import TopNavBar from "../../components/common/TopNavBar";
 
 function PanelContainer() {
   const classes = MainDashStyles();
-  let location = useLocation();
 
   const [open, setOpen] = useState(true);
 
@@ -23,11 +22,6 @@ function PanelContainer() {
   useEffect(() => {
     document.title = "Administration Dashboard";
   }, []);
-
-  useEffect(() => {
-    console.log("route changed");
-    console.log(location);
-  }, [location]);
 
   return (
     <div className={classes.root}>

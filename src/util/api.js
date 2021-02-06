@@ -43,6 +43,7 @@ export default function api(nonApi = false) {
         swal(error.message);
         return Promise.reject(error);
       }
+      return Promise.reject(error);
     }
   );
 
