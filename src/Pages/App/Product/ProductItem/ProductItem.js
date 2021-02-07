@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, createContext } from "react";
 import { useParams } from "react-router-dom";
 import LoadingModel from "../../../../components/Modals/LoadingModel";
 import api from "../../../../util/api";
@@ -18,6 +18,7 @@ import {
 } from "@material-ui/core";
 import PublishMain from "./PublishSection/PublishMain";
 import CategorySection from "./CategorySection/CategorySection";
+export const ProductContext = createContext(null);
 
 // const styles = makeStyles((theme) => ({
 //   displayTable: {
@@ -103,7 +104,9 @@ function ProductItem() {
   };
 
   return (
-    <div>
+    <ProductContext.Provider
+      value={{ product_id: product_id, mainLoader: setLoading }}
+    >
       <LoadingModel status={loading} />
       {productData.id && (
         <React.Fragment>
@@ -188,7 +191,7 @@ function ProductItem() {
           </Grid>
         </React.Fragment>
       )}
-    </div>
+    </ProductContext.Provider>
   );
 }
 

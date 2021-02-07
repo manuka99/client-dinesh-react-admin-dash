@@ -17,10 +17,11 @@ import {
 } from "@material-ui/core";
 import ButtonProgress from "../../../../../components/common/ButtonProgress/ButtonProgress";
 import api from "../../../../../util/api";
-import CategoryMenuItem from "./CategoryMenuItem";
+import CategoryMenuItem from "./NewCategory/CategoryMenuItem";
 import swal from "sweetalert";
 import AddBoxIcon from "@material-ui/icons/AddBox";
-import NewCategory from "./NewCategory";
+import NewCategory from "./NewCategory/NewCategory";
+import ProductCategories from "./ProductCategories/ProductCategories";
 
 const styles = makeStyles((theme) => ({
   flexDiv: {
@@ -36,13 +37,9 @@ const styles = makeStyles((theme) => ({
     gap: "12px",
     flexWrap: "wrap",
   },
-  categories_div: {
-    overflow: "auto",
-    width: "100%",
-  },
 }));
 
-function CategorySection({ handleProductData }) {
+function CategorySection() {
   const classes = styles();
   const [categories, setCategories] = useState([]);
 
@@ -69,12 +66,11 @@ function CategorySection({ handleProductData }) {
           <Divider />
         </CardActionArea>
         <CardContent className={classes.flexRowDiv}>
-          <Grid container spacing={4}>
-            <Grid item xs={6} md={12}>
-              <Typography variant="subtitle2">All categories</Typography>
-              <div className={classes.categories_div}></div>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6} md={12}>
+              <ProductCategories categories={categories} />
             </Grid>
-            <Grid item xs={6} md={12}>
+            <Grid item xs={12} sm={6} md={12}>
               <NewCategory
                 categories={categories}
                 fetchCategories={fetchCategories}

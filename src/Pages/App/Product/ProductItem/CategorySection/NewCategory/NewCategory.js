@@ -9,8 +9,8 @@ import {
   InputLabel,
   Button,
 } from "@material-ui/core";
-import ButtonProgress from "../../../../../components/common/ButtonProgress/ButtonProgress";
-import api from "../../../../../util/api";
+import ButtonProgress from "../../../../../../components/common/ButtonProgress/ButtonProgress";
+import api from "../../../../../../util/api";
 import CategoryMenuItem from "./CategoryMenuItem";
 import swal from "sweetalert";
 import AddBoxIcon from "@material-ui/icons/AddBox";
@@ -25,16 +25,19 @@ const styles = makeStyles((theme) => ({
     alignItems: "flex-start",
     gap: "12px",
     flexWrap: "wrap",
+    width: "100%",
   },
   formMainHide: {
     overflow: "hidden",
     transition: "0.8s ease",
     maxHeight: "0px",
+    width: "100%",
   },
   formMainShow: {
     overflow: "visible",
     transition: "0.8s ease",
     maxHeight: "15em",
+    width: "100%",
   },
   formControl: {
     marginTop: theme.spacing(2),
@@ -75,7 +78,7 @@ function NewCategory({ categories, fetchCategories }) {
   };
 
   return (
-    <div className={`${classes.newCategory} ${classes.flexRowDiv}`}>
+    <div className={classes.flexRowDiv}>
       <Button
         variant="text"
         size="small"
