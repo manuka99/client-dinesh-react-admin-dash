@@ -14,19 +14,19 @@ import {
   CardContent,
   Divider,
   Typography,
-  makeStyles,
+  // makeStyles,
 } from "@material-ui/core";
 import PublishMain from "./PublishSection/PublishMain";
 import CategorySection from "./CategorySection/CategorySection";
 
-const styles = makeStyles((theme) => ({
-  displayTable: {
-    display: "table",
-  },
-  inlineFlex: {
-    display: "inline-flex",
-  },
-}));
+// const styles = makeStyles((theme) => ({
+//   displayTable: {
+//     display: "table",
+//   },
+//   inlineFlex: {
+//     display: "inline-flex",
+//   },
+// }));
 
 const initialProductData = {
   id: "",
@@ -47,7 +47,7 @@ const initialProductData = {
 
 function ProductItem() {
   const { product_id } = useParams();
-  const classes = styles();
+  // const classes = styles();
   const [loading, setLoading] = useState(false);
   const [updateBtnLoader, setUpdateBtnLoader] = useState(false);
   const [productData, setProductData] = useState({
@@ -87,6 +87,7 @@ function ProductItem() {
   useEffect(() => {
     !productData.url_name &&
       setProductData({ ...productData, url_name: product_id });
+    // eslint-disable-next-line
   }, [productData.url_name]);
 
   // update data
@@ -140,7 +141,11 @@ function ProductItem() {
                   label="Product name"
                   variant="outlined"
                   name="product_name"
-                  value={productData.product_name}
+                  value={
+                    productData.product_name === null
+                      ? " "
+                      : productData.product_name
+                  }
                   onChange={handleEventProductData}
                 />
               </Paper>

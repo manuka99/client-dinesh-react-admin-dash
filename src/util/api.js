@@ -1,6 +1,10 @@
 import axios from "axios";
 import store from "../Redux/store";
-import { set_error_data, fetch_user_data } from "../Redux";
+import {
+  set_error_data,
+  fetch_user_data,
+  change_redirect_route,
+} from "../Redux";
 import swal from "sweetalert";
 
 export default function api(nonApi = false) {
@@ -16,7 +20,6 @@ export default function api(nonApi = false) {
       if (error.response) {
         if (error.response.status === 401) {
           store.dispatch(fetch_user_data());
-          // store.dispatch(change_redirect_route("/login"));
         } else if (error.response.status === 403) {
           //no required roles
           store.dispatch(
@@ -27,6 +30,9 @@ export default function api(nonApi = false) {
                 "You either tried some shady route or you came here by mistake. Whichever it is, try using the navigation, if you think this is an mistake please refresh or try log in again.",
             })
           );
+        } else if (error.response.status === 404) {
+          store.dispatch(change_redirect_route("/404"));
+          return Promise.reject(error);
         } else if (error.response.status === 419) {
           swal("Unexpected error 419: Refresh the webpage and try again");
         } else if (error.response.status === 422) {
@@ -34,6 +40,10 @@ export default function api(nonApi = false) {
           return Promise.reject(error);
         } else if (error.response.status === 423) {
           //password confirmation
+          return Promise.reject(error);
+        } else if (error.response.status === 500) {
+          if (error.response.data.message) swal(error.response.data.message);
+          else swal(error.message);
           return Promise.reject(error);
         } else {
           swal(error.message);

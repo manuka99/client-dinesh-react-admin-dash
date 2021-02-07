@@ -144,9 +144,9 @@ export default function TopNavBar({ open, handleDrawerOpen }) {
                 }}
                 inputProps={{
                   "aria-label": "search",
-                  autocomplete: "off",
+                  autoComplete: "off",
                   form: {
-                    autocomplete: "off",
+                    autoComplete: "off",
                   },
                 }}
                 name="search"

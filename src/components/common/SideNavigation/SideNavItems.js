@@ -21,7 +21,7 @@ export function SideNavItems({ navItems, handleDrawerOpen, drawerOpenStatus }) {
     <React.Fragment>
       {navItems.map((navItem) => {
         return (
-          <React.Fragment>
+          <React.Fragment key={navItem.id}>
             <SideNavItem
               navItem={navItem}
               ids={ids}

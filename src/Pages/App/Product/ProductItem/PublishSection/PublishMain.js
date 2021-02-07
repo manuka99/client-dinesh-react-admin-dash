@@ -257,7 +257,7 @@ function PublishMain({
           <FormControlLabel
             control={
               <Checkbox
-                checked={is_featured}
+                checked={is_featured === 0 ? false : true}
                 onChange={(e) =>
                   handleProductData("is_featured", e.target.checked)
                 }

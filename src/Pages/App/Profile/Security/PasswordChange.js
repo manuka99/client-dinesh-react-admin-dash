@@ -35,7 +35,6 @@ function PasswordChange() {
             ...initialPasswordData,
           });
           swal("", "User password was updated successfully", "success");
-
           setErrors({});
         }
       })

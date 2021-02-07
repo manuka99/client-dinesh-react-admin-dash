@@ -66,9 +66,7 @@ function SideNavItem({ navItem, ids, handleNestedChildren, spacing, ...rest }) {
           handleNestedChildren(navItem.id, e, navItem.hasChildren)
         }
       >
-        <ListItemIcon
-          className={classes.icon}
-        >
+        <ListItemIcon className={classes.icon}>
           {navItem.iconFront}
         </ListItemIcon>
         <ListItemText
@@ -91,6 +89,7 @@ function SideNavItem({ navItem, ids, handleNestedChildren, spacing, ...rest }) {
             {navItem.children.map((childItem) => {
               return (
                 <SideNavItem
+                  key={childItem.id}
                   navItem={childItem}
                   ids={ids}
                   handleNestedChildren={handleNestedChildren}
