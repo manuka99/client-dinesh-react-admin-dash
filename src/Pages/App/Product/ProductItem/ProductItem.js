@@ -18,6 +18,8 @@ import {
 } from "@material-ui/core";
 import PublishMain from "./PublishSection/PublishMain";
 import CategorySection from "./CategorySection/CategorySection";
+import ProductImage from "./ProductImage/ProductImage";
+import StorageMain from "../../../../components/Storage/StorageMain";
 export const ProductContext = createContext(null);
 
 // const styles = makeStyles((theme) => ({
@@ -55,6 +57,8 @@ function ProductItem() {
     ...initialProductData,
     url_name: product_id,
   });
+
+  const [isStorageOpen, setIsStorageOpen] = useState(false);
 
   // get the product id and details
   useEffect(() => {
@@ -110,6 +114,10 @@ function ProductItem() {
       <LoadingModel status={loading} />
       {productData.id && (
         <React.Fragment>
+          <StorageMain
+            status={isStorageOpen}
+            setIsStorageOpen={setIsStorageOpen}
+          />
           <Box mb={3}>
             <Card>
               <CardActionArea>
@@ -186,6 +194,9 @@ function ProductItem() {
               />
               <Box mt={4}>
                 <CategorySection />
+              </Box>
+              <Box mt={4}>
+                <ProductImage setIsStorageOpen={setIsStorageOpen} />
               </Box>
             </Grid>
           </Grid>

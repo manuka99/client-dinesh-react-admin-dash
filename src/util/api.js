@@ -59,3 +59,19 @@ export default function api(nonApi = false) {
 
   return api;
 }
+
+export const upload = (file, index, onUploadProgress) => {
+  let formData = new FormData();
+
+  formData.append("image", file);
+  formData.append("index", index);
+
+  console.log(formData);
+
+  return api().post("/files", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+    onUploadProgress,
+  });
+};

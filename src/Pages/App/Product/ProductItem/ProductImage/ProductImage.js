@@ -8,10 +8,9 @@ import {
   CardContent,
   makeStyles,
   Grid,
+  Link,
 } from "@material-ui/core";
 import api from "../../../../../util/api";
-import NewCategory from "./NewCategory/NewCategory";
-import ProductCategories from "./ProductCategories/ProductCategories";
 
 const styles = makeStyles((theme) => ({
   flexDiv: {
@@ -29,7 +28,7 @@ const styles = makeStyles((theme) => ({
   },
 }));
 
-function CategorySection() {
+function ProductImage({ setIsStorageOpen }) {
   const classes = styles();
   const [categories, setCategories] = useState([]);
 
@@ -50,27 +49,19 @@ function CategorySection() {
         <CardActionArea>
           <Box pt={1} pl={2}>
             <Typography gutterBottom variant="h6">
-              Product categories
+              Product image
             </Typography>
           </Box>
           <Divider />
         </CardActionArea>
         <CardContent className={classes.flexRowDiv}>
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={6} md={12}>
-              <ProductCategories categories={categories} />
-            </Grid>
-            <Grid item xs={12} sm={6} md={12}>
-              <NewCategory
-                categories={categories}
-                fetchCategories={fetchCategories}
-              />
-            </Grid>
-          </Grid>
+          <Link href="#" onClick={() => setIsStorageOpen(true)}>
+            Set product image
+          </Link>
         </CardContent>
       </Card>
     </div>
   );
 }
 
-export default CategorySection;
+export default ProductImage;
