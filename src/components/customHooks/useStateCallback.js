@@ -1,29 +1,23 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
-function useStateCallback(initVal) {
-  var [val, setVal] = useState(initVal);
-  var cbRef = useRef(null);
-  var first = useRef(true);
+function useStateCallback(initialState) {
+  const [state, setState] = useState(initialState);
+  const cbRef = useRef(null); // mutable ref to store current callback
 
-  useEffect(() => {
-    if (first.current) {
-      first.current = false;
-      return;
-    }
-
-    if (typeof cbRef.current === "function") {
-      console.log("calling cb");
-      cbRef.current();
-    }
-  }, [val]);
-
-  var setValCB = useCallback((newVal, cb) => {
-    console.log("setValCB", newVal);
-    cbRef.current = cb;
-    setVal(newVal);
+  const setStateCallback = useCallback((state, cb) => {
+    cbRef.current = cb; // store passed callback to ref
+    setState(state);
   }, []);
 
-  return [val, setValCB];
+  useEffect(() => {
+    // cb.current is `null` on initial render, so we only execute cb on state *updates*
+    if (cbRef.current) {
+      cbRef.current(state);
+      cbRef.current = null; // reset callback after execution
+    }
+  }, [state]);
+
+  return [state, setStateCallback];
 }
 
 export default useStateCallback;

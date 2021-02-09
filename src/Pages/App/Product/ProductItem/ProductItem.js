@@ -19,7 +19,7 @@ import {
 import PublishMain from "./PublishSection/PublishMain";
 import CategorySection from "./CategorySection/CategorySection";
 import ProductImage from "./ProductImage/ProductImage";
-import StorageMain from "../../../../components/Storage/StorageMain";
+import useStateCallback from "../../../../components/customHooks/useStateCallback";
 export const ProductContext = createContext(null);
 
 // const styles = makeStyles((theme) => ({
@@ -53,12 +53,14 @@ function ProductItem() {
   // const classes = styles();
   const [loading, setLoading] = useState(false);
   const [updateBtnLoader, setUpdateBtnLoader] = useState(false);
-  const [productData, setProductData] = useState({
+  const [productData, setProductData] = useStateCallback({
     ...initialProductData,
     url_name: product_id,
   });
 
-  const [isStorageOpen, setIsStorageOpen] = useState(false);
+  useEffect(() => {
+    console.log(productData);
+  }, [productData]);
 
   // get the product id and details
   useEffect(() => {
@@ -76,16 +78,21 @@ function ProductItem() {
     }
   }, [product_id]);
 
-  useEffect(() => {
-    console.log(productData);
-  }, [productData]);
-
   const handleEventProductData = (e) => {
-    setProductData({ ...productData, [e.target.name]: e.target.value });
+    setProductData(
+      { ...productData, [e.target.name]: e.target.value },
+      (data) => {
+        console.log(data);
+        updateDataAsync(data);
+      }
+    );
   };
 
   const handleProductData = (name, value) => {
-    setProductData({ ...productData, [name]: value });
+    setProductData({ ...productData, [name]: value }, (data) => {
+      console.log(data);
+      updateDataAsync(data);
+    });
   };
 
   //validate permalink name
@@ -95,8 +102,8 @@ function ProductItem() {
     // eslint-disable-next-line
   }, [productData.url_name]);
 
-  // update data
-  const updateData = () => {
+  // update data from publish
+  const updateDataToDB = () => {
     setUpdateBtnLoader(true);
     api()
       .post(`/products/${product_id}`, productData)
@@ -107,6 +114,18 @@ function ProductItem() {
       });
   };
 
+  // update data from other
+  const updateDataAsync = (data) => {
+    setLoading(true);
+    api()
+      .post(`/products/${product_id}`, data)
+      .then((res) => console.log(res))
+      .catch((error) => console.log(error))
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
   return (
     <ProductContext.Provider
       value={{ product_id: product_id, mainLoader: setLoading }}
@@ -114,10 +133,6 @@ function ProductItem() {
       <LoadingModel status={loading} />
       {productData.id && (
         <React.Fragment>
-          <StorageMain
-            status={isStorageOpen}
-            setIsStorageOpen={setIsStorageOpen}
-          />
           <Box mb={3}>
             <Card>
               <CardActionArea>
@@ -189,14 +204,17 @@ function ProductItem() {
                 published_on={productData.published_on}
                 is_featured={productData.is_featured}
                 handleProductData={handleProductData}
-                updateData={updateData}
+                updateData={updateDataToDB}
                 updateBtnLoader={updateBtnLoader}
               />
               <Box mt={4}>
                 <CategorySection />
               </Box>
               <Box mt={4}>
-                <ProductImage setIsStorageOpen={setIsStorageOpen} />
+                <ProductImage handleProductData={handleProductData} />
+              </Box>
+              <Box mt={4}>
+                <ProductImage handleProductData={handleProductData} />
               </Box>
             </Grid>
           </Grid>

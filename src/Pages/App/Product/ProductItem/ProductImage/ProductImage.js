@@ -9,8 +9,10 @@ import {
   makeStyles,
   Grid,
   Link,
+  CardMedia,
 } from "@material-ui/core";
 import api from "../../../../../util/api";
+import StorageMain from "../../../../../components/Storage/StorageMain";
 
 const styles = makeStyles((theme) => ({
   flexDiv: {
@@ -28,23 +30,41 @@ const styles = makeStyles((theme) => ({
   },
 }));
 
-function ProductImage({ setIsStorageOpen }) {
+function ProductImage({ handleProductData }) {
   const classes = styles();
-  const [categories, setCategories] = useState([]);
+  const [productImage, setProductImage] = useState("");
+  const route_prefix = "http://localhost:8000/laravel-filemanager";
+  const [isStorageOpen, setIsStorageOpen] = useState(false);
 
   useEffect(() => {
-    fetchCategories();
-  }, []);
+    handleProductData("image", productImage);
+  }, [productImage]);
 
-  const fetchCategories = () => {
-    api()
-      .get("/categories")
-      .then((res) => setCategories([...res.data.categories]))
-      .catch((error) => console.log(error));
+  const selectImage = () => {
+    window.open(
+      route_prefix + "?type=file&multiple=false",
+      "FileManager",
+      "width=900,height=600"
+    );
+
+    window.addEventListener(
+      "message",
+      (event) => {
+        console.log(event);
+        if (event.origin !== "http://localhost:3000");
+        {
+          if (Array.isArray(event.data)) {
+            setProductImage(event.data[0].url);
+          }
+        }
+      },
+      false
+    );
   };
 
   return (
     <div style={{ width: "100%" }}>
+      <StorageMain status={isStorageOpen} setIsStorageOpen={setIsStorageOpen} />
       <Card>
         <CardActionArea>
           <Box pt={1} pl={2}>
@@ -55,9 +75,28 @@ function ProductImage({ setIsStorageOpen }) {
           <Divider />
         </CardActionArea>
         <CardContent className={classes.flexRowDiv}>
-          <Link href="#" onClick={() => setIsStorageOpen(true)}>
-            Set product image
-          </Link>
+          {productImage ? (
+            <React.Fragment>
+              <CardMedia
+                component="img"
+                alt="Product image"
+                height="140"
+                title="Product image"
+                onClick={selectImage}
+                image={productImage}
+              />
+              <Typography variant="subtitle2" gutterBottom>
+                Click on the image to edit or update.
+              </Typography>
+              <Link href="#" onClick={() => setProductImage("")}>
+                Remove product image
+              </Link>
+            </React.Fragment>
+          ) : (
+            <Link href="#" onClick={selectImage}>
+              Set product image
+            </Link>
+          )}
         </CardContent>
       </Card>
     </div>
