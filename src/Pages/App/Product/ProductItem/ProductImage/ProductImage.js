@@ -7,11 +7,10 @@ import {
   Typography,
   CardContent,
   makeStyles,
-  Grid,
   Link,
   CardMedia,
+  Grid,
 } from "@material-ui/core";
-import api from "../../../../../util/api";
 import StorageMain from "../../../../../components/Storage/StorageMain";
 
 const styles = makeStyles((theme) => ({
@@ -28,11 +27,17 @@ const styles = makeStyles((theme) => ({
     gap: "12px",
     flexWrap: "wrap",
   },
+  image: {
+    // aspectRatio: "auto 36 / 32",
+    maxWidth: "100%",
+    height: "auto",
+    maxHeight: "300px",
+  },
 }));
 
-function ProductImage({ handleProductData }) {
+function ProductImage({ productData, handleProductData }) {
   const classes = styles();
-  const [productImage, setProductImage] = useState("");
+  const [productImage, setProductImage] = useState(productData.image);
   const route_prefix = "http://localhost:8000/laravel-filemanager";
   const [isStorageOpen, setIsStorageOpen] = useState(false);
 
@@ -51,7 +56,7 @@ function ProductImage({ handleProductData }) {
       "message",
       (event) => {
         console.log(event);
-        if (event.origin !== "http://localhost:3000");
+        if (event.origin === "http://localhost:3000");
         {
           if (Array.isArray(event.data)) {
             setProductImage(event.data[0].url);
@@ -75,16 +80,24 @@ function ProductImage({ handleProductData }) {
           <Divider />
         </CardActionArea>
         <CardContent className={classes.flexRowDiv}>
+          <Link href="#" onClick={() => setIsStorageOpen(true)}>
+            Open storage
+          </Link>
           {productImage ? (
             <React.Fragment>
-              <CardMedia
-                component="img"
-                alt="Product image"
-                height="140"
-                title="Product image"
-                onClick={selectImage}
-                image={productImage}
-              />
+              <Grid container>
+                <Grid item xs={4} md={12}>
+                  <CardMedia
+                    component="img"
+                    alt="Product image"
+                    title="Product image"
+                    onClick={selectImage}
+                    image={productImage}
+                    className={classes.image}
+                  />
+                </Grid>
+              </Grid>
+
               <Typography variant="subtitle2" gutterBottom>
                 Click on the image to edit or update.
               </Typography>

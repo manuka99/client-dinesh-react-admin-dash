@@ -128,7 +128,7 @@ export default function TopNavBar({ open, handleDrawerOpen }) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography className={classes.title} variant="h6" noWrap>
+          <Typography className={classes.title} variant="h5" noWrap>
             PIZZA APES
           </Typography>
           <div className={classes.search}>

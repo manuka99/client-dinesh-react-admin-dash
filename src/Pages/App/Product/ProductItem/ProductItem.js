@@ -20,6 +20,7 @@ import PublishMain from "./PublishSection/PublishMain";
 import CategorySection from "./CategorySection/CategorySection";
 import ProductImage from "./ProductImage/ProductImage";
 import useStateCallback from "../../../../components/customHooks/useStateCallback";
+import ProductGallery from "./ProductGallery/ProductGallery";
 export const ProductContext = createContext(null);
 
 // const styles = makeStyles((theme) => ({
@@ -211,10 +212,13 @@ function ProductItem() {
                 <CategorySection />
               </Box>
               <Box mt={4}>
-                <ProductImage handleProductData={handleProductData} />
+                <ProductImage
+                  productData={productData}
+                  handleProductData={handleProductData}
+                />
               </Box>
               <Box mt={4}>
-                <ProductImage handleProductData={handleProductData} />
+                <ProductGallery />
               </Box>
             </Grid>
           </Grid>
