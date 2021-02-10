@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import {
   Box,
   Card,
@@ -13,6 +13,8 @@ import {
 } from "@material-ui/core";
 import CancelIcon from "@material-ui/icons/Cancel";
 import api from "../../../../../util/api";
+import { ProductContext } from "../ProductItem";
+import useStateCallback from "../../../../../components/customHooks/useStateCallback";
 
 const styles = makeStyles((theme) => ({
   flexDiv: {
@@ -65,46 +67,79 @@ const styles = makeStyles((theme) => ({
 }));
 
 function ProductGallery() {
+  const productContext = useContext(ProductContext);
+  const [productGalleryImages, setProductGalleryImages] = useStateCallback([]);
   const classes = styles();
-  const [productGalleryImageUrls, setProductGalleryImageUrls] = useState([]);
   const route_prefix = "http://localhost:8000/laravel-filemanager";
+  const windowRef = useRef(null);
 
   useEffect(() => {
-    //save to db
-    console.log(productGalleryImageUrls);
-  }, [productGalleryImageUrls]);
+    //fetch gallery images
+    productContext.mainLoader(true);
+    api()
+      .get(`/products/${productContext.product_id}`)
+      .then((res) => {
+        setProductGalleryImages([...res.data.productGalleryImages]);
+      })
+      .catch((errors) => console.log(errors))
+      .finally(() => productContext.mainLoader(false));
+  }, []);
+
+  useEffect(() => {
+    //clear events
+    return () =>
+      window.removeEventListener("message", onRecieveImageUrls, false);
+  }, [productGalleryImages]);
 
   const selectImages = () => {
-    window.open(
+    //open popup to seklect images
+    windowRef.current = window.open(
       route_prefix + "?type=file&multiple=true",
-      "FileManager",
+      "ProductGallery",
       "width=900,height=600"
     );
+    window.addEventListener("message", onRecieveImageUrls, false);
+  };
 
-    window.addEventListener(
-      "message",
-      (event) => {
-        console.log(event);
-        if (event.origin === "http://localhost:3000");
-        {
-          if (Array.isArray(event.data)) {
-            var urls = new Array();
-            event.data.map((image) => {
-              urls.push(image.url);
-            });
-            setProductGalleryImageUrls([...productGalleryImageUrls, ...urls]);
-          }
+  const onRecieveImageUrls = (event) => {
+    // selected images on the file manager
+    if (event.source === windowRef.current) {
+      if (event.origin === "http://localhost:3000");
+      {
+        if (Array.isArray(event.data)) {
+          var newImages = new Array();
+          event.data.map((image) => {
+            image.pid = productContext.product_id;
+            image.type = "product";
+            newImages.push(image);
+          });
+          setProductGalleryImages(
+            [...productGalleryImages, ...newImages],
+            updateGalleryDB
+          );
         }
-      },
-      false
-    );
+      }
+    }
+  };
+
+  const updateGalleryDB = (data) => {
+    // update new images to db
+    productContext.mainLoader(true);
+    api()
+      .post(`/gallery/${productContext.product_id}`, { images: data })
+      .then((res) => console.log(res))
+      .catch((e) => console.log(e))
+      .finally(() => productContext.mainLoader(false));
   };
 
   const clearImage = (index) => {
-    setProductGalleryImageUrls([
-      ...productGalleryImageUrls.slice(0, index),
-      ...productGalleryImageUrls.slice(index + 1),
-    ]);
+    setProductGalleryImages(
+      [
+        ...productGalleryImages.slice(0, index),
+        ...productGalleryImages.slice(index + 1),
+      ],
+      updateGalleryDB
+    );
   };
 
   return (
@@ -119,13 +154,12 @@ function ProductGallery() {
           <Divider />
         </CardActionArea>
         <CardContent className={classes.flexRowDiv}>
-          {productGalleryImageUrls.length > 0 && (
+          {productGalleryImages.length > 0 && (
             <Grid container spacing={2}>
-              {productGalleryImageUrls.map((url, index) => (
+              {productGalleryImages.map((image, index) => (
                 <Grid item xs={2} md={4}>
                   <div className={classes.imageDiv}>
                     <div className={classes.cancelIconDiv}>
-                      {index}
                       <CancelIcon
                         className={classes.cancelIcon}
                         onClick={() => clearImage(index)}
@@ -134,10 +168,10 @@ function ProductGallery() {
                     <CardMedia
                       key={index}
                       component="img"
-                      alt="Product image"
+                      alt={image.name}
                       height="80"
-                      title="Product image"
-                      image={url}
+                      title={image.name}
+                      image={image.url}
                       className={classes.image}
                     />
                   </div>
@@ -145,9 +179,7 @@ function ProductGallery() {
               ))}
             </Grid>
           )}
-          <Link href="#" onClick={selectImages}>
-            Add product gallery images
-          </Link>
+          <Link onClick={selectImages}>Add product gallery images</Link>
         </CardContent>
       </Card>
     </div>

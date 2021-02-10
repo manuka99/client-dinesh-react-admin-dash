@@ -14,9 +14,14 @@ const DefaultTheme = {
           "-webkit-box-shadow": "inset 0 0 6px rgba(0,0,0,0.00)",
         },
         "*::-webkit-scrollbar-thumb": {
-          backgroundColor: 'grey',
+          backgroundColor: "grey",
           // outline: "1px solid black",
         },
+      },
+    },
+    MuiLink: {
+      root: {
+        cursor: "pointer",
       },
     },
   },
