@@ -21,6 +21,7 @@ import CategorySection from "./CategorySection/CategorySection";
 import ProductImage from "./ProductImage/ProductImage";
 import useStateCallback from "../../../../components/customHooks/useStateCallback";
 import ProductGallery from "./ProductGallery/ProductGallery";
+import ProductTags from "./ProductTags/ProductTags";
 export const ProductContext = createContext(null);
 
 // const styles = makeStyles((theme) => ({
@@ -196,6 +197,9 @@ function ProductItem() {
                   dataValue={productData.short_description}
                   handleProductData={handleProductData}
                 />
+              </Box>
+              <Box mt={4}>
+                <ProductTags />
               </Box>
             </Grid>
             <Grid item xs={12} md={3}>
