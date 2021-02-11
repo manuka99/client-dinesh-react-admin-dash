@@ -4,9 +4,9 @@ import { isLoggedIn } from "../../util/auth";
 function AuthRoute({ path, hasAnyRoles, ...rest }) {
   const { userAuth, userRoleValidated } = isLoggedIn(hasAnyRoles);
 
-  console.log(
-    `For path: ${path}, userAuth: ${userAuth}, userRoleValidated: ${userRoleValidated}`
-  );
+  // console.log(
+  //   `For path: ${path}, userAuth: ${userAuth}, userRoleValidated: ${userRoleValidated}`
+  // );
 
   return !userAuth ? (
     <Navigate to="/login" />

@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Button, Typography } from "@material-ui/core";
 import SelectImages from "./SelectImages";
 import UploadingUi from "./UploadingImageUi/UploadingUi";
 

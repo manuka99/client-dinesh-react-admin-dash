@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Box,
   Card,
@@ -11,6 +11,27 @@ import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
 function EditorSection({ heading, name, dataValue, handleProductData }) {
+  const [data, setData] = useState("");
+  const [isSaveData, setIsSaveData] = useState(false);
+  const timeOutRef = useRef(null);
+
+  useEffect(() => {
+    if (isSaveData)
+      timeOutRef.current = setTimeout(
+        () => handleProductData(name, data),
+        10000
+      );
+    return () => {
+      clearTimeout(timeOutRef.current);
+    };
+    // eslint-disable-next-line
+  }, [data]);
+
+  const saveData = (event, editor) => {
+    setIsSaveData(true);
+    setData(editor.getData());
+  };
+
   return (
     <div>
       <Card>
@@ -27,10 +48,7 @@ function EditorSection({ heading, name, dataValue, handleProductData }) {
             id={name}
             editor={ClassicEditor}
             data={!dataValue ? "" : dataValue}
-            onChange={(event, editor) => {
-              const data = editor.getData();
-              handleProductData(name, data);
-            }}
+            onChange={saveData}
           />
         </CardContent>
       </Card>

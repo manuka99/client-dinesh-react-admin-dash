@@ -13,8 +13,6 @@ import ExpandMore from "@material-ui/icons/ExpandMore";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
 
 function SideNavItem({ navItem, ids, handleNestedChildren, spacing, ...rest }) {
-  console.log("nav item rendered");
-
   const styles = makeStyles((theme) =>
     createStyles({
       nested: {

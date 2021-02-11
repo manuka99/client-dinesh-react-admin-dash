@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useContext } from "react";
+import React, { useEffect, useRef, useContext } from "react";
 import {
   Box,
   Card,
@@ -60,7 +60,6 @@ const styles = makeStyles((theme) => ({
   },
   cancelIcon: {
     zIndex: "3",
-    width: "20px",
     width: "40px",
     color: "#ff0000",
   },
@@ -83,12 +82,14 @@ function ProductGallery() {
       })
       .catch((errors) => console.log(errors))
       .finally(() => productContext.mainLoader(false));
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
     //clear events
     return () =>
       window.removeEventListener("message", onRecieveImageUrls, false);
+    // eslint-disable-next-line
   }, [productGalleryImages]);
 
   const selectImages = () => {
@@ -103,22 +104,22 @@ function ProductGallery() {
 
   const onRecieveImageUrls = (event) => {
     // selected images on the file manager
-    if (event.source === windowRef.current) {
-      if (event.origin === "http://localhost:3000");
-      {
-        if (Array.isArray(event.data)) {
-          var newImages = new Array();
-          event.data.map((image) => {
-            image.pid = productContext.product_id;
-            image.type = "product";
-            newImages.push(image);
-          });
-          setProductGalleryImages(
-            [...productGalleryImages, ...newImages],
-            updateGalleryDB
-          );
-        }
-      }
+    if (
+      event.source === windowRef.current &&
+      event.origin === "http://localhost:8000" &&
+      Array.isArray(event.data)
+    ) {
+      var newImages = [];
+      // eslint-disable-next-line
+      event.data.map((image) => {
+        image.pid = productContext.product_id;
+        image.type = "product";
+        newImages.push(image);
+      });
+      setProductGalleryImages(
+        [...productGalleryImages, ...newImages],
+        updateGalleryDB
+      );
     }
   };
 
@@ -157,7 +158,7 @@ function ProductGallery() {
           {productGalleryImages.length > 0 && (
             <Grid container spacing={2}>
               {productGalleryImages.map((image, index) => (
-                <Grid item xs={2} md={4}>
+                <Grid item xs={2} md={4} key={index}>
                   <div className={classes.imageDiv}>
                     <div className={classes.cancelIconDiv}>
                       <CancelIcon

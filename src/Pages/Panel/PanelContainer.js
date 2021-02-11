@@ -36,9 +36,8 @@ function PanelContainer() {
       />
 
       <main className={`${classes.content} ${open && classes.constentShift}`}>
-        
         <div className={classes.toolbar} />
-    
+
         <Breadcrumb />
 
         <Box mb={6}>

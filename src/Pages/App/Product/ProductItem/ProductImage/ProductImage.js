@@ -46,6 +46,7 @@ function ProductImage({ productData, handleProductData }) {
     handleProductData("image", productImage);
     return () =>
       window.removeEventListener("message", onRecieveImageUrls, false);
+    // eslint-disable-next-line
   }, [productImage]);
 
   const selectImage = () => {
@@ -59,14 +60,12 @@ function ProductImage({ productData, handleProductData }) {
   };
 
   const onRecieveImageUrls = (event) => {
-    console.log(event);
-    if (event.source === windowRef.current) {
-      if (event.origin === "http://localhost:3000");
-      {
-        if (Array.isArray(event.data)) {
-          setProductImage(event.data[0].url);
-        }
-      }
+    if (
+      event.source === windowRef.current &&
+      event.origin === "http://localhost:8000" &&
+      Array.isArray(event.data)
+    ) {
+      setProductImage(event.data[0].url);
     }
   };
 

@@ -52,8 +52,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function LoadingModel({ status }) {
   const classes = useStyles();
-  // const theme = useTheme();
-  // const mobileDevice = useMediaQuery(theme.breakpoints.down("sm"));
   return (
     <div>
       <Modal

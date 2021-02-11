@@ -60,10 +60,6 @@ function ProductItem() {
     url_name: product_id,
   });
 
-  useEffect(() => {
-    console.log(productData);
-  }, [productData]);
-
   // get the product id and details
   useEffect(() => {
     if (product_id) {
@@ -78,38 +74,37 @@ function ProductItem() {
           setLoading(false);
         });
     }
+    // eslint-disable-next-line
   }, [product_id]);
 
   const handleEventProductData = (e) => {
-    setProductData(
-      { ...productData, [e.target.name]: e.target.value },
-      (data) => {
-        console.log(data);
+    var name = e.target.name;
+    var value = e.target.value;
+    //validate permalink name
+    if (name === "url_name" && value === "")
+      setProductData({ ...productData, url_name: product_id }, (data) => {
         updateDataAsync(data);
-      }
-    );
+      });
+    else
+      setProductData({ ...productData, [name]: value }, (data) => {
+        updateDataAsync(data);
+      });
   };
 
   const handleProductData = (name, value) => {
     setProductData({ ...productData, [name]: value }, (data) => {
-      console.log(data);
       updateDataAsync(data);
     });
   };
-
-  //validate permalink name
-  useEffect(() => {
-    !productData.url_name &&
-      setProductData({ ...productData, url_name: product_id });
-    // eslint-disable-next-line
-  }, [productData.url_name]);
 
   // update data from publish
   const updateDataToDB = () => {
     setUpdateBtnLoader(true);
     api()
       .post(`/products/${product_id}`, productData)
-      .then((res) => console.log(res))
+      .then((res) => {
+        // console.log(res);
+      })
       .catch((error) => console.log(error))
       .finally(() => {
         setUpdateBtnLoader(false);
@@ -121,7 +116,9 @@ function ProductItem() {
     setLoading(true);
     api()
       .post(`/products/${product_id}`, data)
-      .then((res) => console.log(res))
+      .then((res) => {
+        // console.log(res);
+      })
       .catch((error) => console.log(error))
       .finally(() => {
         setLoading(false);

@@ -25,6 +25,7 @@ function SelectImages({ files, setFiles, setisUploading }) {
 
   const deleteFile = (file) => {
     var newFiles = files;
+    // eslint-disable-next-line
     files.map((x, index) => {
       if (file.data === x.data) {
         newFiles.splice(index, 1);

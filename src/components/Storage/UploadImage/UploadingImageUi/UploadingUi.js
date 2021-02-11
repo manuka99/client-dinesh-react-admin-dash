@@ -147,6 +147,7 @@ function UploadingUi({ files, setFiles, setisUploading }) {
 
   const getErrorMessage = (index) => {
     var message = "Unexpected error occured !";
+    // eslint-disable-next-line
     failedUploadMessages.map((item) => {
       if (item.index === index) {
         message = item.message;
@@ -187,15 +188,17 @@ function UploadingUi({ files, setFiles, setisUploading }) {
     if (uploadingStatus) newQueCount = newQueCount + 1;
     setTotalQueueForDisplay(newQueCount);
     console.log(uploadingQueue);
+    // eslint-disable-next-line
   }, [uploadingStatus, uploadingQueue]);
 
   useEffect(() => {
     files.map((file, index) => addToQueue(index));
+    // eslint-disable-next-line
   }, [files]);
 
   const cancelUploads = () => {
     var r = window.confirm("Are you sure you want to cancel all uploads?");
-    if (r == true) {
+    if (r === true) {
       setUploadingQueue([]);
       setisUploading(false);
     }
@@ -207,6 +210,7 @@ function UploadingUi({ files, setFiles, setisUploading }) {
 
   const clearCompletedUploads = () => {
     var newFiles = files;
+    // eslint-disable-next-line
     successUploadIds.map((x) => {
       newFiles.splice(x, 1);
     });

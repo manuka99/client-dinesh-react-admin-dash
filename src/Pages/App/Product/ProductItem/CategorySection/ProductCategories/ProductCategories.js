@@ -35,6 +35,7 @@ function ProductCategories({ categories }) {
       .finally(() => {
         useProductContext.mainLoader(false);
       });
+    // eslint-disable-next-line
   }, [categories]);
 
   const handleProductCategory = (e) => {
@@ -62,7 +63,6 @@ function ProductCategories({ categories }) {
   };
 
   const CategoryItem = (category, spacing) => {
-    console.log(productCategoriesIds.includes(category.id));
     return [
       <FormControlLabel
         key={category.id}

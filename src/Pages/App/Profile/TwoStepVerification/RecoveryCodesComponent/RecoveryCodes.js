@@ -7,6 +7,7 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import { Box, Grid } from "@material-ui/core";
 import swal from "sweetalert";
+import ReactDOMServer from "react-dom/server";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -39,7 +40,35 @@ function RecoveryCodes({ recoveryCodes }) {
     element.click();
   };
 
-  const printCodes = () => {};
+  const printCodes = () => {
+    var content = printHtml;
+    console.log(content);
+    var pri = document.getElementById("recoveryCodesToPrint").contentWindow;
+    pri.document.open();
+    pri.document.write(content);
+    pri.document.close();
+    pri.focus();
+    pri.print();
+  };
+
+  const printHtml = ReactDOMServer.renderToStaticMarkup(
+    <div id="print_codes">
+      <Typography variant="h3">Recovery codes - Pizza Apes</Typography>
+      <Grid container spacing={4} direction="column">
+        {recoveryCodes.map((code) => {
+          return (
+            <Grid item xs={12}>
+              <li className={classes.rCode}>{code}</li>
+            </Grid>
+          );
+        })}
+      </Grid>
+      <Typography variant="body2" color="secondary" gutterBottom>
+        Treat your recovery codes with the same level of attention as you would
+        your password.
+      </Typography>
+    </div>
+  );
 
   const copyToClipBoard = () => {
     var cb = document.getElementById("recovery_codes_id");
@@ -57,6 +86,11 @@ function RecoveryCodes({ recoveryCodes }) {
 
   return (
     <React.Fragment>
+      <iframe
+        id="recoveryCodesToPrint"
+        title="recoveryCodesToPrint"
+        style={{ height: "0px", width: "0px", position: "absolute" }}
+      ></iframe>
       <Box mt={3} mb={4}>
         <Typography variant="h6" gutterBottom>
           1. Save these recovery codes.
@@ -113,7 +147,7 @@ function RecoveryCodes({ recoveryCodes }) {
                 size="small"
                 variant="outlined"
                 color="primary"
-                onclick={printCodes}
+                onClick={printCodes}
                 fullWidth
                 startIcon={<PrintIcon />}
               >

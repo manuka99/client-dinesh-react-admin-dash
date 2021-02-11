@@ -102,7 +102,6 @@ export default function SessionData({ id, onClose }) {
         setCurrent(res.data.current);
         setsession(res.data.session_data);
         setGeoData(res.data.geo_data);
-        console.log(res.data);
       })
       .catch((error) => {
         // swal(error.message);
@@ -205,6 +204,7 @@ export default function SessionData({ id, onClose }) {
                   >
                     <Grid
                       container
+                      item
                       xs={12}
                       sm={6}
                       direction="column"
@@ -218,20 +218,26 @@ export default function SessionData({ id, onClose }) {
                         {session.deviceType === "desktop" ? (
                           <ComputerIcon
                             className={`${
-                              current === session.id && classes.activeSession
+                              current === session.id
+                                ? classes.activeSession
+                                : ""
                             } ${classes.sessionIcon}`}
                           />
                         ) : session.deviceType === "bot" ? (
                           <BugReportIcon
                             className={
-                              current === session.id && classes.activeSession
+                              current === session.id
+                                ? classes.activeSession
+                                : ""
                             }
                             fontSize="large"
                           />
                         ) : (
                           <PhoneAndroidIcon
                             className={
-                              current === session.id && classes.activeSession
+                              current === session.id
+                                ? classes.activeSession
+                                : ""
                             }
                             fontSize="large"
                           />
@@ -239,6 +245,7 @@ export default function SessionData({ id, onClose }) {
                       </Grid>
 
                       <Grid
+                        item
                         container
                         alignItems="center"
                         alignContent="center"
@@ -250,7 +257,7 @@ export default function SessionData({ id, onClose }) {
                         <Grid
                           item
                           className={
-                            current === session.id && classes.activeSession
+                            current === session.id ? classes.activeSession : ""
                           }
                         >
                           {current === session.id
@@ -279,6 +286,7 @@ export default function SessionData({ id, onClose }) {
                     </Grid>
                     <Grid
                       container
+                      item
                       xs={12}
                       sm={6}
                       direction="column"

@@ -93,9 +93,9 @@ function Account() {
                   name="fname"
                   label="First name"
                   fullWidth
-                  value={userData.fname}
+                  value={userData.fname === null ? "" : userData.fname}
                   onChange={handleChange}
-                  InputLabelProps={{ shrink: userData.fname }}
+                  InputLabelProps={{ shrink: userData.fname ? true : false }}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -110,9 +110,9 @@ function Account() {
                   name="lname"
                   label="Last name"
                   fullWidth
-                  value={userData.lname}
+                  value={userData.lname === null ? "" : userData.lname}
                   onChange={handleChange}
-                  InputLabelProps={{ shrink: userData.lname }}
+                  InputLabelProps={{ shrink: userData.lname ? true : false }}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -128,9 +128,9 @@ function Account() {
                   label="Email"
                   type="email"
                   fullWidth
-                  value={userData.email}
+                  value={userData.email === null ? "" : userData.email}
                   onChange={handleChange}
-                  InputLabelProps={{ shrink: userData.email }}
+                  InputLabelProps={{ shrink: userData.email ? true : false }}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -144,9 +144,9 @@ function Account() {
                   name="address"
                   label="Home Address"
                   fullWidth
-                  value={userData.address}
+                  value={userData.address === null ? "" : userData.address}
                   onChange={handleChange}
-                  InputLabelProps={{ shrink: userData.address }}
+                  InputLabelProps={{ shrink: userData.address ? true : false }}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -161,9 +161,9 @@ function Account() {
                   name="city"
                   label="City"
                   fullWidth
-                  value={userData.city}
+                  value={userData.city === null ? "" : userData.city}
                   onChange={handleChange}
-                  InputLabelProps={{ shrink: userData.city }}
+                  InputLabelProps={{ shrink: userData.city ? true : false }}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -177,9 +177,9 @@ function Account() {
                   name="state"
                   label="State/Province/Region"
                   fullWidth
-                  value={userData.state}
+                  value={userData.state === null ? "" : userData.state}
                   onChange={handleChange}
-                  InputLabelProps={{ shrink: userData.state }}
+                  InputLabelProps={{ shrink: userData.state ? true : false }}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -194,9 +194,9 @@ function Account() {
                   name="zip"
                   label="Zip / Postal code"
                   fullWidth
-                  value={userData.zip}
+                  value={userData.zip === null ? "" : userData.zip}
                   onChange={handleChange}
-                  InputLabelProps={{ shrink: userData.zip }}
+                  InputLabelProps={{ shrink: userData.zip ? true : false }}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -210,7 +210,7 @@ function Account() {
                   label="Country"
                   fullWidth
                   value="Sri Lanka"
-                  InputLabelProps={{ shrink: true }}
+                  InputLabelProps={{ shrink: true ? true : false }}
                   disabled
                 />
               </Grid>

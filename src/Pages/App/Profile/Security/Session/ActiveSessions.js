@@ -43,7 +43,6 @@ function ActiveSessions() {
       api()
         .get("/user/active-sessions")
         .then((res) => {
-          console.log(res.data);
           setSessionsData({ ...res.data });
         })
         .catch((error) => {
@@ -98,6 +97,7 @@ function ActiveSessions() {
                 return (
                   <Grid
                     container
+                    item
                     xs={6}
                     sm={4}
                     md={3}
@@ -112,24 +112,27 @@ function ActiveSessions() {
                       {session.deviceType === "desktop" ? (
                         <ComputerIcon
                           className={
-                            sessionsData.current === session.id &&
-                            classes.activeSession
+                            sessionsData.current === session.id
+                              ? classes.activeSession
+                              : ""
                           }
                           fontSize="large"
                         />
                       ) : session.deviceType === "bot" ? (
                         <BugReportIcon
                           className={
-                            sessionsData.current === session.id &&
-                            classes.activeSession
+                            sessionsData.current === session.id
+                              ? classes.activeSession
+                              : ""
                           }
                           fontSize="large"
                         />
                       ) : (
                         <PhoneAndroidIcon
                           className={
-                            sessionsData.current === session.id &&
-                            classes.activeSession
+                            sessionsData.current === session.id
+                              ? classes.activeSession
+                              : ""
                           }
                           fontSize="large"
                         />
@@ -138,6 +141,7 @@ function ActiveSessions() {
 
                     <Grid
                       container
+                      item
                       alignItems="center"
                       alignContent="center"
                       justify="center"
@@ -148,8 +152,9 @@ function ActiveSessions() {
                       <Grid
                         item
                         className={
-                          sessionsData.current === session.id &&
-                          classes.activeSession
+                          sessionsData.current === session.id
+                            ? classes.activeSession
+                            : ""
                         }
                       >
                         {sessionsData.current === session.id

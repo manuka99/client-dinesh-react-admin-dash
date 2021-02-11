@@ -16,12 +16,6 @@ function App(props) {
   const location = useLocation();
   const [locationRequired, setlocationRequired] = useState("");
 
-  console.log(` props.theme : ${props.theme}`);
-
-  // const APP_THEME = createMuiTheme(
-  //   props.theme === "dark" ? DarkTheme : DefaultTheme
-  // );
-
   const APP_THEME_DATA = get_app_theme(props.theme);
   const APP_THEME = createMuiTheme(APP_THEME_DATA);
 

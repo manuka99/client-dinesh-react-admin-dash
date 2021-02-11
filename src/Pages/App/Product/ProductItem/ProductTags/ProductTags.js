@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Box,
   Card,
@@ -8,8 +8,6 @@ import {
   CardContent,
   makeStyles,
   Link,
-  CardMedia,
-  Grid,
   Chip,
   TextField,
 } from "@material-ui/core";
@@ -42,6 +40,7 @@ function ProductTags() {
 
   useEffect(() => {
     fetchProductTags();
+    // eslint-disable-next-line
   }, []);
 
   const fetchProductTags = () => {

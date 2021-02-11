@@ -83,9 +83,9 @@ function PasswordChange() {
                     "Current password must have atleast 8 characters"
                   }
                   inputProps={{
-                    autocomplete: "new-password",
+                    autoComplete: "new-password",
                     form: {
-                      autocomplete: "off",
+                      autoComplete: "off",
                     },
                   }}
                   onChange={formDataChanged}
@@ -112,9 +112,9 @@ function PasswordChange() {
                   passwordData.current_password.length < 8
                 }
                 inputProps={{
-                  autocomplete: "new-password",
+                  autoComplete: "new-password",
                   form: {
-                    autocomplete: "off",
+                    autoComplete: "off",
                   },
                 }}
                 value={passwordData.password}
@@ -137,9 +137,9 @@ function PasswordChange() {
                   passwordData.password.length < 8
                 }
                 inputProps={{
-                  autocomplete: "new-password",
+                  autoComplete: "new-password",
                   form: {
-                    autocomplete: "off",
+                    autoComplete: "off",
                   },
                 }}
                 value={passwordData.password_confirmation}

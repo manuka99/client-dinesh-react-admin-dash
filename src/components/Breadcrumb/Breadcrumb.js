@@ -32,13 +32,9 @@ export function Breadcrumb() {
   let currentRoutes = [];
 
   currentRoutes = location.pathname !== "/" ? location.pathname.split("/") : [];
-
-  console.log(`location.pathname: ${location.pathname}`);
-  console.log(`currentRoutes: ${currentRoutes}`);
-
   currentRoutes.shift();
   currentRoutes.shift();
-  console.log(`currentRoutes: ${currentRoutes}`);
+
   return (
     <Box mt={8} mb={3}>
       <Breadcrumbs aria-label="breadcrumb" maxItems={5}>
@@ -93,10 +89,7 @@ export function Breadcrumb() {
             })
           )
         ) : (
-          <Typography
-            color="textPrimary"
-            className={classes.textLink}
-          >
+          <Typography color="textPrimary" className={classes.textLink}>
             <GrainIcon className={classes.icon} />
             Panel
           </Typography>
