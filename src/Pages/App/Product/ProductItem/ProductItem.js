@@ -22,6 +22,7 @@ import ProductImage from "./ProductImage/ProductImage";
 import useStateCallback from "../../../../components/customHooks/useStateCallback";
 import ProductGallery from "./ProductGallery/ProductGallery";
 import ProductTags from "./ProductTags/ProductTags";
+import ProductDataMain from "./ProductData/ProductDataMain";
 export const ProductContext = createContext(null);
 
 // const styles = makeStyles((theme) => ({
@@ -193,6 +194,12 @@ function ProductItem() {
                   name="short_description"
                   dataValue={productData.short_description}
                   handleProductData={handleProductData}
+                />
+              </Box>
+              <Box mt={4}>
+                <ProductDataMain
+                  handleProductData={handleProductData}
+                  productData={productData}
                 />
               </Box>
               <Box mt={4}>

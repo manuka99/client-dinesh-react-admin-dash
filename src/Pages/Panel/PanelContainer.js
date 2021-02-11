@@ -9,7 +9,7 @@ import TopNavBar from "../../components/common/TopNavBar";
 function PanelContainer() {
   const classes = MainDashStyles();
 
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
 
   const handleDrawerOpen = () => {
     setOpen(true);
