@@ -23,7 +23,7 @@ import LinkIcon from "@material-ui/icons/Link";
 import FeaturedVideoIcon from "@material-ui/icons/FeaturedVideo";
 import ViewModuleIcon from "@material-ui/icons/ViewModule";
 import GroupWorkIcon from "@material-ui/icons/GroupWork";
-import GenaralMain from "./General/GenaralMain";
+import GenaralMain from "./General/GeneralMain";
 import Inventory from "./Inventory/Inventory";
 import Shipping from "./Shipping/Shipping";
 import SimilarProducts from "./SimilarProducts/SimilarProducts";
@@ -79,6 +79,7 @@ const useStyles = makeStyles((theme) => ({
   },
   tabs: {
     borderRight: `1px solid ${theme.palette.divider}`,
+    width: "20%",
   },
   tab: {
     textTransform: "capitalize",
@@ -92,7 +93,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "flex-start",
     flexDirection: "row",
     gridColumnGap: theme.spacing(1),
-    padding: "6px 0",
+    padding: "6px 0 6px 4px",
     boxSizing: "border-box",
   },
   labelIcon: {
@@ -265,38 +266,69 @@ function ProductDataMain({ handleProductData, productData }) {
               value={7}
             />
           </Tabs>
-          {(productData.type === "simple" || productData.type === "bundle") && (
-            <TabPanel style={{ display: value === 0 ? "block" : "none" }}>
-              <GenaralMain />
+          <div style={{ width: "75%", overflowX: "auto" }}>
+            {(productData.type === "simple" ||
+              productData.type === "bundle") && (
+              <TabPanel
+                style={{
+                  display: value === 0 ? "block" : "none",
+                  width: "100%",
+                }}
+              >
+                <GenaralMain />
+              </TabPanel>
+            )}
+            <TabPanel
+              style={{ display: value === 1 ? "block" : "none", width: "100%" }}
+            >
+              <Inventory />
             </TabPanel>
-          )}
-          <TabPanel style={{ display: value === 1 ? "block" : "none" }}>
-            <Inventory />
-          </TabPanel>
-          <TabPanel style={{ display: value === 2 ? "block" : "none" }}>
-            <Shipping />
-          </TabPanel>
-          <TabPanel style={{ display: value === 3 ? "block" : "none" }}>
-            <SimilarProducts />
-          </TabPanel>
-          {productData.type === "variant" && (
-            <TabPanel style={{ display: value === 4 ? "block" : "none" }}>
-              <Attributes />
+            <TabPanel
+              style={{ display: value === 2 ? "block" : "none", width: "100%" }}
+            >
+              <Shipping />
             </TabPanel>
-          )}
-          {productData.type === "variant" && (
-            <TabPanel style={{ display: value === 5 ? "block" : "none" }}>
-              <Variations />
+            <TabPanel
+              style={{ display: value === 3 ? "block" : "none", width: "100%" }}
+            >
+              <SimilarProducts />
             </TabPanel>
-          )}
-          {productData.type === "bundle" && (
-            <TabPanel style={{ display: value === 6 ? "block" : "none" }}>
-              <GroupProducts />
+            {productData.type === "variant" && (
+              <TabPanel
+                style={{
+                  display: value === 4 ? "block" : "none",
+                  width: "100%",
+                }}
+              >
+                <Attributes />
+              </TabPanel>
+            )}
+            {productData.type === "variant" && (
+              <TabPanel
+                style={{
+                  display: value === 5 ? "block" : "none",
+                  width: "100%",
+                }}
+              >
+                <Variations />
+              </TabPanel>
+            )}
+            {productData.type === "bundle" && (
+              <TabPanel
+                style={{
+                  display: value === 6 ? "block" : "none",
+                  width: "100%",
+                }}
+              >
+                <GroupProducts />
+              </TabPanel>
+            )}
+            <TabPanel
+              style={{ display: value === 7 ? "block" : "none", width: "100%" }}
+            >
+              <Advance />
             </TabPanel>
-          )}
-          <TabPanel style={{ display: value === 7 ? "block" : "none" }}>
-            <Advance />
-          </TabPanel>
+          </div>
         </div>
       </Card>
     </div>
