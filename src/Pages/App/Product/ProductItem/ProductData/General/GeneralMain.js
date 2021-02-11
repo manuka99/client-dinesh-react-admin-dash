@@ -18,10 +18,9 @@ function GeneralMain() {
   };
 
   const update = () => {
-    console.log(generalData);
     setBtnLoading(true);
     api()
-      .post(`/product/general_data/${productContext.product_id}`, generalData)
+      .post(`/products/general_data/${productContext.product_id}`, generalData)
       .then((res) => {
         console.log(res);
       })
@@ -109,7 +108,17 @@ function GeneralMain() {
             />
           </Grid>
           <Grid item xs={10}>
-            <Link onClick={() => setIsSchedule(false)} variant="body2">
+            <Link
+              onClick={() => {
+                setGeneralData({
+                  ...generalData,
+                  offer_from: "",
+                  offer_to: "",
+                });
+                setIsSchedule(false);
+              }}
+              variant="body2"
+            >
               Cancel
             </Link>
           </Grid>

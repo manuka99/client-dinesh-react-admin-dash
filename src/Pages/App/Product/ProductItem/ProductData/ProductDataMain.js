@@ -31,6 +31,8 @@ import Attributes from "./Attributes/Attributes";
 import Variations from "./Variations/Variations";
 import GroupProducts from "./GroupProducts/GroupProducts";
 import Advance from "./Advance/Advance";
+import InfoIcon from "@material-ui/icons/Info";
+import Info from "./Info/Info";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -115,7 +117,7 @@ function ProductDataMain({ handleProductData, productData }) {
   };
 
   React.useEffect(() => {
-    setValue(productData.type === "variant" ? 1 : 0);
+    setValue(0);
   }, [productData]);
 
   return (
@@ -159,8 +161,18 @@ function ProductDataMain({ handleProductData, productData }) {
             className={classes.tabs}
             value={value}
           >
-            {(productData.type === "simple" ||
-              productData.type === "bundle") && (
+            <Tab
+              classes={{
+                root: classes.tab,
+                wrapper: classes.wrapper,
+                labelIcon: classes.labelIcon,
+                selected: classes.selected,
+              }}
+              icon={<InfoIcon fontSize="small" />}
+              label="About"
+              value={0}
+            />
+            {productData.type !== "variant" && (
               <Tab
                 classes={{
                   root: classes.tab,
@@ -170,46 +182,35 @@ function ProductDataMain({ handleProductData, productData }) {
                 }}
                 icon={<BuildIcon fontSize="small" />}
                 label="General"
-                {...a11yProps(0)}
-                value={0}
+                value={1}
               />
             )}
-            <Tab
-              classes={{
-                root: classes.tab,
-                wrapper: classes.wrapper,
-                labelIcon: classes.labelIcon,
-                selected: classes.selected,
-              }}
-              icon={<ShowChartIcon fontSize="small" />}
-              label="Inventory"
-              {...a11yProps(1)}
-              value={1}
-            />
-            <Tab
-              classes={{
-                root: classes.tab,
-                wrapper: classes.wrapper,
-                labelIcon: classes.labelIcon,
-                selected: classes.selected,
-              }}
-              icon={<LocalShippingIcon fontSize="small" />}
-              label="Shipping"
-              {...a11yProps(2)}
-              value={2}
-            />
-            <Tab
-              classes={{
-                root: classes.tab,
-                wrapper: classes.wrapper,
-                labelIcon: classes.labelIcon,
-                selected: classes.selected,
-              }}
-              icon={<LinkIcon fontSize="small" />}
-              label="Similar products"
-              {...a11yProps(3)}
-              value={3}
-            />
+            {productData.type !== "variant" && (
+              <Tab
+                classes={{
+                  root: classes.tab,
+                  wrapper: classes.wrapper,
+                  labelIcon: classes.labelIcon,
+                  selected: classes.selected,
+                }}
+                icon={<ShowChartIcon fontSize="small" />}
+                label="Inventory"
+                value={2}
+              />
+            )}
+            {productData.type !== "variant" && (
+              <Tab
+                classes={{
+                  root: classes.tab,
+                  wrapper: classes.wrapper,
+                  labelIcon: classes.labelIcon,
+                  selected: classes.selected,
+                }}
+                icon={<LocalShippingIcon fontSize="small" />}
+                label="Shipping"
+                value={3}
+              />
+            )}
             {productData.type === "variant" && (
               <Tab
                 classes={{
@@ -220,7 +221,6 @@ function ProductDataMain({ handleProductData, productData }) {
                 }}
                 icon={<FeaturedVideoIcon fontSize="small" />}
                 label="Atributes"
-                {...a11yProps(4)}
                 value={4}
               />
             )}
@@ -235,7 +235,6 @@ function ProductDataMain({ handleProductData, productData }) {
                 }}
                 icon={<ViewModuleIcon fontSize="small" />}
                 label="Variations"
-                {...a11yProps(5)}
                 value={5}
               />
             )}
@@ -249,7 +248,6 @@ function ProductDataMain({ handleProductData, productData }) {
                 }}
                 icon={<GroupWorkIcon fontSize="small" />}
                 label="Bundle products"
-                {...a11yProps(6)}
                 value={6}
               />
             )}
@@ -260,39 +258,61 @@ function ProductDataMain({ handleProductData, productData }) {
                 labelIcon: classes.labelIcon,
                 selected: classes.selected,
               }}
+              icon={<LinkIcon fontSize="small" />}
+              label="Similar products"
+              value={7}
+            />
+            <Tab
+              classes={{
+                root: classes.tab,
+                wrapper: classes.wrapper,
+                labelIcon: classes.labelIcon,
+                selected: classes.selected,
+              }}
               icon={<SettingsIcon fontSize="small" />}
               label="Advance"
-              {...a11yProps(7)}
-              value={7}
+              value={8}
             />
           </Tabs>
           <div style={{ width: "75%", overflowX: "auto" }}>
-            {(productData.type === "simple" ||
-              productData.type === "bundle") && (
+            <TabPanel
+              style={{
+                display: value === 0 ? "block" : "none",
+                width: "100%",
+              }}
+            >
+              <Info type={productData.type} />
+            </TabPanel>
+            {productData.type !== "variant" && (
               <TabPanel
                 style={{
-                  display: value === 0 ? "block" : "none",
+                  display: value === 1 ? "block" : "none",
                   width: "100%",
                 }}
               >
                 <GenaralMain />
               </TabPanel>
             )}
-            <TabPanel
-              style={{ display: value === 1 ? "block" : "none", width: "100%" }}
-            >
-              <Inventory />
-            </TabPanel>
-            <TabPanel
-              style={{ display: value === 2 ? "block" : "none", width: "100%" }}
-            >
-              <Shipping />
-            </TabPanel>
-            <TabPanel
-              style={{ display: value === 3 ? "block" : "none", width: "100%" }}
-            >
-              <SimilarProducts />
-            </TabPanel>
+            {productData.type !== "variant" && (
+              <TabPanel
+                style={{
+                  display: value === 2 ? "block" : "none",
+                  width: "100%",
+                }}
+              >
+                <Inventory />
+              </TabPanel>
+            )}
+            {productData.type !== "variant" && (
+              <TabPanel
+                style={{
+                  display: value === 3 ? "block" : "none",
+                  width: "100%",
+                }}
+              >
+                <Shipping />
+              </TabPanel>
+            )}
             {productData.type === "variant" && (
               <TabPanel
                 style={{
@@ -325,6 +345,11 @@ function ProductDataMain({ handleProductData, productData }) {
             )}
             <TabPanel
               style={{ display: value === 7 ? "block" : "none", width: "100%" }}
+            >
+              <SimilarProducts />
+            </TabPanel>
+            <TabPanel
+              style={{ display: value === 8 ? "block" : "none", width: "100%" }}
             >
               <Advance />
             </TabPanel>
