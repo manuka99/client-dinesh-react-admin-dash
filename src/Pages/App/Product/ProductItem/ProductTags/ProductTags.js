@@ -147,7 +147,7 @@ function ProductTags() {
                   size="small"
                   label={tag.name}
                   onDelete={() => clearTag(tag.id)}
-                  color="primary"
+                  // color="primary"
                 />
               ))}
             </div>
