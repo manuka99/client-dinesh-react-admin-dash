@@ -1,14 +1,15 @@
-import React, { useState, useContext } from "react";
-import { Grid, Link, TextField, InputAdornment } from "@material-ui/core";
+import React, { useState, useContext, useEffect } from "react";
+import { Grid, Link, TextField } from "@material-ui/core";
 import ButtonProgress from "../../../../../../components/common/ButtonProgress/ButtonProgress";
 import api from "../../../../../../util/api";
 import { ProductContext } from "../../ProductItem";
 import CurrencyFeild from "../../../../../../components/common/CurrencyFeild/CurrencyFeild";
+import { useSnackbar } from "notistack";
 
 function GeneralMain() {
   const [generalData, setGeneralData] = useState({});
-  const [isSchedule, setIsSchedule] = useState(false);
   const [btnLoading, setBtnLoading] = useState(false);
+  const { enqueueSnackbar } = useSnackbar();
   const productContext = useContext(ProductContext);
 
   const handleChange = (e) => {
@@ -17,12 +18,21 @@ function GeneralMain() {
     setGeneralData({ ...generalData, [name]: value });
   };
 
+  useEffect(() => {
+    productContext.mainLoader(true);
+    api()
+      .get(`/products/simple_bundle/${productContext.product_id}`)
+      .then((res) => setGeneralData({ ...res.data.generalData }))
+      .catch((error) => console.log(error))
+      .finally(() => productContext.mainLoader(false));
+  }, []);
+
   const update = () => {
     setBtnLoading(true);
     api()
-      .post(`/products/general_data/${productContext.product_id}`, generalData)
+      .post(`/products/simple_bundle/${productContext.product_id}`, generalData)
       .then((res) => {
-        console.log(res);
+        enqueueSnackbar("Product data saved !", { variant: "success" });
       })
       .catch((e) => console.log(e))
       .finally(() => setBtnLoading(false));
@@ -49,20 +59,25 @@ function GeneralMain() {
           color="primary"
           size="small"
           fullWidth
-          value={generalData.sale_price}
+          value={generalData.offer_price}
           name="offer_price"
           onChange={handleChange}
         />
       </Grid>
 
-      {!isSchedule && (
+      {generalData.schedule_offer === 0 && (
         <Grid item xs={12}>
-          <Link onClick={() => setIsSchedule(true)} variant="body2">
+          <Link
+            onClick={() =>
+              setGeneralData({ ...generalData, schedule_offer: 1 })
+            }
+            variant="body2"
+          >
             Schedule
           </Link>
         </Grid>
       )}
-      {isSchedule && (
+      {generalData.schedule_offer === 1 && (
         <React.Fragment>
           <Grid item xs={6}>
             <TextField
@@ -112,14 +127,12 @@ function GeneralMain() {
               onClick={() => {
                 setGeneralData({
                   ...generalData,
-                  offer_from: "",
-                  offer_to: "",
+                  schedule_offer: 0,
                 });
-                setIsSchedule(false);
               }}
               variant="body2"
             >
-              Cancel
+              Cancel schedule
             </Link>
           </Grid>
         </React.Fragment>

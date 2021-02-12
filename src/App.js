@@ -9,6 +9,7 @@ import { AllRoutes } from "./Routes/Routes";
 import Loading from "./Pages/Loading/Loading";
 import { get_app_theme, set_app_theme } from "./util/themeService";
 import { useLocation } from "react-router-dom";
+import { SnackbarProvider } from "notistack";
 import "./App.css";
 
 function App(props) {
@@ -49,14 +50,22 @@ function App(props) {
 
   return (
     <ThemeProvider theme={APP_THEME}>
-      {props.loading ? (
-        <Loading />
-      ) : (
-        <div className="App">
-          <ErrorModelsContainer />
-          {AllRoutes()}
-        </div>
-      )}
+      <SnackbarProvider
+        maxSnack={3}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+      >
+        {props.loading ? (
+          <Loading />
+        ) : (
+          <div className="App">
+            <ErrorModelsContainer />
+            {AllRoutes()}
+          </div>
+        )}
+      </SnackbarProvider>
     </ThemeProvider>
   );
 }
