@@ -1,11 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import {
-  CardActionArea,
-  Divider,
   Grid,
   InputLabel,
-  TextField,
-  Typography,
   makeStyles,
   Select,
   FormControl,
@@ -15,9 +11,8 @@ import ButtonProgress from "../../../../../../components/common/ButtonProgress/B
 import api from "../../../../../../util/api";
 import { ProductContext } from "../../ProductItem";
 import { useSnackbar } from "notistack";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
 import CustomFeild from "../../../../../../components/common/CustomFeild/CustomFeild";
+import swal from "sweetalert";
 
 const initialData = {
   weight: 0,
@@ -54,7 +49,10 @@ function Shipping() {
     api()
       .get(`/products/simple_bundle/${productContext.product_id}`)
       .then((res) => setShipping({ ...res.data.shipping }))
-      .catch((error) => console.log(error))
+      .catch((error) => {
+        if (error.response && error.response.status === 422)
+          swal(error.response.data.message);
+      })
       .finally(() => productContext.mainLoader(false));
   }, []);
 
@@ -65,7 +63,10 @@ function Shipping() {
       .then((res) => {
         enqueueSnackbar("Product data saved !", { variant: "success" });
       })
-      .catch((e) => console.log(e))
+      .catch((error) => {
+        if (error.response && error.response.status === 422)
+          swal(error.response.data.message);
+      })
       .finally(() => setBtnLoading(false));
   };
 

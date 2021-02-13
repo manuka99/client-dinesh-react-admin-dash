@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createContext } from "react";
+import React, { useState, useEffect, createContext, useRef } from "react";
 import { useParams } from "react-router-dom";
 import LoadingModel from "../../../../components/Modals/LoadingModel";
 import api from "../../../../util/api";
@@ -58,10 +58,25 @@ function ProductItem() {
   // const classes = styles();
   const [loading, setLoading] = useState(false);
   const [updateBtnLoader, setUpdateBtnLoader] = useState(false);
+  const [dataChanged, setDataChanged] = useState(false);
+  const dataChangedTimer = useRef(null);
   const [productData, setProductData] = useStateCallback({
     ...initialProductData,
     url_name: product_id,
   });
+
+  useEffect(() => {
+    if (dataChanged) {
+      dataChangedTimer.current = setTimeout(() => updateDataAsync(), 4000);
+    }
+    return () => clearTimeout(dataChangedTimer.current);
+  }, [productData]);
+
+  useEffect(() => {
+    if (dataChanged) {
+      updateDataAsync();
+    }
+  }, [productData.type]);
 
   // get the product id and details
   useEffect(() => {
@@ -70,6 +85,7 @@ function ProductItem() {
       api()
         .get(`/products/${product_id}`)
         .then((res) => {
+          setDataChanged(false);
           setProductData({ ...res.data.productData });
         })
         .catch((errors) => console.log(errors))
@@ -84,20 +100,15 @@ function ProductItem() {
     var name = e.target.name;
     var value = e.target.value;
     //validate permalink name
+    setDataChanged(true);
     if (name === "url_name" && value === "")
-      setProductData({ ...productData, url_name: product_id }, (data) => {
-        updateDataAsync(data);
-      });
-    else
-      setProductData({ ...productData, [name]: value }, (data) => {
-        updateDataAsync(data);
-      });
+      setProductData({ ...productData, url_name: product_id });
+    else setProductData({ ...productData, [name]: value });
   };
 
   const handleProductData = (name, value) => {
-    setProductData({ ...productData, [name]: value }, (data) => {
-      updateDataAsync(data);
-    });
+    setDataChanged(true);
+    setProductData({ ...productData, [name]: value });
   };
 
   // update data from publish
@@ -114,11 +125,10 @@ function ProductItem() {
       });
   };
 
-  // update data from other
-  const updateDataAsync = (data) => {
+  const updateDataAsync = () => {
     setLoading(true);
     api()
-      .post(`/products/${product_id}`, data)
+      .post(`/products/${product_id}`, productData)
       .then((res) => {
         // console.log(res);
       })

@@ -12,6 +12,7 @@ import { ProductContext } from "../../ProductItem";
 import { useSnackbar } from "notistack";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
+import swal from "sweetalert";
 
 const initialData = {
   sku_id: "",
@@ -40,7 +41,10 @@ function Inventory() {
     api()
       .get(`/products/simple_bundle/${productContext.product_id}`)
       .then((res) => setInventory({ ...res.data.inventory }))
-      .catch((error) => console.log(error))
+      .catch((error) => {
+        if (error.response && error.response.status === 422)
+          swal(error.response.data.message);
+      })
       .finally(() => productContext.mainLoader(false));
   }, []);
 
@@ -51,7 +55,10 @@ function Inventory() {
       .then((res) => {
         enqueueSnackbar("Product data saved !", { variant: "success" });
       })
-      .catch((e) => console.log(e))
+      .catch((error) => {
+        if (error.response && error.response.status === 422)
+          swal(error.response.data.message);
+      })
       .finally(() => setBtnLoading(false));
   };
 

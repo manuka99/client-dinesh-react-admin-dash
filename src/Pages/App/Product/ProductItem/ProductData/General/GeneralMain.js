@@ -5,6 +5,7 @@ import api from "../../../../../../util/api";
 import { ProductContext } from "../../ProductItem";
 import CustomFeild from "../../../../../../components/common/CustomFeild/CustomFeild";
 import { useSnackbar } from "notistack";
+import swal from "sweetalert";
 
 const initialData = {
   regular_price: "",
@@ -31,7 +32,10 @@ function GeneralMain() {
     api()
       .get(`/products/simple_bundle/${productContext.product_id}`)
       .then((res) => setGeneralData({ ...res.data.generalData }))
-      .catch((error) => console.log(error))
+      .catch((error) => {
+        if (error.response && error.response.status === 422)
+          swal(error.response.data.message);
+      })
       .finally(() => productContext.mainLoader(false));
   }, []);
 
@@ -42,7 +46,10 @@ function GeneralMain() {
       .then((res) => {
         enqueueSnackbar("Product data saved !", { variant: "success" });
       })
-      .catch((e) => console.log(e))
+      .catch((error) => {
+        if (error.response && error.response.status === 422)
+          swal(error.response.data.message);
+      })
       .finally(() => setBtnLoading(false));
   };
 

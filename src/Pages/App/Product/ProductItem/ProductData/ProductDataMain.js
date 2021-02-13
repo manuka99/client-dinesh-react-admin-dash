@@ -3,11 +3,7 @@ import {
   Box,
   Card,
   CardActionArea,
-  CardContent,
   FormControl,
-  Grid,
-  InputLabel,
-  MenuItem,
   Select,
   Typography,
   makeStyles,
@@ -26,7 +22,7 @@ import GroupWorkIcon from "@material-ui/icons/GroupWork";
 import GenaralMain from "./General/GeneralMain";
 import Inventory from "./Inventory/Inventory";
 import Shipping from "./Shipping/Shipping";
-import SimilarProducts from "./SimilarProducts/SimilarProducts";
+import Suggestions from "./Suggestions/Suggestions";
 import Attributes from "./Attributes/Attributes";
 import Variations from "./Variations/Variations";
 import GroupProducts from "./GroupProducts/GroupProducts";
@@ -259,7 +255,7 @@ function ProductDataMain({ handleProductData, productData }) {
                 selected: classes.selected,
               }}
               icon={<LinkIcon fontSize="small" />}
-              label="Similar products"
+              label="Suggestions"
               value={7}
             />
             <Tab
@@ -275,82 +271,43 @@ function ProductDataMain({ handleProductData, productData }) {
             />
           </Tabs>
           <div style={{ width: "75%", overflowX: "auto" }}>
-            <TabPanel
-              style={{
-                display: value === 0 ? "block" : "none",
-                width: "100%",
-              }}
-            >
+            <TabPanel value={value} index={0}>
               <Info type={productData.type} />
             </TabPanel>
             {productData.type !== "variant" && (
-              <TabPanel
-                style={{
-                  display: value === 1 ? "block" : "none",
-                  width: "100%",
-                }}
-              >
+              <TabPanel value={value} index={1}>
                 <GenaralMain />
               </TabPanel>
             )}
             {productData.type !== "variant" && (
-              <TabPanel
-                style={{
-                  display: value === 2 ? "block" : "none",
-                  width: "100%",
-                }}
-              >
+              <TabPanel value={value} index={2}>
                 <Inventory />
               </TabPanel>
             )}
             {productData.type !== "variant" && (
-              <TabPanel
-                style={{
-                  display: value === 3 ? "block" : "none",
-                  width: "100%",
-                }}
-              >
+              <TabPanel value={value} index={3}>
                 <Shipping />
               </TabPanel>
             )}
             {productData.type === "variant" && (
-              <TabPanel
-                style={{
-                  display: value === 4 ? "block" : "none",
-                  width: "100%",
-                }}
-              >
+              <TabPanel value={value} index={4}>
                 <Attributes />
               </TabPanel>
             )}
             {productData.type === "variant" && (
-              <TabPanel
-                style={{
-                  display: value === 5 ? "block" : "none",
-                  width: "100%",
-                }}
-              >
+              <TabPanel value={value} index={5}>
                 <Variations />
               </TabPanel>
             )}
             {productData.type === "bundle" && (
-              <TabPanel
-                style={{
-                  display: value === 6 ? "block" : "none",
-                  width: "100%",
-                }}
-              >
+              <TabPanel value={value} index={6}>
                 <GroupProducts />
               </TabPanel>
             )}
-            <TabPanel
-              style={{ display: value === 7 ? "block" : "none", width: "100%" }}
-            >
-              <SimilarProducts />
+            <TabPanel value={value} index={7}>
+              <Suggestions />
             </TabPanel>
-            <TabPanel
-              style={{ display: value === 8 ? "block" : "none", width: "100%" }}
-            >
+            <TabPanel value={value} index={8}>
               <Advance />
             </TabPanel>
           </div>

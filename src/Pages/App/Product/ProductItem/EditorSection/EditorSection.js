@@ -19,7 +19,7 @@ function EditorSection({ heading, name, dataValue, handleProductData }) {
     if (isSaveData)
       timeOutRef.current = setTimeout(
         () => handleProductData(name, data),
-        10000
+        5000
       );
     return () => {
       clearTimeout(timeOutRef.current);
