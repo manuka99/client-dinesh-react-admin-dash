@@ -49,6 +49,8 @@ const initialProductData = {
   published_on: "",
   is_featured: "",
   is_trashed: "",
+  label: "",
+  symbol: "",
 };
 
 function ProductItem() {
@@ -143,20 +145,22 @@ function ProductItem() {
                 </Box>
                 <Divider />
               </CardActionArea>
-              <CardContent>
-                <Typography variant="body2" gutterBottom>
-                  Lorem Ipsum is simply dummy text of the printing and
-                  typesetting industry. Lorem Ipsum has been the industry's
-                  standard dummy text ever since the 1500s, when an unknown
-                  printer took a galley of type and scrambled it to make a type
-                  specimen book. It has survived not only five centuries, but
-                  also the leap into electronic typesetting, remaining
-                  essentially unchanged. It was popularised in the 1960s with
-                  the release of Letraset sheets containing Lorem Ipsum
-                  passages, and more recently with desktop publishing software
-                  like Aldus PageMaker including versions of Lorem Ipsum.
-                </Typography>
-              </CardContent>
+              <CardActionArea>
+                <Box p={2}>
+                  <Typography variant="body2" gutterBottom>
+                    Lorem Ipsum is simply dummy text of the printing and
+                    typesetting industry. Lorem Ipsum has been the industry's
+                    standard dummy text ever since the 1500s, when an unknown
+                    printer took a galley of type and scrambled it to make a
+                    type specimen book. It has survived not only five centuries,
+                    but also the leap into electronic typesetting, remaining
+                    essentially unchanged. It was popularised in the 1960s with
+                    the release of Letraset sheets containing Lorem Ipsum
+                    passages, and more recently with desktop publishing software
+                    like Aldus PageMaker including versions of Lorem Ipsum.
+                  </Typography>
+                </Box>
+              </CardActionArea>
             </Card>
           </Box>
           <Grid container spacing={4}>
@@ -211,6 +215,8 @@ function ProductItem() {
                 status={productData.status}
                 visibility={productData.visibility}
                 published_on={productData.published_on}
+                label={productData.label}
+                symbol={productData.symbol}
                 is_featured={productData.is_featured}
                 handleProductData={handleProductData}
                 updateData={updateDataToDB}

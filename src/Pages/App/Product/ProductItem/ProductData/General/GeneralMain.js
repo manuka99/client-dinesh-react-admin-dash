@@ -3,11 +3,19 @@ import { Grid, Link, TextField } from "@material-ui/core";
 import ButtonProgress from "../../../../../../components/common/ButtonProgress/ButtonProgress";
 import api from "../../../../../../util/api";
 import { ProductContext } from "../../ProductItem";
-import CurrencyFeild from "../../../../../../components/common/CurrencyFeild/CurrencyFeild";
+import CustomFeild from "../../../../../../components/common/CustomFeild/CustomFeild";
 import { useSnackbar } from "notistack";
 
+const initialData = {
+  regular_price: "",
+  offer_price: "",
+  schedule_offer: 0,
+  offer_from: "",
+  offer_to: "",
+};
+
 function GeneralMain() {
-  const [generalData, setGeneralData] = useState({});
+  const [generalData, setGeneralData] = useState(initialData);
   const [btnLoading, setBtnLoading] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
   const productContext = useContext(ProductContext);
@@ -41,7 +49,8 @@ function GeneralMain() {
   return (
     <Grid container style={{ width: "100%" }} spacing={2} direction="row">
       <Grid item xs={6}>
-        <CurrencyFeild
+        <CustomFeild
+          prefix="Rs "
           label="Regular price"
           variant="outlined"
           color="primary"
@@ -53,7 +62,8 @@ function GeneralMain() {
         />
       </Grid>
       <Grid item xs={6}>
-        <CurrencyFeild
+        <CustomFeild
+          prefix="Rs "
           label="Offer price"
           variant="outlined"
           color="primary"
@@ -65,7 +75,7 @@ function GeneralMain() {
         />
       </Grid>
 
-      {generalData.schedule_offer === 0 && (
+      {generalData.schedule_offer !== 1 && (
         <Grid item xs={12}>
           <Link
             onClick={() =>
@@ -131,6 +141,7 @@ function GeneralMain() {
                 });
               }}
               variant="body2"
+              color="secondary"
             >
               Cancel schedule
             </Link>

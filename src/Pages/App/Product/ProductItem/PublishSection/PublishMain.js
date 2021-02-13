@@ -14,12 +14,20 @@ import {
   FormControlLabel,
   Link,
   Grid,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  ListItemIcon,
 } from "@material-ui/core";
 import NativeSelect from "@material-ui/core/NativeSelect";
 import GamesIcon from "@material-ui/icons/Games";
 import CreateIcon from "@material-ui/icons/Create";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import PublishIcon from "@material-ui/icons/Publish";
+import LabelImportantIcon from "@material-ui/icons/LabelImportant";
+import LineStyleIcon from "@material-ui/icons/LineStyle";
+import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 import ButtonProgress from "../../../../../components/common/ButtonProgress/ButtonProgress";
 
 const styles = makeStyles((theme) => ({
@@ -64,6 +72,8 @@ function PublishMain({
   status,
   visibility,
   published_on,
+  label,
+  symbol,
   is_featured,
   handleProductData,
   updateBtnLoader,
@@ -87,7 +97,7 @@ function PublishMain({
   };
 
   const handleOkButton = (name) => {
-    if (newValues[name]) {
+    if (newValues[name] || name === "symbol") {
       handleProductData(name, newValues[name]);
     }
     setEditMode({ ...editMode, [name]: !editMode[name] });
@@ -226,6 +236,8 @@ function PublishMain({
             <div className={classes.flexDiv}>
               <TextField
                 type="datetime-local"
+                variant="outlined"
+                size="small"
                 defaultValue={published_on.replace(" ", "T")}
                 onChange={(e) =>
                   setNewValues({
@@ -253,13 +265,136 @@ function PublishMain({
               </Button>
             </div>
           )}
+          {/* Label - popular | treanding */}
+          <div className={classes.flexDiv}>
+            <LabelImportantIcon className={classes.icon} />
+            Product label:
+            <span className={classes.boldFont}>{label ? label : "none"}</span>
+            {!editMode.label && (
+              <IconButton
+                size="small"
+                color="primary"
+                onClick={() => toggleEditMode("label")}
+              >
+                <CreateIcon fontSize="small" />
+              </IconButton>
+            )}
+          </div>
+          {editMode.label && (
+            <div className={classes.flexDiv}>
+              <TextField
+                type="text"
+                variant="outlined"
+                size="small"
+                defaultValue={label}
+                onChange={(e) =>
+                  setNewValues({
+                    ...newValues,
+                    label: e.target.value,
+                  })
+                }
+              />
+              <Button
+                className={classes.btnSmall}
+                variant="outlined"
+                color="primary"
+                onClick={() => handleOkButton("label")}
+              >
+                ok
+              </Button>
+              <bold s>/</bold>
+              <Button
+                className={classes.btnSmall}
+                variant="outlined"
+                color="secondary"
+                onClick={() => toggleEditMode("label")}
+              >
+                Cancel
+              </Button>
+            </div>
+          )}
+          {/* Symbol - meat | veg */}
+          <div className={classes.flexDiv}>
+            <LineStyleIcon className={classes.icon} />
+            Product symbol (imp ! Meat or Veg):
+            <span className={classes.boldFont}>{symbol ? symbol : "none"}</span>
+            {!editMode.symbol && (
+              <IconButton
+                size="small"
+                color="primary"
+                onClick={() => toggleEditMode("symbol")}
+              >
+                <CreateIcon fontSize="small" />
+              </IconButton>
+            )}
+          </div>
+          {editMode.symbol && (
+            <div className={classes.flexDiv}>
+              <FormControl size="small">
+                <Select
+                  variant="outlined"
+                  defaultValue={symbol}
+                  onChange={(e) =>
+                    setNewValues({
+                      ...newValues,
+                      symbol: e.target.value,
+                    })
+                  }
+                >
+                  <MenuItem value="">None</MenuItem>
+                  <MenuItem value="meat" className={classes.flexDiv}>
+                    <FiberManualRecordIcon
+                      style={{
+                        border: "2px solid red",
+                        color: "red",
+                        padding: "2px",
+                        marginRight: "12px",
+                        fontSize: "12px",
+                      }}
+                    />
+                    Meat
+                  </MenuItem>
+                  <MenuItem value="veg" className={classes.flexDiv}>
+                    <FiberManualRecordIcon
+                      style={{
+                        border: "2px solid green",
+                        color: "green",
+                        padding: "2px",
+                        marginRight: "12px",
+                        fontSize: "12px",
+                      }}
+                    />
+                    Vegetarian
+                  </MenuItem>
+                </Select>
+              </FormControl>
+              <Button
+                className={classes.btnSmall}
+                variant="outlined"
+                color="primary"
+                onClick={() => handleOkButton("symbol")}
+              >
+                ok
+              </Button>
+              <bold s>/</bold>
+              <Button
+                className={classes.btnSmall}
+                variant="outlined"
+                color="secondary"
+                onClick={() => toggleEditMode("symbol")}
+              >
+                Cancel
+              </Button>
+            </div>
+          )}
+
           {/* is featured */}
           <FormControlLabel
             control={
               <Checkbox
                 checked={is_featured === 0 ? false : true}
                 onChange={(e) =>
-                  handleProductData("is_featured", e.target.checked)
+                  handleProductData("is_featured", e.target.checked ? 1 : 0)
                 }
                 color="primary"
               />

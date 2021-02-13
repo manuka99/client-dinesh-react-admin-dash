@@ -32,13 +32,15 @@ NumberFormatCustom.propTypes = {
   onChange: PropTypes.func.isRequired,
 };
 
-export default function CurrencyFeild(props) {
+export default function CustomFeild(props) {
   return (
     <TextField
       {...props}
       InputProps={{
         inputComponent: NumberFormatCustom,
-        startAdornment: <InputAdornment position="start">Rs</InputAdornment>,
+        startAdornment: (
+          <InputAdornment position="start">{props.prefix}</InputAdornment>
+        ),
       }}
     />
   );
