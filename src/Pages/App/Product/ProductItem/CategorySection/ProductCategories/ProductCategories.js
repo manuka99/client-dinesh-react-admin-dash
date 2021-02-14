@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
   categories_div: {
     overflow: "auto",
     width: "100%",
-    height: "220px",
+    maxHeight: "220px",
     display: "flex",
     flexDirection: "column",
     gap: "10px",

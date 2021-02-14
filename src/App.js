@@ -15,7 +15,7 @@ import "./App.css";
 function App(props) {
   const navigate = useNavigate();
   const location = useLocation();
-  const [locationRequired, setlocationRequired] = useState("");
+  const [locationRequired, setlocationRequired] = useState("/");
 
   const APP_THEME_DATA = get_app_theme(props.theme);
   const APP_THEME = createMuiTheme(APP_THEME_DATA);
@@ -33,7 +33,7 @@ function App(props) {
       locationRequired !== "/login"
         ? navigate(locationRequired)
         : navigate("/");
-      setlocationRequired("");
+      setlocationRequired("/");
     } else if (props.logout) navigate("/login");
     // eslint-disable-next-line
   }, [props.is2faRequired, props.login, props.logout]);

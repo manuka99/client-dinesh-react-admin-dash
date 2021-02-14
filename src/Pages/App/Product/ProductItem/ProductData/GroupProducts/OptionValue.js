@@ -12,7 +12,25 @@ import ButtonProgress from "../../../../../../components/common/ButtonProgress/B
 
 const useStyles = makeStyles({
   root: {
-    maxWidth: 345,
+    width: "32%",
+    marginBottom: "4%",
+  },
+  ellipsis: {
+    display: "-webkit-box",
+    "-webkit-line-clamp": 2,
+    "-webkit-box-orient": "vertical",
+    textOverflow: "ellipsis",
+    overflow: "hidden",
+  },
+  flexRowCenter: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  btnSmall: {
+    textTransform: "capitalize",
+    paddingTop: "1px",
+    paddingBottom: "1px",
   },
 });
 
@@ -35,31 +53,48 @@ function OptionValue({ value, fetchOptions }) {
       <CardActionArea>
         <CardMedia
           component="img"
-          alt="Contemplative Reptile"
-          height="140"
-          image="/static/images/cards/contemplative-reptile.jpg"
-          title="Contemplative Reptile"
+          alt={product.product_name}
+          height="100"
+          image={product.image}
+          title={product.product_name}
         />
         <CardContent>
-          <Typography gutterBottom variant="h5" component="h2">
+          <Typography
+            gutterBottom
+            variant="subtitle2"
+            className={classes.ellipsis}
+          >
             {product.product_name}
           </Typography>
-          <Typography variant="body2" color="textSecondary" component="p">
-            Lizards are a widespread group of squamate reptiles, with over 6,000
-            species, ranging across all continents except Antarctica
+          <Typography
+            variant="body2"
+            color="textSecondary"
+            component="p"
+            className={classes.ellipsis}
+          >
+            <div dangerouslySetInnerHTML={{ __html: product.description }} />
           </Typography>
         </CardContent>
       </CardActionArea>
-      <CardActions>
+      <CardActions className={classes.flexRowCenter}>
         <ButtonProgress
           size="small"
           color="secondary"
           variant="contained"
           handleButtonClick={deleteProduct}
+          className={classes.btnSmall}
           loading={deleteBtnLoading}
           name="delete"
         />
-        <Button size="small" color="primary" variant="contained" href="/s">
+        <Button
+          size="small"
+          className={classes.btnSmall}
+          color="primary"
+          variant="contained"
+          component="a"
+          target="_blank"
+          href={`/app/products/edit/${product.id}`}
+        >
           More
         </Button>
       </CardActions>

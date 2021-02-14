@@ -11,6 +11,8 @@ import AsyncSelect from "react-select/async";
 import api from "../../../../../../util/api";
 import ButtonProgress from "../../../../../../components/common/ButtonProgress/ButtonProgress";
 import swal from "sweetalert";
+import EditIcon from "@material-ui/icons/Edit";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,17 +35,36 @@ const useStyles = makeStyles((theme) => ({
   },
   flexDiv: {
     display: "flex",
-    gap: theme.spacing(1),
+    gap: "2%",
     flexWrap: "wrap",
+    width: "100%",
   },
   flexColumnDiv: {
     display: "flex",
     flexDirection: "column",
     alignItems: "flex-start",
     justifyContent: "center",
+    gap: theme.spacing(4),
+    flexWrap: "wrap",
+    width: "100%",
+    paddingTop: theme.spacing(3),
+  },
+  flexColumnDiv2: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-start",
+    justifyContent: "center",
     gap: theme.spacing(2),
     flexWrap: "wrap",
-    paddingTop: theme.spacing(2),
+    width: "100%",
+  },
+  flexColumnDiv3: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-start",
+    justifyContent: "center",
+    gap: theme.spacing(1),
+    flexWrap: "wrap",
     width: "100%",
   },
   gridDiv: {
@@ -102,19 +123,24 @@ export default function Option({ option, fetchOptions }) {
   };
 
   const saveOptionValues = () => {
-    setBtnLoading(true);
-    api()
-      .post(`/options/option_value/${option.id}`, newProductNames)
-      .then((res) => {
-        swal("Products were added successfully!");
-        fetchOptions();
-        setNewProductNames([]);
-      })
-      .catch((e) => {
-        if (e.response && e.response.status === 422)
-          swal(e.response.data.message);
-      })
-      .finally(() => setBtnLoading(false));
+    if (newProductNames.length > 0) {
+      setBtnLoading(true);
+      api()
+        .post(`/options/option_value/${option.id}`, newProductNames)
+        .then((res) => {
+          swal("Products were added successfully!");
+          fetchOptions();
+          setNewProductNames([]);
+        })
+        .catch((e) => {
+          if (e.response && e.response.status === 422)
+            swal(e.response.data.message);
+        })
+        .finally(() => setBtnLoading(false));
+    } else
+      alert(
+        "Type product names and select products to add. Feild cannot be empty."
+      );
   };
 
   const deleteOption = () => {
@@ -157,29 +183,29 @@ export default function Option({ option, fetchOptions }) {
         </Typography>
       </AccordionSummary>
       <AccordionDetails className={classes.flexColumnDiv}>
-        <ButtonGroup>
+        <ButtonGroup variant="contained" size="small" color="primary">
           <Button
-            variant="outlined"
-            size="small"
+            style={{ borderRadius: "4px 0 0 4px" }}
             color="primary"
             onClick={() => setEditMode(!editMode)}
+            startIcon={<EditIcon fontSize="small" />}
           >
             Edit
           </Button>
           <ButtonProgress
-            variant="outlined"
-            size="small"
             color="secondary"
+            style={{ borderRadius: "0 4px 4px 0" }}
             loading={deleteBtnLoading}
             handleButtonClick={deleteOption}
             name="delete"
+            startIcon={<DeleteIcon fontSize="small" />}
           />
         </ButtonGroup>
 
         {editMode && (
           <>
             <form
-              className={`${classes.flexColumnDiv}`}
+              className={`${classes.flexColumnDiv2}`}
               onSubmit={updateOptionData}
             >
               <Typography variant="subtitle2">
@@ -214,7 +240,7 @@ export default function Option({ option, fetchOptions }) {
               />
 
               <ButtonProgress
-                name="create option"
+                name="update option"
                 type="submit"
                 variant="contained"
                 color="primary"
@@ -226,32 +252,34 @@ export default function Option({ option, fetchOptions }) {
           </>
         )}
 
-        <Typography variant="subtitle2" gutterBottom>
-          Type the first 4 letters of the product.
-        </Typography>
-        <div className={classes.gridDiv}>
-          <AsyncSelect
-            styles={{ width: "75%" }}
-            isMulti
-            name="pid"
-            cacheOptions
-            className="basic-multi-select"
-            placeholder="Product names"
-            loadOptions={loadOptions}
-            value={newProductNames}
-            defaultOptions
-            onInputChange={handleInputChange}
-            onChange={onChangeSelectedOption}
-          />
-          <ButtonProgress
-            name="Add Products"
-            variant="contained"
-            color="primary"
-            size="small"
-            type="submit"
-            loading={btnLoading}
-            handleButtonClick={saveOptionValues}
-          />
+        <div className={classes.flexColumnDiv3}>
+          <Typography variant="subtitle2" gutterBottom>
+            Type the first 4 letters of the product.
+          </Typography>
+          <div className={classes.gridDiv}>
+            <AsyncSelect
+              styles={{ width: "75%" }}
+              isMulti
+              name="pid"
+              cacheOptions
+              className="basic-multi-select"
+              placeholder="Product names"
+              loadOptions={loadOptions}
+              value={newProductNames}
+              defaultOptions
+              onInputChange={handleInputChange}
+              onChange={onChangeSelectedOption}
+            />
+            <ButtonProgress
+              name="Add Products"
+              variant="contained"
+              color="primary"
+              size="small"
+              type="submit"
+              loading={btnLoading}
+              handleButtonClick={saveOptionValues}
+            />
+          </div>
         </div>
         <div className={classes.flexDiv}>
           {option.values.map((value) => (
