@@ -114,6 +114,7 @@ function ProductItem() {
   // update data from publish
   const updateDataToDB = () => {
     setUpdateBtnLoader(true);
+    clearTimeout(dataChangedTimer.current);
     api()
       .post(`/products/${product_id}`, productData)
       .then((res) => {
@@ -127,6 +128,7 @@ function ProductItem() {
 
   const updateDataAsync = () => {
     setLoading(true);
+    clearTimeout(dataChangedTimer.current);
     api()
       .post(`/products/${product_id}`, productData)
       .then((res) => {

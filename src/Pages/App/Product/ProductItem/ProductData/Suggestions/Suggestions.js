@@ -41,7 +41,7 @@ const styles = makeStyles((theme) => ({
 function Suggestions() {
   const productContext = useContext(ProductContext);
   const [btnAddNewLoading, setBtnAddNewLoading] = useState(false);
-  const [newSuggesstedProduct, setNewSuggesstedProduct] = useState({});
+  const [newSuggesstedProduct, setNewSuggesstedProduct] = useState([]);
   const [suggestedProducts, setSuggestedProducts] = useStateCallback([]);
   const classes = styles();
   const navigate = useNavigate();
@@ -116,19 +116,21 @@ function Suggestions() {
   };
 
   const loadOptions = (inputValue) => {
-    return api()
-      .post("/search_products", { name: inputValue })
-      .then((res) => {
-        let options = res.data.map((product) => ({
-          value: product.id,
-          label: product.product_name,
-        }));
-        return options;
-      })
-      .catch((e) => {
-        console.log(e);
-        return [];
-      });
+    if (inputValue.length > 4) {
+      return api()
+        .post("/search_products", { name: inputValue })
+        .then((res) => {
+          let options = res.data.map((product) => ({
+            value: product.id,
+            label: product.product_name,
+          }));
+          return options;
+        })
+        .catch((e) => {
+          console.log(e);
+          return [];
+        });
+    } else return [];
   };
 
   return (
@@ -163,14 +165,17 @@ function Suggestions() {
         </Box>
       </CardActionArea>
       <CardContent className={classes.flexRow}>
-        <form onSubmit={addNewSuggesstedProduct} className={classes.gridDiv}>
+        <Typography variant="subtitle2" gutterBottom>
+          Type the first 4 letters of the product.
+        </Typography>
+        <div className={classes.gridDiv}>
           <AsyncSelect
             styles={{ width: "75%" }}
             isMulti
             name="pid"
             cacheOptions
             className="basic-multi-select"
-            classNamePrefix="select"
+            placeholder="Product names"
             loadOptions={loadOptions}
             value={newSuggesstedProduct}
             defaultOptions
@@ -184,11 +189,9 @@ function Suggestions() {
             color="primary"
             size="small"
             type="submit"
+            handleButtonClick={addNewSuggesstedProduct}
           />
-        </form>
-        <Typography variant="subtitle2" gutterBottom>
-          Seperate multiple products using commas.
-        </Typography>
+        </div>
         {suggestedProducts.length > 0 && (
           <React.Fragment>
             <div className={classes.flexDiv}>
