@@ -31,7 +31,7 @@ export default function api(nonApi = false) {
             })
           );
         } else if (error.response.status === 404) {
-          store.dispatch(change_redirect_route("/404"));
+          // store.dispatch(change_redirect_route("/404"));
           return Promise.reject(error);
         } else if (error.response.status === 419) {
           swal("Unexpected error 419: Refresh the webpage and try again");

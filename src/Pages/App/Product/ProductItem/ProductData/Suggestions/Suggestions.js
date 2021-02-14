@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
+import AsyncSelect from "react-select/async";
 import {
   Box,
   CardActionArea,
@@ -8,7 +9,6 @@ import {
   makeStyles,
   Link,
   Chip,
-  TextField,
   Avatar,
 } from "@material-ui/core";
 import api from "../../../../../../util/api";
@@ -29,6 +29,12 @@ const styles = makeStyles((theme) => ({
     flexDirection: "column",
     gap: theme.spacing(2),
     flexWrap: "wrap",
+  },
+  gridDiv: {
+    display: "grid",
+    gap: "5%",
+    gridTemplateColumns: "60% 25%",
+    alignItems: "center",
   },
 }));
 
@@ -77,21 +83,52 @@ function Suggestions() {
 
   const addNewSuggesstedProduct = (e) => {
     e.preventDefault();
-    setBtnAddNewLoading(true);
-    api()
-      .post(
-        `/products/suggested/${productContext.product_id}`,
-        newSuggesstedProduct
-      )
+    if (newSuggesstedProduct.length > 0) {
+      setBtnAddNewLoading(true);
+      api()
+        .post(`/products/suggested/${productContext.product_id}`, {
+          options: newSuggesstedProduct,
+        })
+        .then((res) => {
+          setNewSuggesstedProduct([]);
+          setSuggestedProducts(res.data);
+        })
+        .catch((e) => {
+          console.log(e);
+          fetchsuggestedProducts();
+        })
+        .finally(() => setBtnAddNewLoading(false));
+    } else {
+      alert(
+        "Type product names and select products to add. Feild cannot be empty."
+      );
+    }
+  };
+
+  const handleInputChange = (newValue) => {
+    const inputValue = newValue.replace(/\W/g, "");
+    return inputValue;
+  };
+
+  const onChangeSelectedOption = (e) => {
+    console.log(e);
+    setNewSuggesstedProduct([...e]);
+  };
+
+  const loadOptions = (inputValue) => {
+    return api()
+      .post("/search_products", { name: inputValue })
       .then((res) => {
-        setNewSuggesstedProduct({ pid: "" });
-        setSuggestedProducts(res.data);
+        let options = res.data.map((product) => ({
+          value: product.id,
+          label: product.product_name,
+        }));
+        return options;
       })
       .catch((e) => {
         console.log(e);
-        fetchsuggestedProducts();
-      })
-      .finally(() => setBtnAddNewLoading(false));
+        return [];
+      });
   };
 
   return (
@@ -126,16 +163,19 @@ function Suggestions() {
         </Box>
       </CardActionArea>
       <CardContent className={classes.flexRow}>
-        <form onSubmit={addNewSuggesstedProduct} className={classes.flexDiv}>
-          <TextField
-            label="Product"
-            variant="outlined"
-            size="small"
+        <form onSubmit={addNewSuggesstedProduct} className={classes.gridDiv}>
+          <AsyncSelect
+            styles={{ width: "75%" }}
+            isMulti
             name="pid"
-            type="text"
-            onChange={(e) => setNewSuggesstedProduct({ pid: e.target.value })}
-            value={newSuggesstedProduct.pid}
-            required
+            cacheOptions
+            className="basic-multi-select"
+            classNamePrefix="select"
+            loadOptions={loadOptions}
+            value={newSuggesstedProduct}
+            defaultOptions
+            onInputChange={handleInputChange}
+            onChange={onChangeSelectedOption}
           />
           <ButtonProgress
             loading={btnAddNewLoading}
@@ -150,34 +190,36 @@ function Suggestions() {
           Seperate multiple products using commas.
         </Typography>
         {suggestedProducts.length > 0 && (
-          <div className={classes.flexDiv}>
-            {suggestedProducts.map((SProduct) => (
-              <Chip
-                style={{ width: "auto", height: "40px", cursor: "pointer" }}
-                avatar={
-                  <Avatar
-                    onClick={() =>
-                      navigate(`/app/products/edit/${SProduct.id}`)
-                    }
-                    style={{ width: "32px", height: "32px" }}
-                    alt={SProduct.product_name}
-                    src={SProduct.image}
-                  />
-                }
-                key={SProduct.id}
-                size="small"
-                label={SProduct.product_name}
-                onDelete={() => clearSProduct(SProduct.id)}
-                // color="primary"
-              />
-            ))}
-          </div>
+          <React.Fragment>
+            <div className={classes.flexDiv}>
+              {suggestedProducts.map((SProduct) => (
+                <Chip
+                  style={{ width: "auto", height: "40px", cursor: "pointer" }}
+                  avatar={
+                    <Avatar
+                      onClick={() =>
+                        navigate(`/app/products/edit/${SProduct.id}`)
+                      }
+                      style={{ width: "32px", height: "32px" }}
+                      alt={SProduct.product_name}
+                      src={SProduct.image}
+                    />
+                  }
+                  key={SProduct.id}
+                  size="small"
+                  label={SProduct.product_name}
+                  onDelete={() => clearSProduct(SProduct.id)}
+                  // color="primary"
+                />
+              ))}
+            </div>
+            <div>
+              <Link onClick={clearAllSProducts} color="secondary">
+                Clear all suggested products
+              </Link>
+            </div>
+          </React.Fragment>
         )}
-        <div>
-          <Link onClick={clearAllSProducts} color="secondary">
-            Clear all suggested products
-          </Link>
-        </div>
       </CardContent>
     </div>
   );
