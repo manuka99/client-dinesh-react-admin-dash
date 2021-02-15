@@ -4,7 +4,7 @@ import LocalDiningIcon from "@material-ui/icons/LocalDining";
 import ListIcon from "@material-ui/icons/List";
 import CreateIcon from "@material-ui/icons/Create";
 import AcUnitIcon from "@material-ui/icons/AcUnit";
-import ApartmentIcon from "@material-ui/icons/Apartment";
+import ExtensionIcon from "@material-ui/icons/Extension";
 
 export const NavItems1 = () => {
   return [
@@ -112,7 +112,7 @@ export const NavItems1 = () => {
           id: 13,
           name: "Extras",
           to: "/app/products/extras",
-          iconFront: <ApartmentIcon />,
+          iconFront: <ExtensionIcon />,
           hasChildren: false,
           isChild: true,
         },

@@ -28,7 +28,9 @@ import Variations from "./Variations/Variations";
 import GroupProducts from "./GroupProducts/GroupProducts";
 import Advance from "./Advance/Advance";
 import InfoIcon from "@material-ui/icons/Info";
+import ExtensionIcon from "@material-ui/icons/Extension";
 import Info from "./Info/Info";
+import ProductExtras from "./ProductExtras/ProductExtras";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -116,10 +118,8 @@ function ProductDataMain({ handleProductData, productData }) {
           <Box p={1} pl={2} className={classes.rowDiv}>
             <Typography variant="h6">Product data -</Typography>
             <FormControl variant="outlined" size="small">
-              {/* <InputLabel id="product_type_select">Product type</InputLabel> */}
               <Select
                 id="product_type_select"
-                // label="Product type"
                 variant="outlined"
                 autoWidth
                 value={productData.type}
@@ -251,6 +251,19 @@ function ProductDataMain({ handleProductData, productData }) {
               label="Suggestions"
               value={7}
             />
+            {productData.type !== "variant" && (
+              <Tab
+                classes={{
+                  root: classes.tab,
+                  wrapper: classes.wrapper,
+                  labelIcon: classes.labelIcon,
+                  selected: classes.selected,
+                }}
+                icon={<ExtensionIcon fontSize="small" />}
+                label="Addons"
+                value={8}
+              />
+            )}
             <Tab
               classes={{
                 root: classes.tab,
@@ -260,7 +273,7 @@ function ProductDataMain({ handleProductData, productData }) {
               }}
               icon={<SettingsIcon fontSize="small" />}
               label="Advance"
-              value={8}
+              value={9}
             />
           </Tabs>
           <div style={{ width: "75%", overflowX: "auto" }}>
@@ -300,7 +313,12 @@ function ProductDataMain({ handleProductData, productData }) {
             <TabPanel value={value} index={7}>
               <Suggestions />
             </TabPanel>
-            <TabPanel value={value} index={8}>
+            {productData.type !== "variant" && (
+              <TabPanel value={value} index={8}>
+                <ProductExtras />
+              </TabPanel>
+            )}
+            <TabPanel value={value} index={9}>
               <Advance />
             </TabPanel>
           </div>
