@@ -70,6 +70,7 @@ function ProductGallery() {
   const [productGalleryImages, setProductGalleryImages] = useStateCallback([]);
   const classes = styles();
   const route_prefix = "http://localhost:8000/laravel-filemanager";
+  const origin_prefix = "http://localhost:8000";
   const windowRef = useRef(null);
 
   useEffect(() => {
@@ -106,7 +107,7 @@ function ProductGallery() {
     // selected images on the file manager
     if (
       event.source === windowRef.current &&
-      event.origin === "http://localhost:8000" &&
+      event.origin === origin_prefix &&
       Array.isArray(event.data)
     ) {
       var newImages = [];

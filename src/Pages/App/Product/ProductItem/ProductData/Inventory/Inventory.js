@@ -46,6 +46,7 @@ function Inventory() {
           swal(error.response.data.message);
       })
       .finally(() => productContext.mainLoader(false));
+    // eslint-disable-next-line
   }, []);
 
   const update = () => {

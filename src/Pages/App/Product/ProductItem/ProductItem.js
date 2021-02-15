@@ -11,7 +11,6 @@ import {
   Grid,
   Paper,
   CardActionArea,
-  CardContent,
   Divider,
   Typography,
   // makeStyles,
@@ -70,12 +69,14 @@ function ProductItem() {
       dataChangedTimer.current = setTimeout(() => updateDataAsync(), 4000);
     }
     return () => clearTimeout(dataChangedTimer.current);
+    // eslint-disable-next-line
   }, [productData]);
 
   useEffect(() => {
     if (dataChanged) {
       updateDataAsync();
     }
+    // eslint-disable-next-line
   }, [productData.type]);
 
   // get the product id and details

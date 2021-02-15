@@ -6,13 +6,12 @@ import AccordionSummary from "@material-ui/core/AccordionSummary";
 import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { Button, ButtonGroup, Divider } from "@material-ui/core";
-import swal from "sweetalert";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import api from "../../../../../util/api";
 import ButtonProgress from "../../../../../components/common/ButtonProgress/ButtonProgress";
 import AddBoxIcon from "@material-ui/icons/AddBox";
-import NewAddon from "./NewAddon";
+import AddonForm from "./AddonForm";
 import EditOption from "./EditOption";
 import OptionValue from "./OptionValue";
 
@@ -79,7 +78,6 @@ const useStyles = makeStyles((theme) => ({
 export default function ExtrasOption({ option, fetchOptions }) {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
-  const [btnLoading, setBtnLoading] = useState(false);
   const [deleteBtnLoading, setDeleteBtnLoading] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [newAddon, setNewAddon] = useState(false);
@@ -91,22 +89,8 @@ export default function ExtrasOption({ option, fetchOptions }) {
 
   useEffect(() => {
     fetchOptionValues();
+    // eslint-disable-next-line
   }, []);
-
-  const saveOptionValues = () => {
-    setBtnLoading(true);
-    api()
-      .post(`/extras/values/store/${option.id}`)
-      .then((res) => {
-        swal("Addons were added successfully!");
-        fetchOptions();
-      })
-      .catch((e) => {
-        if (e.response && e.response.status === 422)
-          swal(e.response.data.message);
-      })
-      .finally(() => setBtnLoading(false));
-  };
 
   const deleteOption = () => {
     setDeleteBtnLoading(true);
@@ -178,7 +162,7 @@ export default function ExtrasOption({ option, fetchOptions }) {
         )}
         {newAddon && (
           <div className={classes.borderReverse}>
-            <NewAddon eid={option.id} fetchOptionValues={fetchOptionValues} />
+            <AddonForm eid={option.id} fetchOptionValues={fetchOptionValues} />
           </div>
         )}
         <div className={classes.border}>

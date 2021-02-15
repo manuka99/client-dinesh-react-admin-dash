@@ -15,10 +15,8 @@ import {
   Link,
   Grid,
   FormControl,
-  InputLabel,
   Select,
   MenuItem,
-  ListItemIcon,
 } from "@material-ui/core";
 import NativeSelect from "@material-ui/core/NativeSelect";
 import GamesIcon from "@material-ui/icons/Games";

@@ -39,6 +39,7 @@ function ProductImage({ productData, handleProductData }) {
   const classes = styles();
   const [productImage, setProductImage] = useState(productData.image);
   const route_prefix = "http://localhost:8000/laravel-filemanager";
+  const origin_prefix = "http://localhost:8000";
   const [isStorageOpen, setIsStorageOpen] = useState(false);
   const windowRef = useRef(null);
 
@@ -62,7 +63,7 @@ function ProductImage({ productData, handleProductData }) {
   const onRecieveImageUrls = (event) => {
     if (
       event.source === windowRef.current &&
-      event.origin === "http://localhost:8000" &&
+      event.origin === origin_prefix &&
       Array.isArray(event.data)
     ) {
       setProductImage(event.data[0].url);

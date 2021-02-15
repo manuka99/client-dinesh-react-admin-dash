@@ -3,8 +3,6 @@ import {
   Box,
   Card,
   CardActionArea,
-  CardActions,
-  CardContent,
   Divider,
   Grid,
   Typography,

@@ -10,7 +10,7 @@ import api from "../../../../../util/api";
 import ButtonProgress from "../../../../../components/common/ButtonProgress/ButtonProgress";
 import { Box, Divider } from "@material-ui/core";
 import ComponentModal from "../../../../../components/Modals/ComponentModal";
-import NewAddon from "./NewAddon";
+import AddonForm from "./AddonForm";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -66,7 +66,7 @@ function OptionValue({ addon, fetchOptionValues }) {
         status={modelState}
         title="Update addon"
         component={
-          <NewAddon
+          <AddonForm
             oldOptionData={addon}
             fetchOptionValues={fetchOptionValues}
           />

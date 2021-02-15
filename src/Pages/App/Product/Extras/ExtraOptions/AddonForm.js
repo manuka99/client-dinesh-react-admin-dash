@@ -42,7 +42,7 @@ const initialData = {
   layer_image: "",
 };
 
-function NewAddon({ eid, fetchOptionValues, oldOptionData }) {
+function AddonForm({ eid, fetchOptionValues, oldOptionData }) {
   const [optionData, setOptionData] = useState(
     oldOptionData ? oldOptionData : initialData
   );
@@ -181,7 +181,12 @@ function NewAddon({ eid, fetchOptionValues, oldOptionData }) {
         </Typography>
         {optionData.image ? (
           <div className={classes.flexColumnDiv}>
-            <img src={optionData.image} width="100px" height="100px" />
+            <img
+              alt={optionData.name}
+              src={optionData.image}
+              width="100px"
+              height="100px"
+            />
             <div className={classes.flexRowDiv}>
               <Link onClick={selectNewImage}>Change image</Link>
               <Link
@@ -208,7 +213,12 @@ function NewAddon({ eid, fetchOptionValues, oldOptionData }) {
         </Typography>
         {optionData.layer_image ? (
           <div className={classes.flexColumnDiv}>
-            <img src={optionData.layer_image} width="100px" height="100px" />
+            <img
+              alt={optionData.name}
+              src={optionData.layer_image}
+              width="100px"
+              height="100px"
+            />
             <div className={classes.flexRowDiv}>
               <Link onClick={selectNewLayerImage}>Change image</Link>
               <Link
@@ -239,4 +249,4 @@ function NewAddon({ eid, fetchOptionValues, oldOptionData }) {
   );
 }
 
-export default NewAddon;
+export default AddonForm;

@@ -92,6 +92,7 @@ export default function Option({ option, fetchOptions }) {
 
   useEffect(() => {
     setOptionData(option);
+    // eslint-disable-next-line
   }, [editMode]);
 
   const handleInputChange = (newValue) => {
