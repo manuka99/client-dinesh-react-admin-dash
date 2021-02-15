@@ -5,6 +5,7 @@ import loadable from "@loadable/component";
 import AuthRoute from "../components/protectedRoutes/AuthRoute";
 import GuestRoute from "../components/protectedRoutes/GuestRoute";
 import DashboardFallback from "../components/Progress/DashboardFallback";
+import ExtrasMain from "../Pages/App/Product/Extras/ExtrasMain";
 
 // import Fruits from "../components/Fruits";
 // import Login from "../Pages/Login/Login";
@@ -177,6 +178,7 @@ export const AllRoutes = () => {
           <AuthRoute path="/new" element={<NewProduct />} />
           <AuthRoute path="/edit/:product_id" element={<ProductItem />} />
           <AuthRoute path="/categories" element={<CategoriesMain />} />
+          <AuthRoute path="/extras" element={<ExtrasMain />} />
         </AuthRoute>
         <AuthRoute hasAnyRoles={["Editor"]} path="/fruits" element={<Fruits />}>
           <AuthRoute path="/fruit" element={<Fruits />} />

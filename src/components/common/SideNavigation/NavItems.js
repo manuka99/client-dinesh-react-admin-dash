@@ -4,6 +4,7 @@ import LocalDiningIcon from "@material-ui/icons/LocalDining";
 import ListIcon from "@material-ui/icons/List";
 import CreateIcon from "@material-ui/icons/Create";
 import AcUnitIcon from "@material-ui/icons/AcUnit";
+import ApartmentIcon from "@material-ui/icons/Apartment";
 
 export const NavItems1 = () => {
   return [
@@ -107,10 +108,18 @@ export const NavItems1 = () => {
           hasChildren: false,
           isChild: true,
         },
+        {
+          id: 13,
+          name: "Extras",
+          to: "/app/products/extras",
+          iconFront: <ApartmentIcon />,
+          hasChildren: false,
+          isChild: true,
+        },
       ],
     },
     {
-      id: 13,
+      id: 14,
       name: "Exams",
       to: "/app/quiz",
       iconFront: <InboxIcon />,
