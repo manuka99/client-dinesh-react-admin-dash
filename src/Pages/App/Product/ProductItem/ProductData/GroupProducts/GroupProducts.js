@@ -1,5 +1,5 @@
-import { makeStyles, Paper } from "@material-ui/core";
 import React, { useState, useContext, useEffect } from "react";
+import { makeStyles, Paper } from "@material-ui/core";
 import swal from "sweetalert";
 import api from "../../../../../../util/api";
 import { ProductContext } from "../../ProductItem";
@@ -28,7 +28,7 @@ function GroupProducts() {
   const fetchOptions = () => {
     productContext.mainLoader(true);
     api()
-      .get(`/options/bundle/${productContext.product_id}`)
+      .get(`/options/${productContext.product_id}`)
       .then((res) => setOptions(res.data))
       .catch((error) => {
         if (error.response && error.response.status === 422)

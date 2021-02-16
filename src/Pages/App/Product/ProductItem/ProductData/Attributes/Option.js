@@ -5,14 +5,21 @@ import AccordionDetails from "@material-ui/core/AccordionDetails";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import { Button, ButtonGroup, TextField, Divider } from "@material-ui/core";
+import {
+  Button,
+  ButtonGroup,
+  TextField,
+  Divider,
+  Link,
+} from "@material-ui/core";
 import OptionValue from "./OptionValue";
 import AsyncSelect from "react-select/async";
-import api from "../../../../../../util/api";
-import ButtonProgress from "../../../../../../components/common/ButtonProgress/ButtonProgress";
 import swal from "sweetalert";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
+import api from "../../../../../../util/api";
+import ButtonProgress from "../../../../../../components/common/ButtonProgress/ButtonProgress";
+import AttributeForm from "./AttributeForm";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -76,72 +83,47 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const initialData = {
+  name: "",
+  type: "variant",
+};
+
 export default function Option({ option, fetchOptions }) {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
-  const [newProductNames, setNewProductNames] = useState([]);
+  const [newValueNames, setNewValueNames] = useState(initialData);
   const [btnLoading, setBtnLoading] = useState(false);
   const [deleteBtnLoading, setDeleteBtnLoading] = useState(false);
-  const [updateBtnLoading, setUpdateBtnLoading] = useState(false);
   const [editMode, setEditMode] = useState(false);
-  const [optionData, setOptionData] = useState(option);
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
 
-  useEffect(() => {
-    setOptionData(option);
-    // eslint-disable-next-line
-  }, [editMode]);
-
-  const handleInputChange = (newValue) => {
-    const inputValue = newValue.replace(/\W/g, "");
-    return inputValue;
-  };
-
-  const onChangeSelectedOption = (e) => {
-    console.log(e);
-    setNewProductNames([...e]);
-  };
-
-  const loadOptions = (inputValue) => {
-    if (inputValue.length > 3) {
-      return api()
-        .post("/search_products", { name: inputValue })
-        .then((res) => {
-          let options = res.data.map((product) => ({
-            value: product.id,
-            label: product.product_name,
-          }));
-          return options;
-        })
-        .catch((e) => {
-          console.log(e);
-          return [];
-        });
-    } else return [];
+  const onChangeInput = (e) => {
+    setNewValueNames({
+      ...newValueNames,
+      type: "variant",
+      [e.target.name]: e.target.value,
+    });
   };
 
   const saveOptionValues = () => {
-    if (newProductNames.length > 0) {
+    if (newValueNames.name !== "") {
       setBtnLoading(true);
       api()
-        .post(`/options/option_value/${option.id}`, newProductNames)
+        .post(`/options/option_value/${option.id}`, newValueNames)
         .then((res) => {
-          swal("Products were added successfully!");
+          swal("Sub-attributes were added successfully!");
           fetchOptions();
-          setNewProductNames([]);
+          setNewValueNames(initialData);
         })
         .catch((e) => {
           if (e.response && e.response.status === 422)
             swal(e.response.data.message);
         })
         .finally(() => setBtnLoading(false));
-    } else
-      alert(
-        "Type product names and select products to add. Feild cannot be empty."
-      );
+    } else alert("Type sub attributes names. Feild cannot be empty.");
   };
 
   const deleteOption = () => {
@@ -153,18 +135,13 @@ export default function Option({ option, fetchOptions }) {
       .finally(() => setDeleteBtnLoading(false));
   };
 
-  const updateOptionData = (e) => {
-    e.preventDefault();
-    setUpdateBtnLoading(true);
+  const deleteAllSubAttributes = () => {
+    setDeleteBtnLoading(true);
     api()
-      .post(`/options/option/update/${option.id}`, optionData)
+      .delete(`/options/option_value/destroy-all/${option.id}`)
       .then((res) => fetchOptions())
       .catch((e) => console.log(e))
-      .finally(() => setUpdateBtnLoading(false));
-  };
-
-  const handleOptionData = (e) => {
-    setOptionData({ ...optionData, [e.target.name]: e.target.value });
+      .finally(() => setDeleteBtnLoading(false));
   };
 
   return (
@@ -185,11 +162,10 @@ export default function Option({ option, fetchOptions }) {
       </AccordionSummary>
       <AccordionDetails className={classes.flexColumnDiv}>
         <span className={classes.secondaryHeading}>
-          Option name: {option.name}
+          Atribute name: {option.name}
           <br />
-          Product count: {option.values.length}
+          Sub attribute count: {option.values.length}
           <br />
-          Product selection count: {option.select_count}
         </span>
         <ButtonGroup variant="contained" size="small" color="primary">
           <Button
@@ -212,74 +188,31 @@ export default function Option({ option, fetchOptions }) {
 
         {editMode && (
           <>
-            <form
-              className={`${classes.flexColumnDiv2}`}
-              onSubmit={updateOptionData}
-            >
+            <div className={`${classes.flexColumnDiv2}`}>
               <Typography variant="subtitle2">
                 Edit option data <Divider />
               </Typography>
-
-              <TextField
-                label="Option name"
-                name="name"
-                type="text"
-                variant="outlined"
-                color="primary"
-                size="small"
-                fullWidth
-                defaultValue={option.name}
-                onChange={handleOptionData}
-                required
-              />
-
-              <TextField
-                label="Selection count per option"
-                name="select_count"
-                type="number"
-                variant="outlined"
-                color="primary"
-                size="small"
-                fullWidth
-                defaultValue={option.select_count}
-                onChange={handleOptionData}
-                InputProps={{ inputProps: { min: 0 } }}
-                required
-              />
-
-              <ButtonProgress
-                name="update option"
-                type="submit"
-                variant="contained"
-                color="primary"
-                size="small"
-                min="0"
-                loading={updateBtnLoading}
-              />
-            </form>
+              <AttributeForm fetchOptions={fetchOptions} oldData={option} />
+            </div>
           </>
         )}
 
         <div className={classes.flexColumnDiv3}>
           <Typography variant="subtitle2" gutterBottom>
-            Type the first 4 letters of the product.
+            Seperate multiple sub-attributes with commas.
           </Typography>
           <div className={classes.gridDiv}>
-            <AsyncSelect
+            <TextField
               styles={{ width: "75%" }}
-              isMulti
-              name="pid"
-              cacheOptions
-              className="basic-multi-select"
-              placeholder="Product names"
-              loadOptions={loadOptions}
-              value={newProductNames}
-              defaultOptions
-              onInputChange={handleInputChange}
-              onChange={onChangeSelectedOption}
+              name="name"
+              size="small"
+              variant="outlined"
+              label="Sub-attributes"
+              value={newValueNames.name}
+              onChange={onChangeInput}
             />
             <ButtonProgress
-              name="Add Products"
+              name="Add Sub-attributes"
               variant="contained"
               color="primary"
               size="small"
@@ -298,6 +231,12 @@ export default function Option({ option, fetchOptions }) {
             />
           ))}
         </div>
+
+        {option.values.length > 1 && (
+          <Link onClick={deleteAllSubAttributes} color="secondary">
+            Delete all sub-attributes
+          </Link>
+        )}
       </AccordionDetails>
     </Accordion>
   );
