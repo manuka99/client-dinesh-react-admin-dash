@@ -136,12 +136,10 @@ export default function Option({ option, fetchOptions }) {
   };
 
   const deleteAllSubAttributes = () => {
-    setDeleteBtnLoading(true);
     api()
       .delete(`/options/option_value/destroy-all/${option.id}`)
       .then((res) => fetchOptions())
-      .catch((e) => console.log(e))
-      .finally(() => setDeleteBtnLoading(false));
+      .catch((e) => console.log(e));
   };
 
   return (
@@ -164,7 +162,7 @@ export default function Option({ option, fetchOptions }) {
         <span className={classes.secondaryHeading}>
           Atribute name: {option.name}
           <br />
-          Sub attribute count: {option.values.length}
+          Sub attribute count: {option.option_values.length}
           <br />
         </span>
         <ButtonGroup variant="contained" size="small" color="primary">
@@ -223,7 +221,7 @@ export default function Option({ option, fetchOptions }) {
           </div>
         </div>
         <div className={classes.flexDiv}>
-          {option.values.map((value) => (
+          {option.option_values.map((value) => (
             <OptionValue
               key={value.id}
               value={value}
@@ -232,7 +230,7 @@ export default function Option({ option, fetchOptions }) {
           ))}
         </div>
 
-        {option.values.length > 1 && (
+        {option.option_values.length > 1 && (
           <Link onClick={deleteAllSubAttributes} color="secondary">
             Delete all sub-attributes
           </Link>

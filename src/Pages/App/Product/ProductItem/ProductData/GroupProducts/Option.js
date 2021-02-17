@@ -187,7 +187,7 @@ export default function Option({ option, fetchOptions }) {
         <span className={classes.secondaryHeading}>
           Option name: {option.name}
           <br />
-          Product count: {option.values.length}
+          Product count: {option.option_values.length}
           <br />
           Product selection count: {option.select_count}
         </span>
@@ -290,7 +290,7 @@ export default function Option({ option, fetchOptions }) {
           </div>
         </div>
         <div className={classes.flexDiv}>
-          {option.values.map((value) => (
+          {option.option_values.map((value) => (
             <OptionValue
               key={value.id}
               value={value}

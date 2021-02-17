@@ -276,7 +276,7 @@ function ProductDataMain({ handleProductData, productData }) {
               value={9}
             />
           </Tabs>
-          <div style={{ width: "75%", overflowX: "auto" }}>
+          <div style={{ width: "100%", overflowX: "auto" }}>
             <TabPanel value={value} index={0}>
               <Info type={productData.type} />
             </TabPanel>

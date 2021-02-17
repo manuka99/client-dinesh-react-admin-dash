@@ -21,8 +21,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Selection({ fetchVariants }) {
-  const [variationSelection, setVariationSelection] = useState(0);
+function Selection({
+  productVariants,
+  setProductVariants,
+  fetchVariants,
+  posibleVariantCount,
+}) {
+  const [variationSelection, setVariationSelection] = useState(1);
   const [buttonLoading, setButtonLoading] = useState({
     go: false,
     variants: false,
@@ -35,30 +40,61 @@ function Selection({ fetchVariants }) {
   };
 
   const onclickGo = () => {
-    var url = "";
     switch (variationSelection) {
       case 0:
-        return postUrl((url = ""));
+        return true;
       case 1:
-        return postUrl(
-          (url = `/product/variants/otherPosible/${productContext.product_id}`)
-        );
+        if (posibleVariantCount > 0) return allPosible();
+        else
+          return alert(
+            "Cannot create product variations since attributes are not created or available."
+          );
       case 2:
-        return postUrl(
-          `/product/variants/allPosible/${productContext.product_id}`
-        );
+        if (posibleVariantCount - productVariants.length > 0)
+          return otherPosible();
+        else
+          return alert(
+            "Cannot create new product variants since all variants with the given attributes are already created."
+          );
       case 3:
-        return postUrl(
-          `/product/variants/destroy-all/${productContext.product_id}`
+        var confirm = window.confirm(
+          "Are you sure you want to remove all product variants?"
         );
+        confirm && destroyAll();
+        return true;
     }
   };
 
-  const postUrl = (url) => {
+  const allPosible = () => {
     setButtonLoading({ ...buttonLoading, go: true });
     api()
-      .post(url)
+      .post(`/product/variants/allPosible/${productContext.product_id}`)
       .then((res) => {
+        alert(`${res.data.length} product variations have been added.`);
+        setProductVariants(res.data);
+      })
+      .catch((e) => console.log(e))
+      .finally(() => setButtonLoading({ ...buttonLoading, go: false }));
+  };
+
+  const otherPosible = () => {
+    setButtonLoading({ ...buttonLoading, go: true });
+    api()
+      .post(`/product/variants/otherPosible/${productContext.product_id}`)
+      .then((res) => {
+        alert(`${res.data.length} product variations have been added.`);
+        setProductVariants([...productVariants, ...res.data]);
+      })
+      .catch((e) => console.log(e))
+      .finally(() => setButtonLoading({ ...buttonLoading, go: false }));
+  };
+
+  const destroyAll = (url) => {
+    setButtonLoading({ ...buttonLoading, go: true });
+    api()
+      .delete(`/product/variants/destroy-all/${productContext.product_id}`)
+      .then((res) => {
+        alert("All product variantions have been removed!");
         fetchVariants();
       })
       .catch((e) => console.log(e))
@@ -75,14 +111,32 @@ function Selection({ fetchVariants }) {
             variant="outlined"
             value={variationSelection}
           >
-            <MenuItem value={0}>Add variation</MenuItem>
-            <MenuItem value={1}>
-              Create variations which are not present
+            <MenuItem
+              value={0}
+              disabled={
+                productVariants.length === 0 ||
+                posibleVariantCount === productVariants.length
+              }
+            >
+              Add variation
             </MenuItem>
-            <MenuItem value={2}>
+
+            <MenuItem value={1} disabled={posibleVariantCount === 0}>
               Create all variations by deleting existing
             </MenuItem>
-            <MenuItem value={3}>Delete all variations</MenuItem>
+            <MenuItem
+              value={2}
+              disabled={
+                productVariants.length === 0 ||
+                posibleVariantCount === productVariants.length
+              }
+            >
+              Create {posibleVariantCount - productVariants.length} variations
+              which are not present
+            </MenuItem>
+            <MenuItem value={3} disabled={productVariants.length === 0}>
+              Delete all variations
+            </MenuItem>
           </Select>
         </FormControl>
         <ButtonProgress
