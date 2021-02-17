@@ -88,6 +88,7 @@ function Variations() {
           <VariantsContainer
             optionsWithValues={optionsWithValues}
             productVariants={productVariants}
+            setProductVariants={setProductVariants}
           />
         </Paper>
       )}

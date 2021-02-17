@@ -11,6 +11,11 @@ import {
   TextField,
   Divider,
   Link,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
+  Grid,
 } from "@material-ui/core";
 import AsyncSelect from "react-select/async";
 import swal from "sweetalert";
@@ -38,11 +43,18 @@ const useStyles = makeStyles((theme) => ({
     fontSize: theme.typography.pxToRem(15),
     color: theme.palette.text.secondary,
   },
-  flexDiv: {
-    display: "flex",
-    gap: "2%",
-    flexWrap: "wrap",
+  gridDiv: {
     width: "100%",
+    display: "grid",
+    gap: "5%",
+    gridTemplateColumns: "20% 75%",
+    alignItems: "center",
+  },
+  flexDiv: {
+    width: "100%",
+    display: "flex",
+    flexWrap: "wrap",
+    alignItems: "center",
   },
   flexColumnDiv: {
     display: "flex",
@@ -72,41 +84,105 @@ const useStyles = makeStyles((theme) => ({
     flexWrap: "wrap",
     width: "100%",
   },
-  gridDiv: {
-    width: "100%",
-    display: "grid",
-    gap: "5%",
-    gridTemplateColumns: "60% 25%",
-    alignItems: "center",
-  },
 }));
 
-export default function Variant({ optionsWithValues, productVariant }) {
+export default function Variant({
+  optionsWithValues,
+  productVariant,
+  deleteChange,
+}) {
+  const [btnLoaders, setBtnLoaders] = useState({ delete: false });
   const classes = useStyles();
-  const [expanded, setExpanded] = React.useState(false);
-  const [btnLoading, setBtnLoading] = useState(false);
 
-  const handleChange = (panel) => (event, isExpanded) => {
-    setExpanded(isExpanded ? panel : false);
+  const getSelectedOptionValue = (option_id) => {
+    const product_varient_value = productVariant.product_varient_values.find(
+      (product_varient_value) => {
+        if (product_varient_value.option_id === option_id)
+          return parseInt(product_varient_value.id);
+      }
+    );
+    return product_varient_value ? product_varient_value.id : "";
+  };
+
+  const deleteVariant = () => {
+    setBtnLoaders({ ...btnLoaders, delete: true });
+    api()
+      .delete(`/product/variants/destroy/${productVariant.id}`)
+      .then((res) => deleteChange(res.data))
+      .catch((e) => console.log(e))
+      .finally(() => setBtnLoaders({ ...btnLoaders, delete: false }));
   };
 
   return (
-    <Accordion
-      expanded={expanded === "panel1"}
-      onChange={handleChange("panel1")}
-    >
+    <Accordion>
       <AccordionSummary
         className={classes.root}
         expandIcon={<ExpandMoreIcon />}
-        aria-controls="panel1bh-content"
-        id="panel1bh-header"
+        aria-label="Expand"
+        aria-controls="additional-actions1-content"
+        id="additional-actions1-header"
       >
-        <Typography className={classes.heading}>
-          #{productVariant.id}
-        </Typography>
-        <Typography className={classes.secondaryHeading}>
-          {productVariant.regular_price}
-        </Typography>
+        <div
+          aria-label="Acknowledge"
+          onClick={(event) => event.stopPropagation()}
+          onFocus={(event) => event.stopPropagation()}
+          className={classes.flexDiv}
+          style={{ marginRight: "10px" }}
+        >
+          <Grid container spacing={0} alignItems="center">
+            <Grid item xs={2}>
+              <Typography variant="subtitle2" color="textSecondary">
+                #{productVariant.id}
+              </Typography>
+            </Grid>
+            <Grid item xs={9}>
+              <div className={classes.flexDiv}>
+                {optionsWithValues.map((option) => {
+                  if (option.option_values.length > 0)
+                    return (
+                      <FormControl
+                        key={option.id}
+                        size="small"
+                        variant="outlined"
+                        style={{ flexBasis: "30%", margin: "1%" }}
+                      >
+                        <InputLabel id={option.id}>{option.name}</InputLabel>
+                        <Select
+                          labelId={option.id}
+                          id="size"
+                          label={option.name}
+                          value={getSelectedOptionValue(option.id)}
+                          style={{ width: "100%" }}
+                        >
+                          {option.option_values.map((option_value) => {
+                            return (
+                              <MenuItem
+                                key={option_value.id}
+                                value={parseInt(option_value.id)}
+                              >
+                                {option_value.value_name}
+                              </MenuItem>
+                            );
+                          })}
+                        </Select>
+                      </FormControl>
+                    );
+                })}
+              </div>
+            </Grid>
+            <Grid item xs={1}>
+              <ButtonProgress
+                color="secondary"
+                size="small"
+                style={{ fontSize: "0.75rem" }}
+                variant="contained"
+                handleButtonClick={deleteVariant}
+                loading={btnLoaders.delete}
+                name="Delete"
+              />
+            </Grid>
+          </Grid>
+        </div>
       </AccordionSummary>
       <AccordionDetails className={classes.flexColumnDiv}>
         <span className={classes.secondaryHeading}>
