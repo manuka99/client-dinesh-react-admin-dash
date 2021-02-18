@@ -40,7 +40,12 @@ function Selection({
   const onclickGo = () => {
     switch (variationSelection) {
       case 0:
-        return true;
+        if (posibleVariantCount - productVariants.length > 0)
+          return customVariation();
+        else
+          return alert(
+            "Cannot create new product variants since all variants with the given attributes are already created."
+          );
       case 1:
         if (posibleVariantCount > 0) return allPosible();
         else
@@ -63,6 +68,18 @@ function Selection({
       default:
         return true;
     }
+  };
+
+  const customVariation = () => {
+    setButtonLoading({ ...buttonLoading, go: true });
+    api()
+      .post(`/product/variants/custom/${productContext.product_id}`)
+      .then((res) => {
+        alert(`${res.data.length} product variations have been added.`);
+        setProductVariants([...productVariants, ...res.data]);
+      })
+      .catch((e) => console.log(e))
+      .finally(() => setButtonLoading({ ...buttonLoading, go: false }));
   };
 
   const allPosible = () => {
@@ -114,7 +131,7 @@ function Selection({
             <MenuItem
               value={0}
               disabled={
-                productVariants.length === 0 ||
+                posibleVariantCount === 0 ||
                 posibleVariantCount === productVariants.length
               }
             >

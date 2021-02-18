@@ -79,7 +79,7 @@ function Variations() {
             key={productVariants}
             optionsWithValues={optionsWithValues}
             productVariants={productVariants}
-            handleProductVariants={handleProductVariants}
+            setProductVariants={setProductVariants}
             posibleVariantCount={posibleVariantCount}
           />
         ) : (

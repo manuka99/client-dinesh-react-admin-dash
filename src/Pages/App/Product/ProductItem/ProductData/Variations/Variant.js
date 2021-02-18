@@ -89,7 +89,6 @@ export default function Variant({
 
   useEffect(() => {
     if (variantChanged) {
-      console.log("data changed");
       dataChangeHandler(variantChanged);
     }
     // eslint-disable-next-line

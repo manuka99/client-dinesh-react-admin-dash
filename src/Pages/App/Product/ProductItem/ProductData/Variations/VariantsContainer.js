@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
 
 function VariantsContainer({
   optionsWithValues,
-  handleProductVariants,
+  setProductVariants,
   productVariants,
   posibleVariantCount,
 }) {
@@ -34,52 +34,35 @@ function VariantsContainer({
   const [btnLoaders, setBtnLoaders] = useState({ saveAll: false });
   const productContext = useContext(ProductContext);
   const [errors, setErrors] = useState([]);
-  const [dataChanged, setDataChanged] = useState(false);
-  const [currentProductVariants, setCurrentProductVariants] = useState(
-    productVariants
-  );
   const classes = useStyles();
-
-  useEffect(() => {
-    if (dataChanged) {
-      handleProductVariants(currentProductVariants);
-    }
-  }, [currentProductVariants]);
 
   // remove the deleted index from the list
   const deleteChange = (id) => {
-    var deletedVariantIndex = currentProductVariants.findIndex(
-      (productVariant) => {
-        return productVariant.id === id;
-      }
-    );
+    var deletedVariantIndex = productVariants.findIndex((productVariant) => {
+      return productVariant.id === id;
+    });
     if (deletedVariantIndex >= 0) {
-      setCurrentProductVariants([
-        ...currentProductVariants.slice(0, deletedVariantIndex),
-        ...currentProductVariants.slice(
+      setProductVariants([
+        ...productVariants.slice(0, deletedVariantIndex),
+        ...productVariants.slice(
           deletedVariantIndex + 1,
-          currentProductVariants.length
+          productVariants.length
         ),
       ]);
     }
-    setDataChanged(true);
   };
 
   //add the new variant data to the old array
   const dataChangeHandler = (newProductVariant) => {
-    var oldVariantIndex = currentProductVariants.findIndex(
+    var oldVariantIndex = productVariants.findIndex(
       (productVariant) => newProductVariant.id === productVariant.id
     );
     if (oldVariantIndex >= 0)
-      setCurrentProductVariants([
-        ...currentProductVariants.slice(0, oldVariantIndex),
+      setProductVariants([
+        ...productVariants.slice(0, oldVariantIndex),
         ...newProductVariant,
-        ...currentProductVariants.slice(
-          oldVariantIndex + 1,
-          currentProductVariants.length
-        ),
+        ...productVariants.slice(oldVariantIndex + 1, productVariants.length),
       ]);
-    setDataChanged(true);
   };
 
   const saveAllVariants = () => {
@@ -87,7 +70,7 @@ function VariantsContainer({
     api()
       .post(
         `/product/variants/update/${productContext.product_id}`,
-        currentProductVariants
+        productVariants
       )
       .then((res) =>
         enqueueSnackbar("All data have been saved", { variant: "success" })
@@ -127,9 +110,7 @@ function VariantsContainer({
   });
 
   const onSortEnd = ({ oldIndex, newIndex }) => {
-    setCurrentProductVariants(
-      arrayMove(currentProductVariants, oldIndex, newIndex)
-    );
+    setProductVariants(arrayMove(productVariants, oldIndex, newIndex));
   };
 
   return (
@@ -143,17 +124,19 @@ function VariantsContainer({
       )}
       <Paper className={classes.paper}>
         <Typography variant="h6">
-          Product variations ({currentProductVariants.length} /
-          {posibleVariantCount})
+          Product variations ({productVariants.length} /{posibleVariantCount})
+        </Typography>
+        <Typography variant="caption">
+          (Long click on the product variant <b> ID </b> to drag and drop.)
         </Typography>
         <Box mt={1}>
           <SortableList
-            items={currentProductVariants}
+            items={productVariants}
             onSortEnd={onSortEnd}
             useDragHandle
             pressDelay={200}
           />
-          {/* {currentProductVariants.map((productVariant) => (
+          {/* {productVariants.map((productVariant) => (
             <Variant
               key={productVariant.id}
               optionsWithValues={optionsWithValues}
