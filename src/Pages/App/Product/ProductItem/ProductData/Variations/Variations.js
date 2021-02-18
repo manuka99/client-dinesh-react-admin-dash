@@ -1,12 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import {
-  Box,
-  Divider,
-  LinearProgress,
-  Paper,
-  Typography,
-  useTheme,
-} from "@material-ui/core";
+import { Box, LinearProgress } from "@material-ui/core";
 import api from "../../../../../../util/api";
 import { ProductContext } from "../../ProductItem";
 import Selection from "./Selection";
@@ -20,19 +13,21 @@ function Variations() {
     variants: false,
   });
   const productContext = useContext(ProductContext);
-  const theme = useTheme();
 
   useEffect(() => {
     fetchVariants();
     fetchOptionsAndValues();
+    //eslint-disable-next-line
   }, []);
 
   useEffect(() => {
     if (optionsWithValues.length > 0) {
       var count = 1;
       optionsWithValues.map((option) => {
-        option.option_values.length > 0 &&
-          (count *= option.option_values.length);
+        return (
+          option.option_values.length > 0 &&
+          (count *= option.option_values.length)
+        );
       });
       setPosibleVariantCount(count);
     } else setPosibleVariantCount(0);
@@ -73,24 +68,14 @@ function Variations() {
           <LinearProgress />
         </Box>
       ) : (
-        <Paper
-          style={{
-            width: "100%",
-            marginTop: theme.spacing(2),
-            padding: theme.spacing(2, 1),
-            backgroundColor: theme.palette.neutral.brown,
-          }}
-        >
-          <Typography variant="h6">
-            Product variations ({posibleVariantCount})
-          </Typography>
-          <Divider />
+        setProductVariants.length > 0 && (
           <VariantsContainer
             optionsWithValues={optionsWithValues}
             productVariants={productVariants}
             setProductVariants={setProductVariants}
+            posibleVariantCount={posibleVariantCount}
           />
-        </Paper>
+        )
       )}
     </div>
   );

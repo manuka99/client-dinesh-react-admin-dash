@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
@@ -13,7 +13,6 @@ import {
   Link,
 } from "@material-ui/core";
 import OptionValue from "./OptionValue";
-import AsyncSelect from "react-select/async";
 import swal from "sweetalert";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";

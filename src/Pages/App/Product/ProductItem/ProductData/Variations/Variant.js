@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
@@ -6,23 +6,18 @@ import AccordionSummary from "@material-ui/core/AccordionSummary";
 import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import {
-  Button,
-  ButtonGroup,
-  TextField,
-  Divider,
-  Link,
   MenuItem,
   Select,
   FormControl,
   InputLabel,
   Grid,
 } from "@material-ui/core";
-import AsyncSelect from "react-select/async";
-import swal from "sweetalert";
-import EditIcon from "@material-ui/icons/Edit";
-import DeleteIcon from "@material-ui/icons/Delete";
 import api from "../../../../../../util/api";
 import ButtonProgress from "../../../../../../components/common/ButtonProgress/ButtonProgress";
+import { ProductContext } from "../../ProductItem";
+import useStateCallback from "../../../../../../components/customHooks/useStateCallback";
+import { useSnackbar } from "notistack";
+import swal from "sweetalert";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -56,6 +51,11 @@ const useStyles = makeStyles((theme) => ({
     flexWrap: "wrap",
     alignItems: "center",
   },
+  delete: {
+    position: "relative",
+    right: "120%",
+    transition: "right 100s ease",
+  },
   flexColumnDiv: {
     display: "flex",
     flexDirection: "column",
@@ -66,55 +66,128 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     paddingTop: theme.spacing(3),
   },
-  flexColumnDiv2: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "flex-start",
-    justifyContent: "center",
-    gap: theme.spacing(2),
-    flexWrap: "wrap",
-    width: "100%",
-  },
-  flexColumnDiv3: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "flex-start",
-    justifyContent: "center",
-    gap: theme.spacing(1),
-    flexWrap: "wrap",
-    width: "100%",
-  },
 }));
 
 export default function Variant({
   optionsWithValues,
   productVariant,
   deleteChange,
+  dataChangeHandler,
+  setErrors,
 }) {
-  const [btnLoaders, setBtnLoaders] = useState({ delete: false });
+  const [btnLoaders, setBtnLoaders] = useState({ delete: false, save: false });
+  const productContext = useContext(ProductContext);
+  const [currentProductVariant, setCurrentProductVariant] = useStateCallback(
+    productVariant
+  );
+  const [variantOptionChanged, setVariantOptionChanged] = useState(false);
+  const [variantChanged, setVariantChanged] = useState(false);
+  const [variantDeleted, setVariantDeleted] = useState(false);
+  const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
 
+  useEffect(() => {
+    if (variantChanged) {
+      console.log("data changed");
+      dataChangeHandler(variantChanged);
+    }
+    // eslint-disable-next-line
+  }, [variantOptionChanged, currentProductVariant]);
+
+  useEffect(() => {
+    if (variantDeleted) {
+      setTimeout(() => {
+        deleteChange(currentProductVariant.id);
+        setVariantDeleted(false);
+      }, 1000);
+    }
+    // return () => clearTimeout(deleteTimer);
+    // eslint-disable-next-line
+  }, [variantDeleted]);
+
+  // to render option id
   const getSelectedOptionValue = (option_id) => {
-    const product_varient_value = productVariant.product_varient_values.find(
+    const product_varient_value = currentProductVariant.product_varient_values.find(
       (product_varient_value) => {
-        if (product_varient_value.option_id === option_id)
-          return parseInt(product_varient_value.id);
+        return product_varient_value.option_id === option_id;
       }
     );
     return product_varient_value ? product_varient_value.id : "";
   };
 
+  //on change option
+  const onChangeOption = (e) => {
+    const option_id = e.target.name;
+    const option_value_id = e.target.value;
+    var option_found = false;
+
+    var variant = currentProductVariant;
+
+    //eslint-disable-next-line
+    variant.product_varient_values.map((product_varient_value) => {
+      if (product_varient_value.option_id === option_id) {
+        product_varient_value.id = option_value_id;
+        option_found = true;
+      }
+    });
+    // create a new option value
+    if (!option_found) {
+      var option = {
+        id: option_value_id,
+        option_id: option_id,
+      };
+      variant.product_varient_values.push(option);
+    }
+
+    setVariantChanged(true);
+    setCurrentProductVariant(
+      variant,
+      setVariantOptionChanged(!variantOptionChanged)
+    );
+  };
+
   const deleteVariant = () => {
     setBtnLoaders({ ...btnLoaders, delete: true });
     api()
-      .delete(`/product/variants/destroy/${productVariant.id}`)
-      .then((res) => deleteChange(res.data))
+      .delete(`/product/variants/destroy/${currentProductVariant.id}`)
+      .then((res) => {
+        if (res.data === currentProductVariant.id) {
+          enqueueSnackbar("Variant was deleted successfully", {
+            variant: "success",
+          });
+          setVariantDeleted(true);
+        }
+      })
       .catch((e) => console.log(e))
       .finally(() => setBtnLoaders({ ...btnLoaders, delete: false }));
   };
 
+  const saveVariant = () => {
+    setBtnLoaders({ ...btnLoaders, save: true });
+    api()
+      .post(`/product/variants/update/${productContext.product_id}`, [
+        currentProductVariant,
+      ])
+      .then((res) =>
+        enqueueSnackbar("All data have been saved", { variant: "success" })
+      )
+      .catch((e) => {
+        if (e.response && e.response.status === 422) {
+          swal("Error occured when saving data");
+          setErrors(e.response.data);
+        }
+      })
+      .finally(() => setBtnLoaders({ ...btnLoaders, save: false }));
+  };
+
   return (
-    <Accordion>
+    <Accordion
+      style={{
+        position: variantDeleted ? "relative" : "static",
+        right: variantDeleted ? "120%" : "0",
+        transition: "right 1s ease",
+      }}
+    >
       <AccordionSummary
         className={classes.root}
         expandIcon={<ExpandMoreIcon />}
@@ -122,21 +195,21 @@ export default function Variant({
         aria-controls="additional-actions1-content"
         id="additional-actions1-header"
       >
-        <div
-          aria-label="Acknowledge"
-          onClick={(event) => event.stopPropagation()}
-          onFocus={(event) => event.stopPropagation()}
-          className={classes.flexDiv}
-          style={{ marginRight: "10px" }}
-        >
+        <div className={classes.flexDiv} style={{ marginRight: "10px" }}>
           <Grid container spacing={0} alignItems="center">
             <Grid item xs={2}>
               <Typography variant="subtitle2" color="textSecondary">
-                #{productVariant.id}
+                #{currentProductVariant.id}
               </Typography>
             </Grid>
-            <Grid item xs={9}>
-              <div className={classes.flexDiv}>
+            <Grid
+              item
+              xs={9}
+              onClick={(event) => event.stopPropagation()}
+              onFocus={(event) => event.stopPropagation()}
+            >
+              <div className={classes.flexDiv} aria-label="Acknowledge">
+                {/* eslint-disable-next-line */}
                 {optionsWithValues.map((option) => {
                   if (option.option_values.length > 0)
                     return (
@@ -149,11 +222,14 @@ export default function Variant({
                         <InputLabel id={option.id}>{option.name}</InputLabel>
                         <Select
                           labelId={option.id}
-                          id="size"
+                          id={option.id}
+                          name={option.id}
                           label={option.name}
                           value={getSelectedOptionValue(option.id)}
+                          onChange={onChangeOption}
                           style={{ width: "100%" }}
                         >
+                          <MenuItem value="">None</MenuItem>
                           {option.option_values.map((option_value) => {
                             return (
                               <MenuItem
@@ -170,7 +246,12 @@ export default function Variant({
                 })}
               </div>
             </Grid>
-            <Grid item xs={1}>
+            <Grid
+              item
+              xs={1}
+              onClick={(event) => event.stopPropagation()}
+              onFocus={(event) => event.stopPropagation()}
+            >
               <ButtonProgress
                 color="secondary"
                 size="small"
@@ -191,6 +272,15 @@ export default function Variant({
           Sub attribute count:
           <br />
         </span>
+        <ButtonProgress
+          color="primary"
+          size="small"
+          style={{ fontSize: "0.75rem" }}
+          variant="contained"
+          handleButtonClick={saveVariant}
+          loading={btnLoaders.save}
+          name="Save changes"
+        />
       </AccordionDetails>
     </Accordion>
   );

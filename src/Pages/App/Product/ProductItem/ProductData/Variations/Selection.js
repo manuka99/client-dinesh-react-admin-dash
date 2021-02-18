@@ -1,9 +1,7 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import {
-  Box,
   FormControl,
   InputLabel,
-  LinearProgress,
   makeStyles,
   MenuItem,
   Select,
@@ -61,6 +59,8 @@ function Selection({
           "Are you sure you want to remove all product variants?"
         );
         confirm && destroyAll();
+        return true;
+      default:
         return true;
     }
   };

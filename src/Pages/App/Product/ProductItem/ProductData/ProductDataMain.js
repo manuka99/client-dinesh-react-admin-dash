@@ -102,8 +102,7 @@ const useStyles = makeStyles((theme) => ({
 function ProductDataMain({ handleProductData, productData }) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
-  const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
-    console.log(event);
+  const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 

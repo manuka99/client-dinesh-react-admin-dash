@@ -25,6 +25,7 @@ function ProductExtras() {
 
   useEffect(() => {
     fetchProductExtras();
+    //eslint-disable-next-line
   }, []);
 
   const fetchProductExtras = () => {

@@ -34,11 +34,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const initialData = {
-  value_name: "",
-  value_image: "",
-};
-
 function ValueForm({ data, fetchOptions }) {
   const [optionData, setOptionData] = useState(data);
   const [updateBtnLoading, setUpdateBtnLoading] = useState(false);
