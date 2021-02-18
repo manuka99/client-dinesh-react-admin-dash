@@ -5,6 +5,7 @@ import AccordionDetails from "@material-ui/core/AccordionDetails";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import { sortableHandle } from "react-sortable-hoc";
 import {
   MenuItem,
   Select,
@@ -99,7 +100,7 @@ export default function Variant({
       setTimeout(() => {
         deleteChange(currentProductVariant.id);
         setVariantDeleted(false);
-      }, 1000);
+      }, 660);
     }
     // return () => clearTimeout(deleteTimer);
     // eslint-disable-next-line
@@ -180,6 +181,12 @@ export default function Variant({
       .finally(() => setBtnLoaders({ ...btnLoaders, save: false }));
   };
 
+  const DragHandle = sortableHandle(() => (
+    <Typography variant="subtitle2" color="textSecondary">
+      #{currentProductVariant.id}
+    </Typography>
+  ));
+
   return (
     <Accordion
       style={{
@@ -197,14 +204,12 @@ export default function Variant({
       >
         <div className={classes.flexDiv} style={{ marginRight: "10px" }}>
           <Grid container spacing={0} alignItems="center">
-            <Grid item xs={2}>
-              <Typography variant="subtitle2" color="textSecondary">
-                #{currentProductVariant.id}
-              </Typography>
+            <Grid item xs={1} style={{ cursor: "all-scroll" }}>
+              <DragHandle />
             </Grid>
             <Grid
               item
-              xs={9}
+              xs={10}
               onClick={(event) => event.stopPropagation()}
               onFocus={(event) => event.stopPropagation()}
             >

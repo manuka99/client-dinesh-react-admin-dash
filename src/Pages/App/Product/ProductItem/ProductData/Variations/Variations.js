@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Box, LinearProgress } from "@material-ui/core";
+import { Box, LinearProgress, Typography } from "@material-ui/core";
 import api from "../../../../../../util/api";
 import { ProductContext } from "../../ProductItem";
 import Selection from "./Selection";
@@ -55,6 +55,14 @@ function Variations() {
       .finally(() => setButtonLoading({ ...buttonLoading, variants: false }));
   };
 
+  const handleProductVariants = (data) => {
+    setProductVariants(data);
+  };
+
+  useEffect(() => {
+    console.log("changed");
+  }, [productVariants]);
+
   return (
     <div>
       <Selection
@@ -63,20 +71,23 @@ function Variations() {
         setProductVariants={setProductVariants}
         posibleVariantCount={posibleVariantCount}
       />
-      {buttonLoading.variants ? (
-        <Box mt={4} mb={2}>
+      <Box mt={4} mb={2}>
+        {buttonLoading.variants ? (
           <LinearProgress />
-        </Box>
-      ) : (
-        setProductVariants.length > 0 && (
+        ) : productVariants.length > 0 ? (
           <VariantsContainer
+            key={productVariants}
             optionsWithValues={optionsWithValues}
             productVariants={productVariants}
-            setProductVariants={setProductVariants}
+            handleProductVariants={handleProductVariants}
             posibleVariantCount={posibleVariantCount}
           />
-        )
-      )}
+        ) : (
+          <Typography variant="body2" color="textSecondary">
+            There are no product variations created yet.
+          </Typography>
+        )}
+      </Box>
     </div>
   );
 }

@@ -7,6 +7,10 @@ import ButtonProgress from "../../../../../../components/common/ButtonProgress/B
 import { ProductContext } from "../../ProductItem";
 import Error from "../../../../../../components/alerts/Error";
 import swal from "sweetalert";
+//drag stuff
+import { render } from "react-dom";
+import { SortableContainer, SortableElement } from "react-sortable-hoc";
+import arrayMove from "array-move";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
 
 function VariantsContainer({
   optionsWithValues,
-  setProductVariants,
+  handleProductVariants,
   productVariants,
   posibleVariantCount,
 }) {
@@ -30,39 +34,52 @@ function VariantsContainer({
   const [btnLoaders, setBtnLoaders] = useState({ saveAll: false });
   const productContext = useContext(ProductContext);
   const [errors, setErrors] = useState([]);
+  const [dataChanged, setDataChanged] = useState(false);
+  const [currentProductVariants, setCurrentProductVariants] = useState(
+    productVariants
+  );
   const classes = useStyles();
 
   useEffect(() => {
-    console.log(errors);
-  }, [errors]);
+    if (dataChanged) {
+      handleProductVariants(currentProductVariants);
+    }
+  }, [currentProductVariants]);
 
   // remove the deleted index from the list
   const deleteChange = (id) => {
-    var deletedVariantIndex = productVariants.findIndex((productVariant) => {
-      return productVariant.id === id;
-    });
+    var deletedVariantIndex = currentProductVariants.findIndex(
+      (productVariant) => {
+        return productVariant.id === id;
+      }
+    );
     if (deletedVariantIndex >= 0) {
-      setProductVariants([
-        ...productVariants.slice(0, deletedVariantIndex),
-        ...productVariants.slice(
+      setCurrentProductVariants([
+        ...currentProductVariants.slice(0, deletedVariantIndex),
+        ...currentProductVariants.slice(
           deletedVariantIndex + 1,
-          productVariants.length
+          currentProductVariants.length
         ),
       ]);
     }
+    setDataChanged(true);
   };
 
   //add the new variant data to the old array
   const dataChangeHandler = (newProductVariant) => {
-    var oldVariantIndex = productVariants.findIndex(
+    var oldVariantIndex = currentProductVariants.findIndex(
       (productVariant) => newProductVariant.id === productVariant.id
     );
     if (oldVariantIndex >= 0)
-      setProductVariants([
-        ...productVariants.slice(0, oldVariantIndex),
+      setCurrentProductVariants([
+        ...currentProductVariants.slice(0, oldVariantIndex),
         ...newProductVariant,
-        ...productVariants.slice(oldVariantIndex + 1, productVariants.length),
+        ...currentProductVariants.slice(
+          oldVariantIndex + 1,
+          currentProductVariants.length
+        ),
       ]);
+    setDataChanged(true);
   };
 
   const saveAllVariants = () => {
@@ -70,7 +87,7 @@ function VariantsContainer({
     api()
       .post(
         `/product/variants/update/${productContext.product_id}`,
-        productVariants
+        currentProductVariants
       )
       .then((res) =>
         enqueueSnackbar("All data have been saved", { variant: "success" })
@@ -84,6 +101,37 @@ function VariantsContainer({
       .finally(() => setBtnLoaders({ ...btnLoaders, saveAll: false }));
   };
 
+  const SortableItem = SortableElement(({ value }) => (
+    <Variant
+      key={value.id}
+      optionsWithValues={optionsWithValues}
+      productVariant={value}
+      deleteChange={deleteChange}
+      dataChangeHandler={dataChangeHandler}
+      setErrors={setErrors}
+    />
+  ));
+
+  const SortableList = SortableContainer(({ items }) => {
+    return (
+      <ul style={{ padding: "0" }}>
+        {items.map((productVariant, index) => (
+          <SortableItem
+            index={index}
+            key={productVariant.id}
+            value={productVariant}
+          />
+        ))}
+      </ul>
+    );
+  });
+
+  const onSortEnd = ({ oldIndex, newIndex }) => {
+    setCurrentProductVariants(
+      arrayMove(currentProductVariants, oldIndex, newIndex)
+    );
+  };
+
   return (
     <div className={classes.root}>
       {errors.length > 0 && (
@@ -95,10 +143,17 @@ function VariantsContainer({
       )}
       <Paper className={classes.paper}>
         <Typography variant="h6">
-          Product variations ({productVariants.length} /{posibleVariantCount})
+          Product variations ({currentProductVariants.length} /
+          {posibleVariantCount})
         </Typography>
         <Box mt={1}>
-          {productVariants.map((productVariant) => (
+          <SortableList
+            items={currentProductVariants}
+            onSortEnd={onSortEnd}
+            useDragHandle
+            pressDelay={200}
+          />
+          {/* {currentProductVariants.map((productVariant) => (
             <Variant
               key={productVariant.id}
               optionsWithValues={optionsWithValues}
@@ -107,7 +162,7 @@ function VariantsContainer({
               dataChangeHandler={dataChangeHandler}
               setErrors={setErrors}
             />
-          ))}
+          ))} */}
           <Box mt={2}>
             <Grid item xs={3}>
               <ButtonProgress
