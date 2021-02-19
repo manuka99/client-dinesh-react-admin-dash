@@ -10,6 +10,7 @@ import swal from "sweetalert";
 //drag stuff
 import { SortableContainer, SortableElement } from "react-sortable-hoc";
 import arrayMove from "array-move";
+import DefaultVariant from "./DefaultVariant";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -132,6 +133,9 @@ function VariantsContainer({
           ))}
         </Box>
       )}
+      <Box mb={4}>
+        <DefaultVariant productVariants={productVariants} />
+      </Box>
       <Paper className={classes.paper}>
         <Typography variant="h6">
           Product variations ({productVariants.length} /{posibleVariantCount})
