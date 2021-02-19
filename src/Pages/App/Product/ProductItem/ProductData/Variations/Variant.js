@@ -1,10 +1,17 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  useCallback,
+  useRef,
+} from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import Accordion from "@material-ui/core/Accordion";
-import AccordionDetails from "@material-ui/core/AccordionDetails";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
+import MuiAccordion from "@material-ui/core/Accordion";
+import MuiAccordionSummary from "@material-ui/core/AccordionSummary";
+import MuiAccordionDetails from "@material-ui/core/AccordionDetails";
 import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import { withStyles } from "@material-ui/core/styles";
 import { sortableHandle } from "react-sortable-hoc";
 import {
   MenuItem,
@@ -12,6 +19,7 @@ import {
   FormControl,
   InputLabel,
   Grid,
+  TextField,
 } from "@material-ui/core";
 import api from "../../../../../../util/api";
 import ButtonProgress from "../../../../../../components/common/ButtonProgress/ButtonProgress";
@@ -20,16 +28,47 @@ import useStateCallback from "../../../../../../components/customHooks/useStateC
 import { useSnackbar } from "notistack";
 import swal from "sweetalert";
 
-const useStyles = makeStyles((theme) => ({
+const Accordion = withStyles({
   root: {
-    width: "100%",
+    border: "1px solid rgba(0, 0, 0, .125)",
+    boxShadow: "none",
+    "&:not(:last-child)": {
+      borderBottom: 0,
+    },
+    "&:before": {
+      display: "none",
+    },
+    "&$expanded": {
+      margin: "auto",
+    },
+  },
+  expanded: {},
+})(MuiAccordion);
+
+const AccordionSummary = withStyles({
+  root: {
     borderBottom: "1px solid rgba(0, 0, 0, .125)",
     marginBottom: -1,
-    minHeight: 46,
+    minHeight: 56,
     "&$expanded": {
       minHeight: 56,
     },
   },
+  content: {
+    "&$expanded": {
+      margin: "12px 0",
+    },
+  },
+  expanded: {},
+})(MuiAccordionSummary);
+
+const AccordionDetails = withStyles((theme) => ({
+  root: {
+    padding: theme.spacing(2),
+  },
+}))(MuiAccordionDetails);
+
+const useStyles = makeStyles((theme) => ({
   heading: {
     fontSize: theme.typography.pxToRem(15),
     flexBasis: "10%",
@@ -69,7 +108,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Variant({
+function Variant({
   optionsWithValues,
   productVariant,
   deleteChange,
@@ -84,13 +123,14 @@ export default function Variant({
   const [variantOptionChanged, setVariantOptionChanged] = useState(false);
   const [variantChanged, setVariantChanged] = useState(false);
   const [variantDeleted, setVariantDeleted] = useState(false);
+  const windowRef = useRef(null);
   const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
+  const route_prefix = "http://localhost:8000/laravel-filemanager";
+  const origin_prefix = "http://localhost:8000";
 
   useEffect(() => {
-    if (variantChanged) {
-      dataChangeHandler(variantChanged);
-    }
+    if (variantChanged) dataChangeHandler(currentProductVariant);
     // eslint-disable-next-line
   }, [variantOptionChanged, currentProductVariant]);
 
@@ -106,14 +146,14 @@ export default function Variant({
   }, [variantDeleted]);
 
   // to render option id
-  const getSelectedOptionValue = (option_id) => {
+  const getSelectedOptionValue = useCallback((option_id) => {
     const product_varient_value = currentProductVariant.product_varient_values.find(
       (product_varient_value) => {
         return product_varient_value.option_id === option_id;
       }
     );
     return product_varient_value ? product_varient_value.id : "";
-  };
+  }, []);
 
   //on change option
   const onChangeOption = (e) => {
@@ -147,19 +187,23 @@ export default function Variant({
   };
 
   const deleteVariant = () => {
-    setBtnLoaders({ ...btnLoaders, delete: true });
-    api()
-      .delete(`/product/variants/destroy/${currentProductVariant.id}`)
-      .then((res) => {
-        if (res.data === currentProductVariant.id) {
-          enqueueSnackbar("Variant was deleted successfully", {
-            variant: "success",
-          });
-          setVariantDeleted(true);
-        }
-      })
-      .catch((e) => console.log(e))
-      .finally(() => setBtnLoaders({ ...btnLoaders, delete: false }));
+    if (
+      window.confirm("Are you sure you want to delete this product variant?")
+    ) {
+      setBtnLoaders({ ...btnLoaders, delete: true });
+      api()
+        .delete(`/product/variants/destroy/${currentProductVariant.id}`)
+        .then((res) => {
+          if (res.data === currentProductVariant.id) {
+            enqueueSnackbar("Variant was deleted successfully", {
+              variant: "success",
+            });
+            setVariantDeleted(true);
+          }
+        })
+        .catch((e) => console.log(e))
+        .finally(() => setBtnLoaders({ ...btnLoaders, delete: false }));
+    }
   };
 
   const saveVariant = () => {
@@ -181,11 +225,49 @@ export default function Variant({
   };
 
   const DragHandle = sortableHandle(() => (
-    <Typography variant="subtitle2" color="textSecondary">
+    <Typography
+      variant="subtitle2"
+      style={{
+        whiteSpace: "nowrap",
+        textOverflow: "ellipsis",
+        overflow: "hidden",
+        fontSize: "0.7rem",
+      }}
+      color="textSecondary"
+    >
       #{currentProductVariant.id}
     </Typography>
   ));
 
+  const selectVariantImage = () => {
+    windowRef.current = window.open(
+      route_prefix + "?type=file&multiple=false",
+      "ProductImage",
+      "width=900,height=600"
+    );
+
+    window.addEventListener("message", onRecieveImageUrls, false);
+  };
+  const onRecieveImageUrls = (event) => {
+    if (
+      event.source === windowRef.current &&
+      event.origin === origin_prefix &&
+      Array.isArray(event.data)
+    )
+      handleVariantData("image", event.data[0].url);
+  };
+
+  const handleEventDataChange = (e) => {
+    handleVariantData(e.target.name, e.target.value);
+  };
+
+  const handleVariantData = (name, value) => {
+    setVariantChanged(true);
+    setCurrentProductVariant({
+      ...currentProductVariant,
+      [name]: value,
+    });
+  };
   return (
     <Accordion
       style={{
@@ -195,7 +277,6 @@ export default function Variant({
       }}
     >
       <AccordionSummary
-        className={classes.root}
         expandIcon={<ExpandMoreIcon />}
         aria-label="Expand"
         aria-controls="additional-actions1-content"
@@ -206,13 +287,13 @@ export default function Variant({
             <Grid item xs={1} style={{ cursor: "all-scroll" }}>
               <DragHandle />
             </Grid>
-            <Grid
-              item
-              xs={10}
-              onClick={(event) => event.stopPropagation()}
-              onFocus={(event) => event.stopPropagation()}
-            >
-              <div className={classes.flexDiv} aria-label="Acknowledge">
+            <Grid item xs={10}>
+              <div
+                className={classes.flexDiv}
+                aria-label="Acknowledge"
+                onClick={(event) => event.stopPropagation()}
+                onFocus={(event) => event.stopPropagation()}
+              >
                 {/* eslint-disable-next-line */}
                 {optionsWithValues.map((option) => {
                   if (option.option_values.length > 0)
@@ -231,7 +312,12 @@ export default function Variant({
                           label={option.name}
                           value={getSelectedOptionValue(option.id)}
                           onChange={onChangeOption}
-                          style={{ width: "100%" }}
+                          style={{
+                            width: "100%",
+                            fontSize: "0.8rem",
+                            textTransform: "none",
+                            padding: "0",
+                          }}
                         >
                           <MenuItem value="">None</MenuItem>
                           {option.option_values.map((option_value) => {
@@ -259,23 +345,46 @@ export default function Variant({
               <ButtonProgress
                 color="secondary"
                 size="small"
-                style={{ fontSize: "0.75rem" }}
-                variant="contained"
+                style={{
+                  fontSize: "0.75rem",
+                  textTransform: "none",
+                  padding: "0 12px",
+                }}
                 handleButtonClick={deleteVariant}
                 loading={btnLoaders.delete}
-                name="Delete"
+                name="remove"
               />
             </Grid>
           </Grid>
         </div>
       </AccordionSummary>
       <AccordionDetails className={classes.flexColumnDiv}>
-        <span className={classes.secondaryHeading}>
-          Atribute name:
-          <br />
-          Sub attribute count:
-          <br />
-        </span>
+        <Grid container spacing={2}>
+          <Grid item xs={5}>
+            <img
+              style={{ border: "2px solid #ccc" }}
+              height="80px"
+              width="80px"
+              onClick={selectVariantImage}
+              alt={`product-variant-${currentProductVariant.id}-image`}
+              src={
+                currentProductVariant.image
+                  ? currentProductVariant.image
+                  : "/images/no_image.jpg"
+              }
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              size="small"
+              name="sku_id"
+              value={currentProductVariant.sku_id}
+              onChange={handleEventDataChange}
+            ></TextField>
+          </Grid>
+          <Grid item xs={5}></Grid>
+          <Grid item xs={5}></Grid>
+        </Grid>
         <ButtonProgress
           color="primary"
           size="small"
@@ -289,3 +398,5 @@ export default function Variant({
     </Accordion>
   );
 }
+
+export default React.memo(Variant);

@@ -169,4 +169,4 @@ function Selection({
   );
 }
 
-export default Selection;
+export default React.memo(Selection);

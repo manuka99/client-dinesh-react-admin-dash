@@ -55,14 +55,6 @@ function Variations() {
       .finally(() => setButtonLoading({ ...buttonLoading, variants: false }));
   };
 
-  const handleProductVariants = (data) => {
-    setProductVariants(data);
-  };
-
-  useEffect(() => {
-    console.log("changed");
-  }, [productVariants]);
-
   return (
     <div>
       <Selection
@@ -92,4 +84,4 @@ function Variations() {
   );
 }
 
-export default Variations;
+export default React.memo(Variations, (prevProps, nextProps) => true);

@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import { Box, Grid, makeStyles, Paper, Typography } from "@material-ui/core";
 import Variant from "./Variant";
 import api from "../../../../../../util/api";
@@ -8,7 +8,6 @@ import { ProductContext } from "../../ProductItem";
 import Error from "../../../../../../components/alerts/Error";
 import swal from "sweetalert";
 //drag stuff
-import { render } from "react-dom";
 import { SortableContainer, SortableElement } from "react-sortable-hoc";
 import arrayMove from "array-move";
 
@@ -31,6 +30,9 @@ function VariantsContainer({
   posibleVariantCount,
 }) {
   const { enqueueSnackbar } = useSnackbar();
+  const [currentProductVariants, setCurrentProductVariants] = useState(
+    productVariants
+  );
   const [btnLoaders, setBtnLoaders] = useState({ saveAll: false });
   const productContext = useContext(ProductContext);
   const [errors, setErrors] = useState([]);
@@ -38,15 +40,17 @@ function VariantsContainer({
 
   // remove the deleted index from the list
   const deleteChange = (id) => {
-    var deletedVariantIndex = productVariants.findIndex((productVariant) => {
-      return productVariant.id === id;
-    });
+    var deletedVariantIndex = currentProductVariants.findIndex(
+      (productVariant) => {
+        return productVariant.id === id;
+      }
+    );
     if (deletedVariantIndex >= 0) {
-      setProductVariants([
-        ...productVariants.slice(0, deletedVariantIndex),
-        ...productVariants.slice(
+      setCurrentProductVariants([
+        ...currentProductVariants.slice(0, deletedVariantIndex),
+        ...currentProductVariants.slice(
           deletedVariantIndex + 1,
-          productVariants.length
+          currentProductVariants.length
         ),
       ]);
     }
@@ -54,14 +58,17 @@ function VariantsContainer({
 
   //add the new variant data to the old array
   const dataChangeHandler = (newProductVariant) => {
-    var oldVariantIndex = productVariants.findIndex(
+    var oldVariantIndex = currentProductVariants.findIndex(
       (productVariant) => newProductVariant.id === productVariant.id
     );
     if (oldVariantIndex >= 0)
-      setProductVariants([
-        ...productVariants.slice(0, oldVariantIndex),
-        ...newProductVariant,
-        ...productVariants.slice(oldVariantIndex + 1, productVariants.length),
+      setCurrentProductVariants([
+        ...currentProductVariants.slice(0, oldVariantIndex),
+        newProductVariant,
+        ...currentProductVariants.slice(
+          oldVariantIndex + 1,
+          currentProductVariants.length
+        ),
       ]);
   };
 
@@ -70,7 +77,7 @@ function VariantsContainer({
     api()
       .post(
         `/product/variants/update/${productContext.product_id}`,
-        productVariants
+        currentProductVariants
       )
       .then((res) =>
         enqueueSnackbar("All data have been saved", { variant: "success" })
@@ -95,22 +102,26 @@ function VariantsContainer({
     />
   ));
 
-  const SortableList = SortableContainer(({ items }) => {
-    return (
-      <ul style={{ padding: "0" }}>
-        {items.map((productVariant, index) => (
-          <SortableItem
-            index={index}
-            key={productVariant.id}
-            value={productVariant}
-          />
-        ))}
-      </ul>
-    );
-  });
+  const SortableList = React.memo(
+    SortableContainer(({ items }) => {
+      return (
+        <ul style={{ padding: "0" }}>
+          {items.map((productVariant, index) => (
+            <SortableItem
+              index={index}
+              key={productVariant.id}
+              value={productVariant}
+            />
+          ))}
+        </ul>
+      );
+    })
+  );
 
   const onSortEnd = ({ oldIndex, newIndex }) => {
-    setProductVariants(arrayMove(productVariants, oldIndex, newIndex));
+    setCurrentProductVariants(
+      arrayMove(currentProductVariants, oldIndex, newIndex)
+    );
   };
 
   return (
@@ -124,19 +135,20 @@ function VariantsContainer({
       )}
       <Paper className={classes.paper}>
         <Typography variant="h6">
-          Product variations ({productVariants.length} /{posibleVariantCount})
+          Product variations ({currentProductVariants.length} /
+          {posibleVariantCount})
         </Typography>
         <Typography variant="caption">
           (Long click on the product variant <b> ID </b> to drag and drop.)
         </Typography>
         <Box mt={1}>
           <SortableList
-            items={productVariants}
+            items={currentProductVariants}
             onSortEnd={onSortEnd}
             useDragHandle
             pressDelay={200}
           />
-          {/* {productVariants.map((productVariant) => (
+          {/* {currentProductVariants.map((productVariant) => (
             <Variant
               key={productVariant.id}
               optionsWithValues={optionsWithValues}
@@ -165,4 +177,9 @@ function VariantsContainer({
   );
 }
 
-export default VariantsContainer;
+export default React.memo(
+  VariantsContainer,
+  (prevProps, nextProps) =>
+    prevProps.currentProductVariants.length ===
+    nextProps.currentProductVariants.length
+);
