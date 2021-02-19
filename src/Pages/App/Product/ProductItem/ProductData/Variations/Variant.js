@@ -19,14 +19,12 @@ import {
   FormControl,
   InputLabel,
   Grid,
-  TextField,
 } from "@material-ui/core";
 import api from "../../../../../../util/api";
 import ButtonProgress from "../../../../../../components/common/ButtonProgress/ButtonProgress";
-import { ProductContext } from "../../ProductItem";
 import useStateCallback from "../../../../../../components/customHooks/useStateCallback";
 import { useSnackbar } from "notistack";
-import swal from "sweetalert";
+import VariantForm from "./VariantForm";
 
 const Accordion = withStyles({
   root: {
@@ -106,6 +104,9 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     paddingTop: theme.spacing(3),
   },
+  labelSmall: {
+    fontSize: "0.9rem",
+  },
 }));
 
 function Variant({
@@ -116,18 +117,16 @@ function Variant({
   setErrors,
 }) {
   const [btnLoaders, setBtnLoaders] = useState({ delete: false, save: false });
-  const productContext = useContext(ProductContext);
+
   const [currentProductVariant, setCurrentProductVariant] = useStateCallback(
     productVariant
   );
   const [variantOptionChanged, setVariantOptionChanged] = useState(false);
   const [variantChanged, setVariantChanged] = useState(false);
   const [variantDeleted, setVariantDeleted] = useState(false);
-  const windowRef = useRef(null);
+
   const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
-  const route_prefix = "http://localhost:8000/laravel-filemanager";
-  const origin_prefix = "http://localhost:8000";
 
   useEffect(() => {
     if (variantChanged) dataChangeHandler(currentProductVariant);
@@ -209,24 +208,6 @@ function Variant({
     }
   };
 
-  const saveVariant = () => {
-    setBtnLoaders({ ...btnLoaders, save: true });
-    api()
-      .post(`/product/variants/update/${productContext.product_id}`, [
-        currentProductVariant,
-      ])
-      .then((res) =>
-        enqueueSnackbar("All data have been saved", { variant: "success" })
-      )
-      .catch((e) => {
-        if (e.response && e.response.status === 422) {
-          swal("Error occured when saving data");
-          setErrors(e.response.data);
-        }
-      })
-      .finally(() => setBtnLoaders({ ...btnLoaders, save: false }));
-  };
-
   const DragHandle = sortableHandle(() => (
     <Typography
       variant="subtitle2"
@@ -235,30 +216,12 @@ function Variant({
         textOverflow: "ellipsis",
         overflow: "hidden",
         fontSize: "0.7rem",
+        fontWeight: "bold",
       }}
-      color="textSecondary"
     >
       #{currentProductVariant.id}
     </Typography>
   ));
-
-  const selectVariantImage = () => {
-    windowRef.current = window.open(
-      route_prefix + "?type=file&multiple=false",
-      "ProductImage",
-      "width=900,height=600"
-    );
-
-    window.addEventListener("message", onRecieveImageUrls, false);
-  };
-  const onRecieveImageUrls = (event) => {
-    if (
-      event.source === windowRef.current &&
-      event.origin === origin_prefix &&
-      Array.isArray(event.data)
-    )
-      handleVariantData("image", event.data[0].url);
-  };
 
   const handleEventDataChange = (e) => {
     handleVariantData(e.target.name, e.target.value);
@@ -271,6 +234,7 @@ function Variant({
       [name]: value,
     });
   };
+
   return (
     <Accordion
       style={{
@@ -317,7 +281,7 @@ function Variant({
                           onChange={onChangeOption}
                           style={{
                             width: "100%",
-                            fontSize: "0.8rem",
+                            fontSize: "0.85rem",
                             textTransform: "none",
                             padding: "0",
                           }}
@@ -349,7 +313,7 @@ function Variant({
                 color="secondary"
                 size="small"
                 style={{
-                  fontSize: "0.75rem",
+                  fontSize: "0.8rem",
                   textTransform: "none",
                   padding: "0 12px",
                 }}
@@ -362,40 +326,11 @@ function Variant({
         </div>
       </AccordionSummary>
       <AccordionDetails className={classes.flexColumnDiv}>
-        <Grid container spacing={2}>
-          <Grid item xs={5}>
-            <img
-              style={{ border: "2px solid #ccc" }}
-              height="80px"
-              width="80px"
-              onClick={selectVariantImage}
-              alt={`product-variant-${currentProductVariant.id}-image`}
-              src={
-                currentProductVariant.image
-                  ? currentProductVariant.image
-                  : "/images/no_image.jpg"
-              }
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              size="small"
-              name="sku_id"
-              value={currentProductVariant.sku_id}
-              onChange={handleEventDataChange}
-            ></TextField>
-          </Grid>
-          <Grid item xs={5}></Grid>
-          <Grid item xs={5}></Grid>
-        </Grid>
-        <ButtonProgress
-          color="primary"
-          size="small"
-          style={{ fontSize: "0.75rem" }}
-          variant="contained"
-          handleButtonClick={saveVariant}
-          loading={btnLoaders.save}
-          name="Save changes"
+        <VariantForm
+          setErrors={setErrors}
+          currentProductVariant={currentProductVariant}
+          handleEventDataChange={handleEventDataChange}
+          handleVariantData={handleVariantData}
         />
       </AccordionDetails>
     </Accordion>
