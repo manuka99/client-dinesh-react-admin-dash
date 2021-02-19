@@ -13,6 +13,11 @@ function Variations() {
     variants: false,
   });
   const productContext = useContext(ProductContext);
+  var newProductVariants = productVariants;
+
+  useEffect(() => {
+    newProductVariants = productVariants;
+  }, [productVariants]);
 
   useEffect(() => {
     fetchVariants();
@@ -55,12 +60,22 @@ function Variations() {
       .finally(() => setButtonLoading({ ...buttonLoading, variants: false }));
   };
 
+  //set new product variant data
+  const handleNewVariantData = (data) => {
+    newProductVariants = data;
+  };
+
+  const addToProductVariantArray = (data) => {
+    setProductVariants([...newProductVariants, ...data]);
+  };
+
   return (
     <div>
       <Selection
         fetchVariants={fetchVariants}
         productVariants={productVariants}
         setProductVariants={setProductVariants}
+        addToProductVariantArray={addToProductVariantArray}
         posibleVariantCount={posibleVariantCount}
       />
       <Box mt={4} mb={2}>
@@ -72,6 +87,7 @@ function Variations() {
             optionsWithValues={optionsWithValues}
             productVariants={productVariants}
             setProductVariants={setProductVariants}
+            handleNewVariantData={handleNewVariantData}
             posibleVariantCount={posibleVariantCount}
           />
         ) : (
@@ -84,4 +100,4 @@ function Variations() {
   );
 }
 
-export default React.memo(Variations, (prevProps, nextProps) => true);
+export default React.memo(Variations, (prevProps, nextProps) => false);

@@ -138,8 +138,7 @@ function Variant({
     if (variantDeleted) {
       setTimeout(() => {
         deleteChange(currentProductVariant.id);
-        setVariantDeleted(false);
-      }, 660);
+      }, 1000);
     }
     // return () => clearTimeout(deleteTimer);
     // eslint-disable-next-line
@@ -191,6 +190,7 @@ function Variant({
       window.confirm("Are you sure you want to delete this product variant?")
     ) {
       setBtnLoaders({ ...btnLoaders, delete: true });
+      // productContext.mainLoader(true);
       api()
         .delete(`/product/variants/destroy/${currentProductVariant.id}`)
         .then((res) => {
@@ -202,7 +202,10 @@ function Variant({
           }
         })
         .catch((e) => console.log(e))
-        .finally(() => setBtnLoaders({ ...btnLoaders, delete: false }));
+        .finally(() => {
+          setBtnLoaders({ ...btnLoaders, delete: false });
+          // productContext.mainLoader(false);
+        });
     }
   };
 

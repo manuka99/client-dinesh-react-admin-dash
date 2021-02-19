@@ -22,6 +22,7 @@ const useStyles = makeStyles((theme) => ({
 function Selection({
   productVariants,
   setProductVariants,
+  addToProductVariantArray,
   fetchVariants,
   posibleVariantCount,
 }) {
@@ -76,7 +77,7 @@ function Selection({
       .post(`/product/variants/custom/${productContext.product_id}`)
       .then((res) => {
         alert(`${res.data.length} product variations have been added.`);
-        setProductVariants([...productVariants, ...res.data]);
+        addToProductVariantArray(res.data);
       })
       .catch((e) => console.log(e))
       .finally(() => setButtonLoading({ ...buttonLoading, go: false }));
@@ -100,7 +101,7 @@ function Selection({
       .post(`/product/variants/otherPosible/${productContext.product_id}`)
       .then((res) => {
         alert(`${res.data.length} product variations have been added.`);
-        setProductVariants([...productVariants, ...res.data]);
+        addToProductVariantArray(res.data);
       })
       .catch((e) => console.log(e))
       .finally(() => setButtonLoading({ ...buttonLoading, go: false }));

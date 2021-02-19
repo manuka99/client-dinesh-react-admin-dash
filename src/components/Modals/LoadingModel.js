@@ -60,10 +60,6 @@ export default function LoadingModel({ status }) {
         closeAfterTransition
         disableBackdropClick={false}
         disableEscapeKeyDown={false}
-        BackdropComponent={Backdrop}
-        BackdropProps={{
-          timeout: 500,
-        }}
       >
         <Fade in={status}>
           <div className={classes.paper}>

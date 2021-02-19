@@ -26,31 +26,31 @@ const useStyles = makeStyles((theme) => ({
 function VariantsContainer({
   optionsWithValues,
   setProductVariants,
+  handleNewVariantData,
   productVariants,
   posibleVariantCount,
 }) {
   const { enqueueSnackbar } = useSnackbar();
-  const [currentProductVariants, setCurrentProductVariants] = useState(
-    productVariants
-  );
   const [btnLoaders, setBtnLoaders] = useState({ saveAll: false });
   const productContext = useContext(ProductContext);
   const [errors, setErrors] = useState([]);
   const classes = useStyles();
 
+  var newVariantsData = productVariants;
+
   // remove the deleted index from the list
   const deleteChange = (id) => {
-    var deletedVariantIndex = currentProductVariants.findIndex(
-      (productVariant) => {
-        return productVariant.id === id;
-      }
-    );
+    console.log(`deleted ${id}`);
+    var deletedVariantIndex = newVariantsData.findIndex((productVariant) => {
+      return productVariant.id === id;
+    });
+    console.log(`deletedVariantIndex ${deletedVariantIndex}`);
     if (deletedVariantIndex >= 0) {
-      setCurrentProductVariants([
-        ...currentProductVariants.slice(0, deletedVariantIndex),
-        ...currentProductVariants.slice(
+      setProductVariants([
+        ...newVariantsData.slice(0, deletedVariantIndex),
+        ...newVariantsData.slice(
           deletedVariantIndex + 1,
-          currentProductVariants.length
+          newVariantsData.length
         ),
       ]);
     }
@@ -58,18 +58,17 @@ function VariantsContainer({
 
   //add the new variant data to the old array
   const dataChangeHandler = (newProductVariant) => {
-    var oldVariantIndex = currentProductVariants.findIndex(
+    var oldVariantIndex = newVariantsData.findIndex(
       (productVariant) => newProductVariant.id === productVariant.id
     );
-    if (oldVariantIndex >= 0)
-      setCurrentProductVariants([
-        ...currentProductVariants.slice(0, oldVariantIndex),
+    if (oldVariantIndex >= 0) {
+      newVariantsData = [
+        ...newVariantsData.slice(0, oldVariantIndex),
         newProductVariant,
-        ...currentProductVariants.slice(
-          oldVariantIndex + 1,
-          currentProductVariants.length
-        ),
-      ]);
+        ...newVariantsData.slice(oldVariantIndex + 1, newVariantsData.length),
+      ];
+      handleNewVariantData(newVariantsData);
+    }
   };
 
   const saveAllVariants = () => {
@@ -77,7 +76,7 @@ function VariantsContainer({
     api()
       .post(
         `/product/variants/update/${productContext.product_id}`,
-        currentProductVariants
+        newVariantsData
       )
       .then((res) =>
         enqueueSnackbar("All data have been saved", { variant: "success" })
@@ -119,9 +118,9 @@ function VariantsContainer({
   );
 
   const onSortEnd = ({ oldIndex, newIndex }) => {
-    setCurrentProductVariants(
-      arrayMove(currentProductVariants, oldIndex, newIndex)
-    );
+    console.log(oldIndex);
+    console.log(newIndex);
+    setProductVariants(arrayMove(newVariantsData, oldIndex, newIndex));
   };
 
   return (
@@ -135,20 +134,19 @@ function VariantsContainer({
       )}
       <Paper className={classes.paper}>
         <Typography variant="h6">
-          Product variations ({currentProductVariants.length} /
-          {posibleVariantCount})
+          Product variations ({productVariants.length} /{posibleVariantCount})
         </Typography>
         <Typography variant="caption">
           (Long click on the product variant <b> ID </b> to drag and drop.)
         </Typography>
         <Box mt={1}>
           <SortableList
-            items={currentProductVariants}
+            items={productVariants}
             onSortEnd={onSortEnd}
             useDragHandle
             pressDelay={200}
           />
-          {/* {currentProductVariants.map((productVariant) => (
+          {/* {productVariants.map((productVariant) => (
             <Variant
               key={productVariant.id}
               optionsWithValues={optionsWithValues}
@@ -177,9 +175,4 @@ function VariantsContainer({
   );
 }
 
-export default React.memo(
-  VariantsContainer,
-  (prevProps, nextProps) =>
-    prevProps.currentProductVariants.length ===
-    nextProps.currentProductVariants.length
-);
+export default React.memo(VariantsContainer, (prevProps, nextProps) => false);
