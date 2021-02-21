@@ -29,6 +29,7 @@ function DefaultVariant({ productVariants }) {
       .get(`/products/${productContext.product_id}`)
       .then((res) => setDefault_variant(res.data.productData.default_variation))
       .catch((e) => console.log(e));
+    //eslint-disable-next-line
   }, []);
 
   const saveData = () => {
@@ -115,4 +116,4 @@ function DefaultVariant({ productVariants }) {
   );
 }
 
-export default DefaultVariant;
+export default React.memo(DefaultVariant);

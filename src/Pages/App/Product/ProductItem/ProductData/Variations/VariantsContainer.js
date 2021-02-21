@@ -1,5 +1,12 @@
 import React, { useState, useContext } from "react";
-import { Box, Grid, makeStyles, Paper, Typography } from "@material-ui/core";
+import {
+  Box,
+  FormControlLabel,
+  Grid,
+  makeStyles,
+  Paper,
+  Typography,
+} from "@material-ui/core";
 import Variant from "./Variant";
 import api from "../../../../../../util/api";
 import { useSnackbar } from "notistack";
@@ -11,6 +18,11 @@ import swal from "sweetalert";
 import { SortableContainer, SortableElement } from "react-sortable-hoc";
 import arrayMove from "array-move";
 import DefaultVariant from "./DefaultVariant";
+// switch
+import Switch from "@material-ui/core/Switch";
+import VariantDrag from "./VariantDrag";
+import Alert from "@material-ui/lab/Alert";
+import useStateCallback from "../../../../../../components/customHooks/useStateCallback";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,6 +46,7 @@ function VariantsContainer({
   const { enqueueSnackbar } = useSnackbar();
   const [btnLoaders, setBtnLoaders] = useState({ saveAll: false });
   const productContext = useContext(ProductContext);
+  const [enableDrag, setEnableDrag] = useStateCallback(false);
   const [errors, setErrors] = useState([]);
   const classes = useStyles();
 
@@ -41,11 +54,9 @@ function VariantsContainer({
 
   // remove the deleted index from the list
   const deleteChange = (id) => {
-    console.log(`deleted ${id}`);
     var deletedVariantIndex = newVariantsData.findIndex((productVariant) => {
       return productVariant.id === id;
     });
-    console.log(`deletedVariantIndex ${deletedVariantIndex}`);
     if (deletedVariantIndex >= 0) {
       setProductVariants([
         ...newVariantsData.slice(0, deletedVariantIndex),
@@ -74,6 +85,7 @@ function VariantsContainer({
 
   const saveAllVariants = () => {
     setBtnLoaders({ ...btnLoaders, saveAll: true });
+    setProductVariants(newVariantsData);
     api()
       .post(
         `/product/variants/update/${productContext.product_id}`,
@@ -92,14 +104,7 @@ function VariantsContainer({
   };
 
   const SortableItem = SortableElement(({ value }) => (
-    <Variant
-      key={value.id}
-      optionsWithValues={optionsWithValues}
-      productVariant={value}
-      deleteChange={deleteChange}
-      dataChangeHandler={dataChangeHandler}
-      setErrors={setErrors}
-    />
+    <VariantDrag optionsWithValues={optionsWithValues} productVariant={value} />
   ));
 
   const SortableList = React.memo(
@@ -119,9 +124,12 @@ function VariantsContainer({
   );
 
   const onSortEnd = ({ oldIndex, newIndex }) => {
-    console.log(oldIndex);
-    console.log(newIndex);
     setProductVariants(arrayMove(newVariantsData, oldIndex, newIndex));
+  };
+
+  const enableDragandDrop = () => {
+    setProductVariants(newVariantsData);
+    setEnableDrag(!enableDrag);
   };
 
   return (
@@ -137,29 +145,76 @@ function VariantsContainer({
         <DefaultVariant productVariants={productVariants} />
       </Box>
       <Paper className={classes.paper}>
-        <Typography variant="h6">
+        <Typography
+          variant="h6"
+          style={{ paddingLeft: "6px", marginBottom: "14px" }}
+        >
           Product variations ({productVariants.length} /{posibleVariantCount})
         </Typography>
-        <Typography variant="caption">
-          (Long click on the product variant <b> ID </b> to drag and drop.)
-        </Typography>
-        <Box mt={1}>
-          <SortableList
-            items={productVariants}
-            onSortEnd={onSortEnd}
-            useDragHandle
-            pressDelay={200}
-          />
-          {/* {productVariants.map((productVariant) => (
-            <Variant
-              key={productVariant.id}
-              optionsWithValues={optionsWithValues}
-              productVariant={productVariant}
-              deleteChange={deleteChange}
-              dataChangeHandler={dataChangeHandler}
-              setErrors={setErrors}
+        <FormControlLabel
+          style={{ paddingLeft: "10px" }}
+          control={
+            <Switch
+              checked={enableDrag}
+              onChange={enableDragandDrop}
+              color="primary"
+              name="draganddroptoggler"
+              size="small"
             />
-          ))} */}
+          }
+          label={
+            <Typography variant="body2">
+              {!enableDrag
+                ? "Enable drag and drop to arrange variants order."
+                : "Disable drag and drop."}
+            </Typography>
+          }
+        />
+
+        <Box mt={1}>
+          {!enableDrag ? (
+            <Alert severity="warning" style={{ marginTop: "10px" }}>
+              <Typography variant="body2" color="secondary">
+                Do not delete or remove multiple variants at once, please wait
+                until the request variant to completely be deleted.
+              </Typography>
+            </Alert>
+          ) : (
+            <>
+              <Typography variant="caption" gutterBottom>
+                (Long click on the product variant <b> ID </b> to drag and
+                drop.)
+              </Typography>
+              <Alert severity="warning" style={{ marginTop: "10px" }}>
+                <Typography variant="body2" color="secondary">
+                  Product variant editting has been disabled to improve
+                  performance when using drag and grop to arrane variants.
+                </Typography>
+              </Alert>
+            </>
+          )}
+        </Box>
+
+        <Box mt={1}>
+          {enableDrag ? (
+            <SortableList
+              items={productVariants}
+              onSortEnd={onSortEnd}
+              useWindowAsScrollContainer
+            />
+          ) : (
+            productVariants.map((productVariant) => (
+              <Variant
+                key={productVariant.id}
+                optionsWithValues={optionsWithValues}
+                productVariant={productVariant}
+                deleteChange={deleteChange}
+                dataChangeHandler={dataChangeHandler}
+                setErrors={setErrors}
+              />
+            ))
+          )}
+
           <Box mt={2}>
             <Grid item xs={3}>
               <ButtonProgress
@@ -179,4 +234,4 @@ function VariantsContainer({
   );
 }
 
-export default React.memo(VariantsContainer, (prevProps, nextProps) => false);
+export default React.memo(VariantsContainer);

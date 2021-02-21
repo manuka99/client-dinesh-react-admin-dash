@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  useContext,
-  useCallback,
-  useRef,
-} from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import MuiAccordion from "@material-ui/core/Accordion";
 import MuiAccordionSummary from "@material-ui/core/AccordionSummary";
@@ -12,7 +6,6 @@ import MuiAccordionDetails from "@material-ui/core/AccordionDetails";
 import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { withStyles } from "@material-ui/core/styles";
-import { sortableHandle } from "react-sortable-hoc";
 import {
   MenuItem,
   Select,
@@ -151,6 +144,7 @@ function Variant({
       }
     );
     return product_varient_value ? product_varient_value.id : "";
+    //eslint-disable-next-line
   }, []);
 
   //on change option
@@ -208,21 +202,6 @@ function Variant({
     }
   };
 
-  const DragHandle = sortableHandle(() => (
-    <Typography
-      variant="subtitle2"
-      style={{
-        whiteSpace: "nowrap",
-        textOverflow: "ellipsis",
-        overflow: "hidden",
-        fontSize: "0.7rem",
-        fontWeight: "bold",
-      }}
-    >
-      #{currentProductVariant.id}
-    </Typography>
-  ));
-
   const handleEventDataChange = (e) => {
     handleVariantData(e.target.name, e.target.value);
   };
@@ -251,8 +230,19 @@ function Variant({
       >
         <div className={classes.flexDiv} style={{ marginRight: "10px" }}>
           <Grid container spacing={0} alignItems="center">
-            <Grid item xs={1} style={{ cursor: "all-scroll" }}>
-              <DragHandle />
+            <Grid item xs={1}>
+              <Typography
+                variant="subtitle2"
+                style={{
+                  whiteSpace: "nowrap",
+                  textOverflow: "ellipsis",
+                  overflow: "hidden",
+                  fontSize: "0.7rem",
+                  fontWeight: "bold",
+                }}
+              >
+                #{currentProductVariant.id}
+              </Typography>
             </Grid>
             <Grid item xs={10}>
               <div

@@ -17,11 +17,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function ProductExtras() {
+function ProductExtras({ productVariantId }) {
   const [options, setOptions] = useState([]);
   const [addNewOption, setaddNewOption] = useState(false);
   const productContext = useContext(ProductContext);
   const classes = useStyles();
+  var url = productVariantId
+    ? `/extras/variant/${productVariantId}`
+    : `/extras/product/variant/${productContext.product_id}`;
 
   useEffect(() => {
     fetchProductExtras();
@@ -31,7 +34,7 @@ function ProductExtras() {
   const fetchProductExtras = () => {
     productContext.mainLoader(true);
     api()
-      .get(`/extras/variant/${productContext.product_id}`)
+      .get(url)
       .then((res) => setOptions(res.data))
       .catch((e) => console.log(e))
       .finally(() => productContext.mainLoader(false));
@@ -51,9 +54,14 @@ function ProductExtras() {
         }
         onClick={() => setaddNewOption(!addNewOption)}
       >
-        Edit add-ons
+        New add-ons
       </Button>
-      {addNewOption && <ExtraForm fetchProductExtras={fetchProductExtras} />}
+      {addNewOption && (
+        <ExtraForm
+          fetchProductExtras={fetchProductExtras}
+          productVariantId={productVariantId}
+        />
+      )}
       {options.length > 0 && (
         <Paper className={classes.root}>
           {options.map((option) => (
@@ -69,4 +77,4 @@ function ProductExtras() {
   );
 }
 
-export default ProductExtras;
+export default React.memo(ProductExtras);

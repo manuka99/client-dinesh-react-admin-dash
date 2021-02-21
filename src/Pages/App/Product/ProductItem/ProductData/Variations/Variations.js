@@ -4,9 +4,10 @@ import api from "../../../../../../util/api";
 import { ProductContext } from "../../ProductItem";
 import Selection from "./Selection";
 import VariantsContainer from "./VariantsContainer";
+import useStateCallback from "../../../../../../components/customHooks/useStateCallback";
 
 function Variations() {
-  const [productVariants, setProductVariants] = useState([]);
+  const [productVariants, setProductVariants] = useStateCallback([]);
   const [optionsWithValues, setOptionsWithValues] = useState([]);
   const [posibleVariantCount, setPosibleVariantCount] = useState(0);
   const [buttonLoading, setButtonLoading] = useState({
@@ -16,6 +17,7 @@ function Variations() {
   var newProductVariants = productVariants;
 
   useEffect(() => {
+    //eslint-disable-next-line
     newProductVariants = productVariants;
   }, [productVariants]);
 
@@ -100,4 +102,4 @@ function Variations() {
   );
 }
 
-export default React.memo(Variations, (prevProps, nextProps) => false);
+export default React.memo(Variations);

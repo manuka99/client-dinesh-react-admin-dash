@@ -22,6 +22,8 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
+import ProductExtras from "../ProductExtras/ProductExtras";
+import ComponentModal from "../../../../../../components/Modals/ComponentModal";
 
 const useStyles = makeStyles((theme) => ({
   labelSmall: {
@@ -35,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function VariantForm({
+function VariantForm({
   currentProductVariant,
   handleEventDataChange,
   handleVariantData,
@@ -45,6 +47,7 @@ export default function VariantForm({
   const productContext = useContext(ProductContext);
   const windowRef = useRef(null);
   const { enqueueSnackbar } = useSnackbar();
+  const [displayExtras, setDisplayExtras] = useState(false);
   const classes = useStyles();
 
   const route_prefix = "http://localhost:8000/laravel-filemanager";
@@ -92,7 +95,7 @@ export default function VariantForm({
         style={{
           width: "100%",
           display: "grid",
-          gridRowGap: "10px",
+          gap: "10px",
           gridTemplateColumns: "repeat(4, auto)",
           alignItems: "center",
           alignContent: "center",
@@ -104,7 +107,7 @@ export default function VariantForm({
           height="100%"
           width="110px"
           onClick={selectVariantImage}
-          alt={`product-variant-${currentProductVariant.id}-image`}
+          alt={`product-variant-${currentProductVariant.id}`}
           src={
             currentProductVariant.image
               ? currentProductVariant.image
@@ -136,7 +139,6 @@ export default function VariantForm({
               <Checkbox
                 size="small"
                 checked={currentProductVariant.enable}
-                onChange={handleVariantData}
                 name="enable"
                 color="primary"
                 onChange={(e) =>
@@ -164,8 +166,28 @@ export default function VariantForm({
             label="Manage stock"
             classes={{ label: classes.labelSmall }}
           />
+          <FormControlLabel
+            control={
+              <Checkbox
+                size="small"
+                checked={displayExtras}
+                onChange={() => setDisplayExtras(!displayExtras)}
+                color="primary"
+              />
+            }
+            label="Manage product extras"
+            classes={{ label: classes.labelSmall }}
+          />
         </div>
       </div>
+      <ComponentModal
+        status={displayExtras}
+        component={
+          <ProductExtras productVariantId={currentProductVariant.id} />
+        }
+        closeModal={() => setDisplayExtras(false)}
+        title={`Manage product extras - Variant ID #${currentProductVariant.id}`}
+      />
       <Grid container spacing={2}>
         <Grid item xs={6}>
           <CustomFeild
@@ -476,3 +498,5 @@ export default function VariantForm({
     </>
   );
 }
+
+export default React.memo(VariantForm);

@@ -32,7 +32,11 @@ const styles = makeStyles((theme) => ({
   },
 }));
 
-export default function ExtraForm({ fetchProductExtras, oldData }) {
+export default function ExtraForm({
+  fetchProductExtras,
+  oldData,
+  productVariantId,
+}) {
   const classes = styles();
   const [newExtra, setNewExtra] = useState(oldData ? oldData : initialnewExtra);
   const [newExtraBtnLoader, setNewExtraBtnLoader] = useState(false);
@@ -40,7 +44,9 @@ export default function ExtraForm({ fetchProductExtras, oldData }) {
   const productContext = useContext(ProductContext);
   const url = oldData
     ? `/extras/variant/update/${oldData.id}`
-    : `/extras/variant/store/${productContext.product_id}`;
+    : productVariantId
+    ? `/extras/variant/store/${productVariantId}`
+    : `/extras/product/variant/store/${productContext.product_id}`;
 
   const handleNewExtra = (e) => {
     setNewExtra({
