@@ -226,6 +226,7 @@ function ProductItem() {
             <Grid item xs={12} md={3}>
               <PublishMain
                 status={productData.status}
+                is_trashed={productData.is_trashed}
                 visibility={productData.visibility}
                 published_on={productData.published_on}
                 label={productData.label}

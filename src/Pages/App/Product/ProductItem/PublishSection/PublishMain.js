@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   Box,
   Card,
@@ -27,6 +27,8 @@ import LabelImportantIcon from "@material-ui/icons/LabelImportant";
 import LineStyleIcon from "@material-ui/icons/LineStyle";
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 import ButtonProgress from "../../../../../components/common/ButtonProgress/ButtonProgress";
+import { ProductContext } from "../ProductItem";
+import api from "../../../../../util/api";
 
 const styles = makeStyles((theme) => ({
   icon: {
@@ -68,6 +70,7 @@ const styles = makeStyles((theme) => ({
 
 function PublishMain({
   status,
+  is_trashed,
   visibility,
   published_on,
   label,
@@ -85,6 +88,8 @@ function PublishMain({
   });
   const [newValues, setNewValues] = useState({});
 
+  const productContext = useContext(ProductContext);
+
   const toggleEditMode = (name) => {
     setEditMode({ ...editMode, [name]: !editMode[name] });
     setNewValues({ ...newValues, [name]: "" });
@@ -101,12 +106,18 @@ function PublishMain({
     setEditMode({ ...editMode, [name]: !editMode[name] });
   };
 
-  const copyToNewDraft = (e) => {
-    e.preventDefault();
-  };
-
-  const moveToTrash = (e) => {
-    e.preventDefault();
+  const copyToNewDraft = () => {
+    productContext.mainLoader(true);
+    api()
+      .post(`/products/draft/${productContext.product_id}`)
+      .then((res) => {
+        window.open(`/app/products/edit/${res.data}`);
+        console.log(res.data);
+      })
+      .catch((e) => console.log(e))
+      .finally(() => {
+        productContext.mainLoader(false);
+      });
   };
 
   return (
@@ -404,12 +415,22 @@ function PublishMain({
           <Grid container spacing={2}>
             <Grid item xs={7}>
               <div className={classes.flexRowDiv2}>
-                <Link href="#" onClick={copyToNewDraft}>
-                  Copy to a new draft
-                </Link>
-                <Link href="#" color="secondary" onClick={moveToTrash}>
-                  Move to trash
-                </Link>
+                <Link onClick={copyToNewDraft}>Copy to a new draft</Link>
+                {is_trashed === 1 ? (
+                  <Link
+                    color="secondary"
+                    onClick={() => handleProductData("is_trashed", 0)}
+                  >
+                    Restore from trash
+                  </Link>
+                ) : (
+                  <Link
+                    color="secondary"
+                    onClick={() => handleProductData("is_trashed", 1)}
+                  >
+                    Move to trash
+                  </Link>
+                )}
               </div>
             </Grid>
             <Grid item xs={4}>

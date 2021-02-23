@@ -16,7 +16,7 @@ import swal from "sweetalert";
 import AddBoxIcon from "@material-ui/icons/AddBox";
 import IndeterminateCheckBoxIcon from "@material-ui/icons/IndeterminateCheckBox";
 
-const initialNewCategoryData = { name: "", root_id: "" };
+const initialNewCategoryData = { name: "", slug: "", root_id: "" };
 
 const styles = makeStyles((theme) => ({
   flexRowDiv: {
@@ -109,6 +109,18 @@ function NewCategory({ categories, fetchCategories }) {
           value={newCategoryData.name}
           onChange={handleNewCategoryData}
           required
+        />
+        <TextField
+          className={classes.formControl}
+          label="Category slug"
+          name="slug"
+          type="text"
+          variant="outlined"
+          color="primary"
+          size="small"
+          style={{ width: "100%" }}
+          value={newCategoryData.slug}
+          onChange={handleNewCategoryData}
         />
         <FormControl
           variant="outlined"

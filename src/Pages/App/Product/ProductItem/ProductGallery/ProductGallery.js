@@ -113,8 +113,6 @@ function ProductGallery() {
       var newImages = [];
       // eslint-disable-next-line
       event.data.map((image) => {
-        image.pid = productContext.product_id;
-        image.type = "product";
         newImages.push(image);
       });
       setProductGalleryImages(
