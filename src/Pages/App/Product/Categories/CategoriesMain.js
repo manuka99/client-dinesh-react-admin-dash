@@ -6,24 +6,14 @@ import {
   Typography,
   CardContent,
   Divider,
-  makeStyles,
   Box,
 } from "@material-ui/core";
 import api from "../../../../util/api";
 import CategoryForm from "./CategoryForm";
 import AllCategories from "./AllCategories";
 
-const useStyles = makeStyles((theme) => ({
-  flexColumnDiv: {
-    display: "flex",
-    flexDirection: "column",
-    gap: theme.spacing(2),
-  },
-}));
-
 function CategoriesMain() {
   const [categories, setCategories] = useState([]);
-  const classes = useStyles();
 
   useEffect(() => {
     fetchCategories();

@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useTable } from "react-table";
 import {
   Card,
   CardActionArea,
@@ -19,6 +18,7 @@ function AllProductsMain() {
 
   useEffect(() => {
     fetchProducts();
+    //eslint-disable-next-line
   }, []);
 
   const fetchProducts = () => {
