@@ -21,27 +21,12 @@ import {
   TextareaAutosize,
   FormHelperText,
   Grid,
-  Button,
 } from "@material-ui/core";
 import swal from "sweetalert";
 import api from "../../../../util/api";
 import ButtonProgress from "../../../../components/common/ButtonProgress/ButtonProgress";
-import LocationOnIcon from "@material-ui/icons/LocationOn";
 import ToggleDays from "../../../../components/common/ToggleDays";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-
-const initialNewStoreData = {
-  name: "",
-  since_year: "",
-  description: "",
-  open_days: "[1,3]",
-  status: "available",
-  start_time: "11:30",
-  end_time: "23:30",
-  address: "",
-  longitude: 0,
-  latitude: 0,
-};
+import SingleMapHandler from "../../../../components/common/SingleMapHandler";
 
 const styles = makeStyles((theme) => ({
   flexRowDiv: {
@@ -58,52 +43,46 @@ const styles = makeStyles((theme) => ({
   },
 }));
 
-function NewStore({ fetchStores }) {
+const initialNewStoreData = {
+  name: "",
+  since_year: "",
+  description: "",
+  open_days: "[1,3]",
+  status: "available",
+  start_time: "11:30",
+  end_time: "23:30",
+  address: "",
+  longitude: 0,
+  latitude: 0,
+};
+
+function NewStore({ fetchStores, oldData }) {
   const classes = styles();
   const [newStoreData, setNewStoreData] = useState(initialNewStoreData);
   const [newStoreBtnLoader, setNewStoreBtnLoader] = useState(false);
-  const [map, setMap] = useState(null);
-  const [marker, setMarker] = useState({});
-  // const markerRef = useRef(null);
-  const [position, setPosition] = useState({ lat: 0, lng: 0 });
-
-  const markerRef = React.useCallback((node) => {
-    if (node !== null) setMarker(node); // node = ref.current
-  }, []);
-
-  const onMove = useCallback(() => {
-    if (map !== null) setPosition(map.getCenter());
-  }, [map]);
-
-  useEffect(() => {
-    if (map !== null) map.on("move", onMove);
-
-    return () => {
-      if (map !== null) map.off("move", onMove);
-    };
-  }, [map, onMove]);
-
-  useEffect(() => {
-    if (map !== null)
-      map.setView([newStoreData.latitude, newStoreData.longitude], 13);
-    if (marker._latlng)
-      marker.setLatLng([newStoreData.latitude, newStoreData.longitude]);
-  }, [newStoreData.latitude, newStoreData.longitude]);
-
-  useEffect(() => {
-    console.log(marker);
-    if (marker._latlng)
-      setNewStoreData({
-        ...newStoreData,
-        longitude: marker._latlng.lng,
-        latitude: marker._latlng.lat,
-      });
-  }, [marker._latlng]);
+  const [positionInput, setPositionInput] = useState(false);
 
   const handleNewStoreData = (e) => {
     setNewStoreData({
       ...newStoreData,
       [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleNewInputPosition = (e) => {
+    setNewStoreData({
+      ...newStoreData,
+      [e.target.name]: parseInt(e.target.value),
+    });
+    setPositionInput(!positionInput);
+  };
+
+  const handlePositionChange = (newPosition) => {
+    console.log(newPosition);
+    setNewStoreData({
+      ...newStoreData,
+      longitude: newPosition.longitude,
+      latitude: newPosition.latitude,
     });
   };
 
@@ -123,47 +102,12 @@ function NewStore({ fetchStores }) {
       });
   };
 
-  const getLocation = () => {
-    if (navigator.geolocation)
-      navigator.geolocation.getCurrentPosition(savePosition);
-    else swal("Geolocation is not supported by this browser.");
-  };
-
-  const savePosition = (position) => {
-    setNewStoreData({
-      ...newStoreData,
-      longitude: position.coords.longitude,
-      latitude: position.coords.latitude,
-    });
-  };
-
   const setDays = (value) => {
     setNewStoreData({
       ...newStoreData,
       open_days: JSON.stringify(value),
     });
   };
-
-  const displayMap = useMemo(
-    () => (
-      <MapContainer
-        center={[newStoreData.latitude, newStoreData.longitude]}
-        zoom={13}
-        scrollWheelZoom={false}
-        whenCreated={setMap}
-        style={{ width: "100%", height: "400px" }}
-      >
-        <TileLayer
-          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        <Marker position={position} ref={markerRef} draggable={true}>
-          <Popup onClick={setLocation}>Select as store location</Popup>
-        </Marker>
-      </MapContainer>
-    ),
-    []
-  );
 
   return (
     <div>
@@ -288,26 +232,26 @@ function NewStore({ fetchStores }) {
                 <TextField
                   label="Store location latitude"
                   name="latitude"
-                  type="text"
+                  type="number"
                   variant="outlined"
                   color="primary"
                   size="small"
                   fullWidth
                   value={newStoreData.latitude}
-                  onChange={handleNewStoreData}
+                  onChange={handleNewInputPosition}
                 />
               </Grid>
               <Grid item xs={6}>
                 <TextField
                   label="Store location longitude"
                   name="longitude"
-                  type="text"
+                  type="number"
                   variant="outlined"
                   color="primary"
                   size="small"
                   fullWidth
                   value={newStoreData.longitude}
-                  onChange={handleNewStoreData}
+                  onChange={handleNewInputPosition}
                 />
               </Grid>
               <Box pl={2} pr={2}>
@@ -316,26 +260,14 @@ function NewStore({ fetchStores }) {
                   manually enter valid location cordinates respectively.
                 </FormHelperText>
               </Box>
-              <Grid item xs={12}>
-                <Button
-                  startIcon={<LocationOnIcon size="small" />}
-                  color="primary"
-                  size="small"
-                  variant="outlined"
-                  onClick={getLocation}
-                >
-                  locate me
-                </Button>
-              </Grid>
               {!isNaN(newStoreData.latitude) && !isNaN(newStoreData.longitude) && (
                 <Grid item xs={12}>
-                  {displayMap}
-                  {position !== null && (
-                    <p>
-                      latitude: {position.lat.toFixed(4)}, longitude:{" "}
-                      {position.lng.toFixed(4)}{" "}
-                    </p>
-                  )}
+                  <SingleMapHandler
+                    height="400px"
+                    initialPosition={newStoreData}
+                    positionInput={positionInput}
+                    handlePositionChange={handlePositionChange}
+                  />
                 </Grid>
               )}
               <Grid item xs={12}>
