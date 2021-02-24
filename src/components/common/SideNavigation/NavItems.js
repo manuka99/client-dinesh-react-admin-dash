@@ -5,6 +5,11 @@ import ListIcon from "@material-ui/icons/List";
 import CreateIcon from "@material-ui/icons/Create";
 import AcUnitIcon from "@material-ui/icons/AcUnit";
 import ExtensionIcon from "@material-ui/icons/Extension";
+// shipping
+import LocalShippingIcon from "@material-ui/icons/LocalShipping";
+import StoreMallDirectoryIcon from "@material-ui/icons/StoreMallDirectory";
+import ClassIcon from "@material-ui/icons/Class";
+import RoomIcon from "@material-ui/icons/Room";
 
 export const NavItems1 = () => {
   return [
@@ -120,11 +125,37 @@ export const NavItems1 = () => {
     },
     {
       id: 14,
-      name: "Exams",
-      to: "/app/quiz",
-      iconFront: <InboxIcon />,
-      hasChildren: false,
+      name: "Shipping",
+      to: "/app/shipping",
+      iconFront: <LocalShippingIcon />,
+      hasChildren: true,
       isChild: false,
+      children: [
+        {
+          id: 15,
+          name: "Store management",
+          to: "/app/shipping/stores",
+          iconFront: <StoreMallDirectoryIcon />,
+          hasChildren: false,
+          isChild: true,
+        },
+        {
+          id: 16,
+          name: "Delivery classes",
+          to: "/app/shipping/classes",
+          iconFront: <ClassIcon />,
+          hasChildren: false,
+          isChild: true,
+        },
+        {
+          id: 17,
+          name: "Delivery areas",
+          to: "/app/shipping/areas",
+          iconFront: <RoomIcon />,
+          hasChildren: false,
+          isChild: true,
+        },
+      ],
     },
   ];
 };

@@ -6,6 +6,10 @@ import AuthRoute from "../components/protectedRoutes/AuthRoute";
 import GuestRoute from "../components/protectedRoutes/GuestRoute";
 import DashboardFallback from "../components/Progress/DashboardFallback";
 import ExtrasMain from "../Pages/App/Product/Extras/ExtrasMain";
+import ShippingMain from "../Pages/App/Shipping/ShippingMain";
+import Stores from "../Pages/App/Shipping/Stores/Stores";
+import DeliveryClasses from "../Pages/App/Shipping/Classes/DeliveryClasses";
+import DeliveryAreas from "../Pages/App/Shipping/Areas/DeliveryAreas";
 
 // import Fruits from "../components/Fruits";
 // import Login from "../Pages/Login/Login";
@@ -180,6 +184,18 @@ export const AllRoutes = () => {
           <AuthRoute path="/categories" element={<CategoriesMain />} />
           <AuthRoute path="/extras" element={<ExtrasMain />} />
         </AuthRoute>
+
+        {/* shipping */}
+        <AuthRoute path="/shipping" element={<ShippingMain />}>
+          <AuthRoute
+            path="/"
+            element={<Navigate replace={true} to="/app/shipping/stores" />}
+          />
+          <AuthRoute path="/stores" element={<Stores />} />
+          <AuthRoute path="/classes" element={<DeliveryClasses />} />
+          <AuthRoute path="/areas" element={<DeliveryAreas />} />
+        </AuthRoute>
+
         <AuthRoute hasAnyRoles={["Editor"]} path="/fruits" element={<Fruits />}>
           <AuthRoute path="/fruit" element={<Fruits />} />
           <AuthRoute path="/login" element={<Login />} />
