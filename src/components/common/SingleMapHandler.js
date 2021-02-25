@@ -1,11 +1,22 @@
 import React, { useState, useCallback, useEffect, useMemo } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
-import { Button, Grid } from "@material-ui/core";
+import GpsFixedIcon from "@material-ui/icons/GpsFixed";
+import { Button, Grid, Typography } from "@material-ui/core";
 import swal from "sweetalert";
+import { SearchControl, OpenStreetMapProvider } from "leaflet-geosearch";
+
+const searchControl = new SearchControl({
+  style: "button",
+  provider: new OpenStreetMapProvider(),
+  marker: {
+    draggable: false,
+  },
+});
 
 function SingleMapHandler({
   height,
+  zoom,
   initialPosition,
   positionInput,
   handlePositionChange,
@@ -22,11 +33,23 @@ function SingleMapHandler({
   }, []);
 
   useEffect(() => {
-    if (map !== null)
-      map.flyTo([initialPosition.latitude, initialPosition.longitude], 18);
-    if (marker._latlng) {
-      marker.setLatLng([initialPosition.latitude, initialPosition.longitude]);
+    if (map !== null) {
+      map.addControl(searchControl);
+      map.on("click", function (e) {
+        setPosition(e.latlng);
+      });
     }
+  }, [map]);
+
+  // when free marker position change
+  useEffect(() => {
+    if (map !== null) map.flyTo([position.lat, position.lng], map.getZoom());
+    if (marker._latlng) {
+      marker.setLatLng([position.lat, position.lng]);
+    }
+  }, [position]);
+
+  useEffect(() => {
     setPosition({
       lat: initialPosition.latitude,
       lng: initialPosition.longitude,
@@ -46,10 +69,6 @@ function SingleMapHandler({
           lng: markerEvent._latlng.lng,
           lat: markerEvent._latlng.lat,
         });
-        map.flyTo(
-          [markerEvent._latlng.lat, markerEvent._latlng.lng],
-          map.getZoom()
-        );
       });
     }
   }, [marker._latlng]);
@@ -65,16 +84,6 @@ function SingleMapHandler({
       lat: eventPosition.coords.latitude,
       lng: eventPosition.coords.longitude,
     });
-    if (map !== null)
-      map.flyTo(
-        [eventPosition.coords.latitude, eventPosition.coords.longitude],
-        18
-      );
-    if (marker._latlng)
-      marker.setLatLng([
-        eventPosition.coords.latitude,
-        eventPosition.coords.longitude,
-      ]);
   };
 
   const setLocation = () => {
@@ -90,12 +99,20 @@ function SingleMapHandler({
     }
   };
 
+  const displaySelected = () => {
+    setPosition({
+      lat: initialPosition.latitude,
+      lng: initialPosition.longitude,
+    });
+  };
+
   const displayMap = useMemo(
     () => (
       <MapContainer
         center={[initialPosition.latitude, initialPosition.longitude]}
-        zoom={18}
+        zoom={zoom}
         scrollWheelZoom={false}
+        doubleClickZoom={false}
         whenCreated={setMap}
         style={{ width: "100%", height: height }}
       >
@@ -118,24 +135,39 @@ function SingleMapHandler({
     [position]
   );
   return (
-    <Grid container spacing={2}>
+    <Grid container spacing={1}>
       <Grid item xs={12}>
+        <Button
+          startIcon={<GpsFixedIcon size="small" />}
+          color="primary"
+          size="small"
+          variant="outlined"
+          onClick={getLocation}
+          style={{ marginRight: "10px" }}
+        >
+          locate me
+        </Button>
         <Button
           startIcon={<LocationOnIcon size="small" />}
           color="primary"
           size="small"
           variant="outlined"
-          onClick={getLocation}
+          onClick={displaySelected}
         >
-          locate me
+          display selected
         </Button>
       </Grid>
       <Grid item xs={12}>
         {displayMap}
-        <p>
-          latitude: {position.lat.toFixed(4)}, longitude:
-          {position.lng.toFixed(4)}
-        </p>
+      </Grid>
+      <Grid item xs={12}>
+        <Typography
+          variant="body2"
+          color="textSecondary"
+          style={{ cursor: "pointer" }}
+        >
+          Click on the marker to select a location.
+        </Typography>
       </Grid>
     </Grid>
   );

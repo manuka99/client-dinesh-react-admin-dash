@@ -18,6 +18,7 @@
     "history": "^5.0.0",
     "js-cookie": "^2.2.1",
     "leaflet": "^1.7.1",
+    "leaflet-geosearch": "^3.2.1",
     "material-ui-dropzone": "^3.5.0",
     "moment": "^2.29.1",
     "notistack": "^1.0.3",

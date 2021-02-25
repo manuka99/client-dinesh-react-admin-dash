@@ -47,7 +47,7 @@ const initialNewStoreData = {
   name: "",
   since_year: "",
   description: "",
-  open_days: "[1,3]",
+  open_days: "[]",
   status: "available",
   start_time: "11:30",
   end_time: "23:30",
@@ -72,7 +72,7 @@ function NewStore({ fetchStores, oldData }) {
   const handleNewInputPosition = (e) => {
     setNewStoreData({
       ...newStoreData,
-      [e.target.name]: parseInt(e.target.value),
+      [e.target.name]: parseFloat(e.target.value),
     });
     setPositionInput(!positionInput);
   };
@@ -114,13 +114,17 @@ function NewStore({ fetchStores, oldData }) {
       <Card>
         <CardActionArea>
           <CardContent>
-            <Typography variant="h6">New shipping store</Typography>
+            <Typography variant="h6">
+              {oldData
+                ? `Update store #${newStoreData.id}`
+                : "New shipping store"}
+            </Typography>
           </CardContent>
         </CardActionArea>
         <Divider />
         <CardContent>
           <form onSubmit={createNewStore}>
-            <Grid container spacing={3}>
+            <Grid container spacing={4}>
               <Grid item xs={12}>
                 <TextField
                   label="Store name"
@@ -264,6 +268,7 @@ function NewStore({ fetchStores, oldData }) {
                 <Grid item xs={12}>
                   <SingleMapHandler
                     height="400px"
+                    zoom={18}
                     initialPosition={newStoreData}
                     positionInput={positionInput}
                     handlePositionChange={handlePositionChange}
@@ -272,7 +277,7 @@ function NewStore({ fetchStores, oldData }) {
               )}
               <Grid item xs={12}>
                 <ButtonProgress
-                  name="create category"
+                  name={oldData ? `Update store details` : "Create new store"}
                   type="submit"
                   variant="contained"
                   color="primary"
